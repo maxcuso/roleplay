@@ -1,0 +1,7 @@
+/js/node_modules/
+/vendor/
+/resources/presentation/icons.local.json
+
+/tests/.runtime/
+
+# js/dist включаем в релиз: Flarum загружает готовый JavaScript без сборки у пользователя.

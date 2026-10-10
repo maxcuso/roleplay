@@ -1,0 +1,182 @@
+/* Цвета поверхностей наследуем у форума. Цвета сущностей приходят из их справочников. */
+.RpAdmin { padding-top: 22px; padding-bottom: 30px; }
+.RpAdmin-navigation, .RpCatalog-toolbar, .RpCatalog-filters, .RpCatalog-actions {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.RpAdmin-navigation { justify-content: flex-start; margin-bottom: 22px; }
+.RpAdmin-tabs { display: flex; flex-wrap: wrap; gap: 4px; background: var(--control-bg); padding: 4px; border-radius: 8px; }
+.RpAdmin-tabs .Button { background: transparent; }
+.RpAdmin-tabs .active { background: var(--body-bg); color: var(--primary-color); }
+.RpAdmin-settingsTabs .Button { font-size: 12px; padding: 8px 10px; }
+.RpCatalog-toolbar { justify-content: space-between; }
+.RpCatalog-search { min-width: 200px; width: 300px; }
+.RpCatalog-count { text-transform: uppercase; font-size: 12px; color: var(--muted-color); margin: 18px 0 25px; }
+.RpCatalog-tableWrap { overflow-x: auto; }
+.RpCatalog-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
+.RpCatalog-table th { color: var(--primary-color); text-transform: uppercase; font-size: 12px; padding: 12px 8px; white-space: normal; line-height: 1.35; }
+.RpCatalog-table td { background: var(--body-bg); border-block: 1px solid var(--control-bg); padding: 18px 8px; text-align: center; vertical-align: middle; }
+.RpCatalog-table td:first-child { border-left: 1px solid var(--control-bg); border-radius: 8px 0 0 8px; text-align: left; }
+.RpCatalog-table td:last-child { border-right: 1px solid var(--control-bg); border-radius: 0 8px 8px 0; }
+/* Короткие столбцы занимают ширину содержимого; оставшееся место получает название.
+   Привязка к ключу работает и у рангов, где название находится не в первом столбце. */
+.RpCatalog-table th:not([data-column="name"]) { width: 1%; }
+.RpCatalog-table [data-column="name"] { min-width: 180px; text-align: left; }
+.RpCatalog-table td:is([data-column="enabled"], [data-column="level"], [data-column="count"],
+  [data-column="properties"], [data-column="price"], [data-column="weight"], [data-column="equipment_limit"]) { white-space: nowrap; }
+.RpCatalog-rowActions { display: flex; justify-content: flex-end; gap: 4px; white-space: nowrap; }
+.RpCatalog-rowActions .Button { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border-radius: 7px; }
+.RpCatalog-rowActions .Button-icon { margin: 0; }
+.RpCatalog-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+/* Сохраняем размер и начертание. Полное название доступно в подсказке. */
+.RpCatalog-nameText { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; line-height: 1.4; min-width: 0; }
+.RpCatalog-name > .icon { width: 24px; flex-shrink: 0; text-align: center; font-size: 20px; color: var(--primary-color); }
+.RpCatalog-name img, .RpCatalog-icons img { width: 22px; height: 22px; flex-shrink: 0; object-fit: contain; }
+.RpCatalog-icons, .RpCatalog-costs { display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+.RpCatalog-costs { flex-wrap: wrap; }
+.RpCatalog-icons .icon { font-size: 19px; }
+.RpCatalog-pagination { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 15px; }
+.RpStatusSwitch { display: inline-block; width: 46px; height: 26px; border: 0; border-radius: 20px; background: #aaa; padding: 3px; cursor: pointer; }
+.RpStatusSwitch::after { content: ''; display: block; width: 20px; height: 20px; border-radius: 50%; background: white; transition: transform .15s; }
+.RpStatusSwitch[aria-checked="true"] { background: #58a700; }
+.RpStatusSwitch[aria-checked="true"]::after { transform: translateX(20px); }
+.RpStatusSwitch:disabled { opacity: .6; cursor: default; }
+.RpAdmin-placeholder { padding: 50px; text-align: center; background: var(--control-bg); border-radius: 8px; color: var(--muted-color); }
+.RpAdmin-placeholder > .icon { font-size: 35px; }
+
+/* Обмен JSON: те же поверхности темы, что у редакторов, без отдельной палитры. */
+.RpCatalog-toolbarActions, .RpCatalog-transferActions { display: flex; align-items: center; gap: 8px; }
+.RpCatalog-transferActions { gap: 4px; padding-right: 8px; border-right: 1px solid var(--control-bg); }
+.RpCatalog-transferActions .Button { width: 36px; height: 36px; padding: 0; border-radius: 9px; }
+.RpCatalogTransfer .Modal-content { width: 480px; max-width: calc(100vw - 24px); }
+.RpTransfer-section { display: flex; align-items: center; gap: 8px; color: var(--muted-color); font-size: 12px; margin: 0 0 16px; }
+.RpTransfer-options { display: grid; gap: 8px; }
+.RpTransfer-option {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  padding: 13px 14px; background: var(--body-bg); color: var(--text-color);
+  border: 1px solid transparent; border-radius: 10px; cursor: pointer; font: inherit;
+}
+.RpTransfer-option[aria-pressed="true"] { border-color: var(--primary-color); box-shadow: inset 0 0 0 1px var(--primary-color); }
+.RpTransfer-option > .icon:first-child { width: 20px; text-align: center; color: var(--primary-color); font-size: 18px; }
+.RpTransfer-option > .icon:last-child { font-size: 12px; margin-left: auto; color: var(--muted-color); }
+.RpTransfer-option span, .RpTransfer-file span, .RpTransfer-record > span { display: grid; gap: 4px; min-width: 0; }
+.RpTransfer-option strong, .RpTransfer-file strong, .RpTransfer-record strong { font-size: 13px; overflow-wrap: anywhere; }
+.RpTransfer-option small, .RpTransfer-file small, .RpTransfer-record small { font-size: 11px; color: var(--muted-color); }
+.RpTransfer-note { font-size: 12px; line-height: 1.5; color: var(--muted-color); margin: 14px 0 0; }
+.RpTransfer-note .icon { margin-right: 5px; }
+.RpTransfer-file { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--body-bg); color: var(--text-color); border-radius: 10px; }
+.RpTransfer-file > .icon { font-size: 25px; color: var(--primary-color); }
+.RpTransfer-file > span { flex: 1; }
+.RpTransfer-modes { display: flex; gap: 4px; padding: 4px; margin: 14px 0; background: var(--control-bg); border-radius: 9px; }
+.RpTransfer-modes .Button { flex: 1; padding: 9px 7px; font-size: 11px; white-space: normal; background: transparent; }
+.RpTransfer-modes .Button[aria-pressed="true"] { background: var(--body-bg); color: var(--text-color); }
+.RpTransfer-totals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 16px 0 12px; }
+.RpTransfer-totals > span { display: grid; justify-items: center; gap: 4px; padding: 10px 4px; background: var(--body-bg); color: var(--text-color); border-radius: 9px; }
+.RpTransfer-totals .icon { font-size: 12px; color: var(--muted-color); }
+.RpTransfer-totals b { font-size: 19px; line-height: 1.2; }
+.RpTransfer-totals small { font-size: 10px; color: var(--muted-color); }
+.RpTransfer-totals .hasErrors, .RpTransfer-totals .hasErrors .icon { color: var(--error-color, #c44); }
+.RpTransfer-records { max-height: 230px; overflow-y: auto; overscroll-behavior: contain; background: var(--body-bg); color: var(--text-color); border-radius: 9px; border: 1px solid var(--control-bg); }
+.RpTransfer-record { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; }
+.RpTransfer-record + .RpTransfer-record { border-top: 1px solid var(--control-bg); }
+.RpTransfer-record small { overflow-wrap: anywhere; }
+.RpTransfer-badge { flex-shrink: 0; padding: 4px 7px; border-radius: 6px; background: var(--control-bg); }
+.RpTransfer-record--create .RpTransfer-badge, .RpTransfer-record--update .RpTransfer-badge { color: var(--primary-color); }
+.RpTransfer-messages { max-height: 130px; overflow-y: auto; font-size: 12px; line-height: 1.5; margin: 10px 0; }
+.RpTransfer-messages p { margin: 0; overflow-wrap: anywhere; }
+.RpTransfer-messages p + p { margin-top: 8px; }
+.RpTransfer-warnings { padding: 10px 12px; border-radius: 9px; background: var(--control-bg); color: var(--muted-color); }
+.RpTransfer-option:disabled { opacity: .6; cursor: default; }
+@media (max-width: 550px) {
+  .RpCatalog-toolbarActions { flex-wrap: wrap; }
+  .RpTransfer-modes .Button { font-size: 11px; }
+}
+
+/* Общие настройки. Размеры полей определяются содержимым: числа короткие,
+ * названия и шаблоны получают место. Цвета продолжают наследоваться от темы. */
+.RpSettings-panel { max-width: 720px; padding: 0; margin-top: 8px; }
+.RpSettings-panel--application { max-width: 620px; }
+.RpSettings-panel--icons { max-width: 960px; }
+.RpSettings-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.RpSettings-headingIcon { display: grid; place-items: center; flex: 0 0 34px; width: 34px; height: 34px; background: var(--control-bg); color: var(--primary-color); border-radius: 10px; font-size: 16px; }
+.RpSettings-header > div:not(.RpSettings-headerActions) { min-width: 0; }
+.RpSettings-header h2 { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 700; color: var(--text-color); }
+.RpSettings-header p { font-size: 12px; line-height: 1.4; color: var(--muted-color); margin: 3px 0 0; }
+.RpSettings-headerActions { display: flex; align-items: center; gap: 4px; margin-left: auto; flex-shrink: 0; }
+.RpSettings-headerActions .Button { width: 32px; height: 32px; padding: 0; border-radius: 8px; }
+.RpSettings-feedback p { margin: 0 0 14px; font-size: 12px; }
+.RpSettings-feedback .icon { margin-right: 5px; }
+.RpSettings-field { display: flex; flex-direction: column; gap: 7px; margin: 0; min-width: 0; }
+.RpSettings-panel .FormControl { min-width: 0; height: 34px; padding: 7px 9px; border-radius: 7px; font-size: 13px; font-weight: 400; }
+.RpSettings-panel .RpForm-label { font-size: 12px; }
+.RpSettings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.RpSettings-toggle { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 12px; font-weight: 600; color: var(--text-color); }
+.RpSettings-toggle input { margin: 0; width: 15px; height: 15px; accent-color: var(--primary-color); flex-shrink: 0; }
+.RpSettings-numbers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; margin-top: 16px; }
+.RpSettings-number { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 9px; background: var(--control-bg); min-width: 0; }
+.RpSettings-number .FormControl { width: 84px; flex: 0 0 84px; text-align: center; background: var(--body-bg); }
+.RpSettings-number .RpForm-label { color: var(--text-color); font-weight: 500; }
+.RpSettings-distribution { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.RpSettings-distribution > span { display: flex; gap: 5px; }
+.RpSettings-distribution b { display: grid; place-items: center; min-width: 27px; height: 25px; padding: 0 5px; border-radius: 6px; background: var(--control-bg); font-size: 12px; }
+.RpSettings-block { padding-top: 18px; margin-top: 18px; border-top: 1px solid var(--control-bg); }
+.RpSettings-block h3 { margin: 0 0 12px; }
+.RpSettings-block h3 .RpForm-label { font-size: 13px; color: var(--text-color); }
+.RpSettings-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 18px; margin-top: 18px; border-top: 1px solid var(--control-bg); }
+.RpSettings-footer small { font-size: 11px; color: var(--muted-color); line-height: 1.4; }
+.RpSettings-footer small .icon { margin-right: 4px; }
+.RpSettings-footer .Button { margin-left: auto; font-size: 12px; padding: 9px 12px; border-radius: 8px; }
+.RpSettings-note { font-size: 11px; color: var(--muted-color); line-height: 1.5; margin: 8px 0 14px; }
+.RpSettings-panel .RpSettings-template textarea { min-height: 174px; height: auto; resize: vertical; line-height: 1.5; font-family: monospace; }
+.RpSettings-placeholders { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; font-size: 11px; color: var(--muted-color); }
+.RpSettings-placeholders code { background: var(--control-bg); border-radius: 4px; padding: 2px 4px; color: var(--text-color); }
+.RpSettings-process { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--control-bg); }
+.RpSettings-process > div { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.RpSettings-process .icon { color: var(--primary-color); font-size: 16px; }
+.RpSettings-process strong { display: block; font-size: 12px; }
+.RpSettings-process small { display: block; margin-top: 3px; font-size: 11px; color: var(--muted-color); }
+.RpAttributeIcons-row { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+.RpAttributeIcons-row > .RpSettings-field { flex: 1 1 140px; min-width: 120px; }
+.RpAttributeIcons-row > .Button { flex-shrink: 0; height: 34px; padding: 7px 11px; font-size: 12px; border-radius: 7px; margin-left: auto; }
+
+/* Наборы: один лёгкий контур группы. Варианты разделены линиями, без вложенных заливок. */
+.RpLoadout-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.RpLoadout-search { display: flex; align-items: center; gap: 7px; max-width: 260px; }
+.RpLoadout-search > .icon { color: var(--muted-color); font-size: 12px; }
+.RpLoadout-group { margin: 0 0 12px; padding: 12px; border: 1px solid var(--control-bg); border-radius: 10px; min-width: 0; }
+.RpLoadout-groupHeader, .RpLoadout-optionHeader { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.RpLoadout-groupHeader { flex-wrap: wrap; }
+.RpLoadout-groupHeader > .RpSettings-toggle, .RpLoadout-limit { flex-shrink: 0; }
+.RpLoadout-name { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; max-width: 320px; margin: 0; }
+.RpLoadout-name > .icon { color: var(--muted-color); font-size: 13px; width: 16px; flex-shrink: 0; text-align: center; }
+.RpLoadout-name .FormControl { font-weight: 600; }
+.RpLoadout-limit { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted-color); }
+.RpLoadout-limit .FormControl { width: 56px; text-align: center; padding-inline: 5px; }
+.RpLoadout-option { padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--control-bg); }
+.RpLoadout-optionHeader { margin-bottom: 8px; }
+.RpLoadout-option .RpLoadout-name { max-width: 280px; }
+.RpLoadout-item { display: grid; grid-template-columns: minmax(0, 1fr) 85px 28px; align-items: center; gap: 8px; margin: 7px 0; }
+.RpLoadout-quantity { display: flex; align-items: center; gap: 5px; color: var(--muted-color); font-size: 12px; }
+.RpLoadout-quantity .FormControl { width: 68px; padding-inline: 5px; text-align: center; }
+.RpLoadout-editor .Button--icon { width: 28px; height: 28px; padding: 0; background: transparent; border-radius: 6px; color: var(--muted-color); }
+.RpLoadout-editor .Button--icon:hover { background: var(--control-bg); color: var(--error-color, #c44); }
+.RpLoadout-editor .Button--link { margin: 4px 0 0; padding: 4px 0; font-size: 12px; }
+.RpLoadout-addOption { margin-top: 12px !important; }
+@media (max-width: 650px) {
+  .RpSettings-header { align-items: flex-start; }
+  .RpSettings-header h2 { font-size: 16px; }
+  .RpSettings-numbers { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .RpSettings-grid, .RpSettings-process { grid-template-columns: 1fr; }
+  .RpAttributeIcons-row > .RpSettings-field { flex-basis: calc(50% - 6px); min-width: 0; }
+  .RpSettings-panel--icons .RpSettings-header { flex-wrap: wrap; }
+  .RpSettings-panel--icons .RpSettings-headerActions { margin-left: auto; }
+  .RpLoadout-toolbar { align-items: flex-start; }
+  .RpLoadout-search { max-width: 100%; }
+  .RpLoadout-groupHeader > .RpLoadout-name { flex-basis: calc(100% - 48px); max-width: none; }
+  .RpLoadout-groupHeader > .Button { order: 1; }
+  .RpLoadout-groupHeader > .RpSettings-toggle { order: 2; }
+  .RpLoadout-groupHeader > .RpLoadout-limit { order: 3; }
+  .RpLoadout-item { grid-template-columns: minmax(0, 1fr) 72px 24px; gap: 4px; }
+  .RpLoadout-quantity .FormControl { width: 58px; }
+}

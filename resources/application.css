@@ -1,0 +1,83 @@
+/* Компактная панель: место под пояснения и действия сохраняется при смене статуса. */
+.RpReview { margin: 0 0 16px; padding: 16px 18px; border-radius: 12px; background: var(--control-bg); }
+.RpReview-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.RpReview-icon { width: 34px; height: 34px; flex-shrink: 0; display: grid; place-items: center; border-radius: 10px; background: color-mix(in srgb, var(--text-color) 7%, transparent); color: var(--muted-color); font-size: 18px; }
+.RpReview-heading strong { display: block; font-size: 15px; font-weight: 700; }
+.RpReview-heading small { display: block; margin-top: 2px; color: var(--muted-color); font-size: 12px; }
+.RpReview-tools { margin-left: auto; flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+.RpReview-historyButton { width: 30px; height: 30px; padding: 0; border-radius: 8px; background: var(--body-bg); }
+.RpReview-progress { flex-shrink: 0; padding: 5px 9px; border-radius: 8px; background: var(--body-bg); color: var(--muted-color); font-size: 12px; font-weight: 700; }
+.RpReview-parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+/* Общая высота колонок удерживает кнопки на одной линии, даже если пояснение переносится. */
+.RpReview-part { min-width: 0; display: flex; flex-direction: column; }
+.RpReview-partHeading { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.RpReview-partHeading > .icon { color: var(--muted-color); }
+.RpReview-partHeading > strong { font-size: 13px; font-weight: 700; }
+.RpReview-status { display: inline-flex; align-items: center; justify-content: center; min-width: 102px; gap: 5px; margin-left: auto; padding: 4px 7px; border-radius: 7px; font-size: 11px; font-weight: 700; line-height: 1.2; color: #a35bff; background: color-mix(in srgb, #a35bff 10%, transparent); }
+.RpReview-part.is-approved .RpReview-status { color: #62965e; background: color-mix(in srgb, #80b77e 14%, transparent); }
+.RpReview-part.is-changes_requested .RpReview-status { color: #cb8137; background: color-mix(in srgb, #cb8137 12%, transparent); }
+.RpReview-part.is-draft .RpReview-status { color: #b88712; background: color-mix(in srgb, #edc446 16%, transparent); }
+.RpReview-caption { display: grid; flex: 1; margin-top: 7px; color: var(--muted-color); font-size: 12px; line-height: 1.45; }
+/* Отдельные координаты: сборщик Less форума воспринимает 1 / 1 как деление. */
+.RpReview-caption > span { grid-column: 1; grid-row: 1; }
+.RpReview-captionSizing { visibility: hidden; pointer-events: none; }
+.RpReview-captionSizing strong { font-weight: 600; }
+/* Даже при исчезновении кнопки её строка остаётся; высоту не фиксируем для переносов. */
+.RpReview-actions { display: flex; flex-wrap: wrap; align-items: flex-start; min-height: 32px; gap: 6px; margin-top: 9px; }
+.RpReview-actions .Button { border-radius: 8px; padding: 7px 10px; font-size: 12px; line-height: 18px; }
+/* Акцент строится из системных цветов: темнее панели на светлой теме,
+ * контрастнее на тёмной. Не смешиваем его с цветами статусов. */
+.RpReview-actions .RpReview-editButton { background: color-mix(in srgb, var(--text-color) 12%, var(--control-bg)); color: var(--text-color); font-weight: 600; }
+.RpReview-actions .RpReview-editButton:hover:not(:disabled) { background: color-mix(in srgb, var(--text-color) 18%, var(--control-bg)); }
+.RpReview-topicLink { font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.RpReview-warning { margin: 0 0 12px; color: #cb8137; font-size: 12px; }
+.RpReview-warning .icon { margin-right: 4px; }
+.RpReview-form label {display: block; margin: 16px 0; font-weight: bold;}
+.RpReview-form label .FormControl {margin-top: 6px; font-weight: normal;}
+.RpReview-form textarea {min-height: 120px; resize: vertical;}
+@media (max-width: 580px) {.RpReview-parts {grid-template-columns: 1fr;}}
+/* История не занимает место в анкете; длинный список прокручивается в небольшом окне. */
+.RpHistoryModal .Modal-dialog { width: 520px; max-width: calc(100% - 32px); }
+.RpHistoryModal .Modal-body { max-height: 480px; overflow-y: auto; }
+.RpReviewHistoryModal.Modal { width: 480px; max-width: calc(100% - 32px); }
+.RpHistory ul { list-style: none; margin: 0; padding: 0; }
+.RpHistory li { padding: 12px 0; border-bottom: 1px solid var(--control-bg); }
+.RpHistory li:first-child { padding-top: 0; }
+.RpHistory li:last-child { border-bottom: 0; padding-bottom: 0; }
+.RpHistory strong { font-size: 13px; }
+.RpHistory small { display: block; margin-top: 3px; font-size: 11px; color: var(--muted-color); }
+.RpHistory p { margin: 6px 0 0; font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* Два ограничения вместо min(): совместимо со сборщиком Less в Flarum. */
+@media (max-height: 800px) { .RpHistoryModal .Modal-body { max-height: 60vh; } }
+
+/* История персонажа: компактный список. Заголовок остаётся снаружи прокручиваемой части.
+ * Отдельные классы сохраняют прежнее оформление журнала проверки анкеты. */
+.RpCharacterHistoryModal.Modal { width: 480px; max-width: calc(100% - 32px); }
+.RpCharacterHistoryModal .Modal-header { padding: 22px 24px; }
+.RpCharacterHistoryModal .Modal-header h3 { font-size: 20px; font-weight: 700; }
+.RpCharacterHistoryModal .Modal-header h3 > .icon { margin-right: 6px; color: var(--muted-color); font-size: 17px; }
+.RpCharacterHistoryModal .Modal-body { padding: 18px 24px 22px; scrollbar-gutter: stable; }
+.RpCharacterHistory-day + .RpCharacterHistory-day { margin-top: 24px; }
+.RpCharacterHistory-day h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 0; font-size: 12px; font-weight: 700; color: var(--muted-color); }
+.RpCharacterHistory-day h3 span { margin-left: auto; font-weight: 400; }
+.RpCharacterHistory ul { list-style: none; margin: 0; padding: 0; }
+.RpCharacterHistory li { display: flex; align-items: flex-start; gap: 10px; padding: 14px 0; border-bottom: 1px solid color-mix(in srgb, var(--text-color) 10%, transparent); }
+.RpCharacterHistory li:last-child { border-bottom: 0; padding-bottom: 0; }
+.RpCharacterHistory-icon { flex: 0 0 20px; text-align: center; color: var(--muted-color); line-height: 21px; }
+.RpCharacterHistory-content { flex: 1; min-width: 0; }
+.RpCharacterHistory-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.RpCharacterHistory-heading strong { font-size: 14px; line-height: 1.45; font-weight: 700; color: var(--text-color); overflow-wrap: anywhere; }
+.RpCharacterHistory-heading time { flex-shrink: 0; font-size: 11px; color: var(--muted-color); font-variant-numeric: tabular-nums; }
+.RpCharacterHistory-caption, .RpCharacterHistory-resources, .RpCharacterHistory-comment { margin: 4px 0 0; font-size: 12px; line-height: 1.45; color: var(--muted-color); }
+.RpCharacterHistory-resources { display: flex; flex-wrap: wrap; gap: 5px 14px; }
+.RpCharacterHistory-resource { display: inline-flex; align-items: center; gap: 5px; font-variant-numeric: tabular-nums; }
+.RpCharacterHistory-resource.is-experience > .icon, .RpCharacterHistory-resource.is-experience.is-positive { color: #a35bff; }
+.RpCharacterHistory-resource.is-gold > .icon, .RpCharacterHistory-resource.is-gold.is-positive { color: #dda51e; }
+.RpCharacterHistory-resource.is-positive { font-weight: 700; }
+.RpCharacterHistory-comment { margin-top: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.RpCharacterHistory-empty { margin: 0; color: var(--muted-color); }
+@media (max-width: 480px) {
+  .RpCharacterHistoryModal .Modal-header { padding: 20px 16px; }
+  .RpCharacterHistoryModal .Modal-header h3 { font-size: 18px; }
+  .RpCharacterHistoryModal .Modal-body { padding: 16px; }
+}

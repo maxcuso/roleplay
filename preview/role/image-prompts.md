@@ -1,0 +1,12 @@
+# Промпты иллюстраций макета /role
+
+Режим: встроенный ImageGen. Обе иллюстрации созданы заново, без изображений-референсов. Это оформление макета, не утверждённая карта мира или новые NPC.
+
+## assets/bridge-hero.png
+
+Use case: stylized-concept. Asset type: panoramic hero artwork for a Russian fantasy roleplay website. Create a richly atmospheric painterly fantasy landscape: an inhabited broad stone bridge spanning a deep hundred-meter ravine, a modest guildhall with warm window lights built at the center of the bridge and small medieval settlements at both ends, wooded hills, rugged forest cliffs, mist in the ravine. This is an adventurers' town established around a bridge, grounded low fantasy rather than a huge capital. Composition: wide landscape 1536x1024, guildhall and bridge on the right two-thirds, left third dark forest and mist with low detail to allow large HTML headline overlay. Late dusk, deep teal woodland, slate stone, muted amber lanterns, soft pale mist, realistic architectural proportions, editorial painted concept art with tactile brushwork, compelling scene depth. No text, no logos, no UI, no border, no watermark. Do not create character portraits or sheet of images.
+
+## assets/character-portraits.png
+
+Use case: stylized-concept. Asset type: four-column character portrait contact sheet for a fantasy roleplay website mockup. Create a wide 1536x1024 painterly illustration divided into four equal seamless vertical panels, each a distinct head and shoulders portrait centered strictly within its own quarter, same scale, eyes at the same height, no face or body crossing panel edges. First quarter: a weathered human male scout in forest green travel cloak, short dark hair, scar, woodland mist. Second: an elven female researcher with silver hair tied back, pointed ears, indigo embroidered robe, subtle pale magical light and library darkness. Third: a stout dwarven male craftsman with copper beard, leather work apron, warm amber forge atmosphere. Fourth: a human female adventurer with dark curly hair, simple slate armor and travel cloak, dusk landscape. Grounded fantasy, believable expressive adults, editorial painted concept art, rich textured brushwork, dark atmospheric backgrounds, refined cinematic lighting, not photorealistic, not cartoon, no text or symbols, no logos, no frames or gutters or dividing lines. These are fictional demo portraits, not established lore NPCs.
+

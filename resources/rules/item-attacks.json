@@ -1,0 +1,5 @@
+[
+  {"mode": "melee", "flag": "is_melee_weapon", "proficiency": "melee_proficiency_id", "label": "Ближняя атака (Физиология)"},
+  {"mode": "ranged", "flag": "is_ranged_weapon", "proficiency": "ranged_proficiency_id", "label": "Атака от Ловкости"},
+  {"mode": "magic", "flag": "is_magic_weapon", "proficiency": "magic_proficiency_id", "label": "Магическая атака"}
+]

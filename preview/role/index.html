@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Ролевая · QuestPost</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%2345698d'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-family='Arial' font-size='28' font-weight='700' fill='white'%3EQ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/assets/fontawesome.css">
+  <link rel="stylesheet" href="/role/style.css">
+</head>
+<body>
+  <header class="RoleSiteHeader">
+    <div class="RoleSiteHeader-inner">
+      <a class="RoleBrand" href="https://questpost.ru/" aria-label="QuestPost — главная"><span class="RoleBrand-mark">Q<span></span></span><strong>QuestPost</strong></a>
+      <nav class="RoleSiteNav" aria-label="Навигация форума">
+        <a href="https://questpost.ru/">Главная</a>
+        <a href="https://questpost.ru/p/3-quest">Гостевая</a>
+        <a href="https://questpost.ru/p/2-team">Команда</a>
+      </nav>
+      <div class="RoleSiteActions">
+        <button class="RoleIconButton" id="theme-toggle" type="button" aria-label="Включить тёмную тему" title="Сменить тему"><i data-icon="landing.themeDark" aria-hidden="true"></i></button>
+        <a class="RoleForumLink" href="https://questpost.ru/t/role">На форум <i data-icon="landing.arrow" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="RoleHero" aria-labelledby="hero-title">
+      <div class="RoleContainer RoleHero-inner">
+        <div class="RoleHero-copy">
+          <span class="RoleHero-genre">Фэнтези</span>
+          <h1 id="hero-title">Текстовая ролевая</h1>
+          <p>Создай героя. Найди спутников. Отправляйся в приключения, которые меняют тебя и мир вокруг.</p>
+          <div class="RoleHero-actions">
+            <button class="RoleButton RoleButton--gold" id="start-character" type="button"><i data-icon="permissions.create" aria-hidden="true"></i> Создать персонажа</button>
+            <a class="RoleButton RoleButton--ghost" href="#guides">Познакомиться с миром <i data-icon="landing.arrow" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="RoleContainer RoleGuides" id="guides" aria-label="Об игре">
+      <div class="RoleGuideGrid" id="guide-cards" role="tablist" aria-label="Разделы ролевой"></div>
+      <div id="guide-panels"></div>
+    </section>
+
+    <section class="RoleContainer RoleCharacters" id="characters" aria-labelledby="characters-title">
+      <div class="RoleSectionHeading"><div><span class="RoleSectionKicker">У каждой истории есть лицо</span><h2 id="characters-title">Герои этого мира</h2></div><div class="RoleSliderActions"><span class="RoleSliderCounter" id="character-counter" aria-live="polite"></span><button class="RoleIconButton" id="previous-characters" type="button" aria-label="Предыдущие персонажи"><i data-icon="actions.back" aria-hidden="true"></i></button><button class="RoleIconButton" id="next-characters" type="button" aria-label="Следующие персонажи"><i data-icon="landing.arrow" aria-hidden="true"></i></button></div></div>
+      <div class="RoleCharacterRail" id="character-rail" tabindex="0" role="region" aria-roledescription="слайдер" aria-label="Примеры анкет персонажей"></div>
+      <div class="RoleCharacters-footer"><p>За цифрами и навыками — характер, выбор и своя история.</p><span class="RoleDemoLabel"><i data-icon="fields.image" aria-hidden="true"></i> Примеры для макета</span></div>
+    </section>
+  </main>
+  <footer class="RolePreviewFooter"><span>QuestPost · Ролевая</span><span>Макет /role · Первые три блока</span><a href="/">Предпросмотр мастера <i data-icon="landing.arrow" aria-hidden="true"></i></a></footer>
+
+  <dialog class="RoleDialog" id="role-dialog" aria-labelledby="dialog-title">
+    <button class="RoleIconButton RoleDialog-close" id="close-dialog" aria-label="Закрыть окно" type="button"><i data-icon="actions.close" aria-hidden="true"></i></button>
+    <span class="RoleSectionKicker" id="dialog-kicker"></span><h2 id="dialog-title"></h2><p id="dialog-description"></p><div class="RoleDialog-actions" id="dialog-actions"></div>
+  </dialog>
+  <script type="module" src="/role/page.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{
+  "name": "maxcuso/flarum-roleplay",
+  "description": "Roleplaying characters and character applications for Flarum",
+  "homepage": "https://github.com/maxcuso/roleplay",
+  "type": "flarum-extension",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "maxcuso",
+      "email": "charomax11@gmail.com"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/maxcuso/roleplay"
+  },
+  "require": {
+    "php": "^8.3",
+    "flarum/core": "^2.0.0-rc.8",
+    "enshrined/svg-sanitize": "^0.22",
+    "flarum/tags": "^2.0.0-rc.8",
+    "flarum/lock": "^2.0.0-rc.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Maxcuso\\Roleplay\\": "src/"
+    }
+  },
+  "archive": {
+    "exclude": [
+      "/resources/presentation/icons.local.json",
+      "/tests/.runtime/**",
+      "/js/node_modules/**",
+      "/vendor/**"
+    ]
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Roleplay",
+      "category": "feature",
+      "icon": {
+        "name": "fas fa-scroll",
+        "backgroundColor": "#5a189a",
+        "color": "#ffffff"
+      }
+    }
+  }
+}

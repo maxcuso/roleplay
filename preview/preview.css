@@ -1,0 +1,9 @@
+.RpPreview-shell {margin:0;background:#f1f3f6;color:#334155;font:14px/1.5 Arial,sans-serif;}
+.RpPreview-toolbar {position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #d8e0ea;padding:14px 20px;}
+.RpPreview-toolbar strong {font-size:18px;margin-right:20px;}
+.RpPreview-toolbar p {margin:6px 0;color:#64748b;}
+.RpPreview-controls,.RpPreview-steps {display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;}
+.RpPreview-toolbar button,.RpPreview-toolbar select {border:1px solid #d8e0ea;border-radius:6px;padding:7px 10px;background:#fff;color:#45698d;cursor:pointer;}
+.RpPreview-toolbar button.is-selected {background:#45698d;color:#fff;border-color:#45698d;}
+.RpPreview-frame {padding:24px 0;overflow:auto;}
+.RpPreview-frame iframe {display:block;width:708px;max-width:100%;min-height:790px;margin:0 auto;background:#fff;border:1px solid #d8e0ea;box-shadow:0 4px 20px #3341550c;}

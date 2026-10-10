@@ -1,0 +1,7 @@
+/* Буква сохраняется перед русским названием и не меняет направление окружающей строки. */
+.RpRank { display: inline-flex; align-items: baseline; gap: 6px; direction: ltr; vertical-align: baseline; }
+.RpRank-letter { font-size: 1.15em; font-weight: 700; line-height: 1; }
+.RpRank-preview { padding: 12px 14px; margin-bottom: 12px; border-radius: 10px; background: var(--control-bg); font-size: 18px; font-weight: 700; }
+.RpManagement-rank { max-width: 360px; margin: 16px auto; }
+.RpManagement-rankPreview { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 12px; border-radius: 10px; background: var(--body-bg); }
+.RpManagement-rankPreview > .icon { color: var(--muted-color); font-size: 12px; }

@@ -1,0 +1,815 @@
+{
+  "catalog": {
+    "revision": 1,
+    "rules_hash": "visual-preview",
+    "definitions": {
+      "attributes": [
+        {
+          "id": 1,
+          "name": "Физиология",
+          "enabled": true,
+          "slug": "physiology",
+          "icon": "fas fa-fist-raised"
+        },
+        {
+          "id": 2,
+          "name": "Ловкость",
+          "enabled": true,
+          "slug": "agility",
+          "icon": "fas fa-user-ninja"
+        },
+        {
+          "id": 3,
+          "name": "Магия",
+          "enabled": true,
+          "slug": "magic",
+          "icon": "fas fa-magic"
+        },
+        {
+          "id": 4,
+          "name": "Харизма",
+          "enabled": true,
+          "slug": "charisma",
+          "icon": "fas fa-guitar"
+        }
+      ],
+      "races": [
+        {
+          "id": 1,
+          "name": "Человек",
+          "enabled": true,
+          "min_age": 12,
+          "max_age": 90,
+          "rules": {
+            "fixed_bonuses": {},
+            "choice_attributes": [
+              "physiology",
+              "agility",
+              "magic",
+              "charisma"
+            ],
+            "attribute_bonus": 1,
+            "attribute_count": 3,
+            "fixed_perk_ids": [
+              1
+            ],
+            "perk_choice_ids": [
+              3,
+              4,
+              5,
+              6
+            ],
+            "perk_choice_count": 2,
+            "proficiency_choice_count": 0
+          }
+        },
+        {
+          "id": 2,
+          "name": "Эльф",
+          "enabled": true,
+          "min_age": 20,
+          "max_age": 300,
+          "rules": {
+            "fixed_bonuses": {
+              "agility": 1,
+              "magic": 1
+            },
+            "choice_attributes": [],
+            "attribute_count": 0,
+            "fixed_perk_ids": [
+              1,
+              2
+            ],
+            "perk_choice_ids": [
+              3,
+              4,
+              5,
+              6
+            ],
+            "perk_choice_count": 2,
+            "spell_choice_count": 1,
+            "spell_choice_ids": [
+              1,
+              2
+            ],
+            "proficiency_choice_count": 0
+          }
+        },
+        {
+          "id": 3,
+          "name": "Полуэльф",
+          "enabled": true,
+          "min_age": 16,
+          "max_age": 160,
+          "rules": {
+            "fixed_bonuses": {
+              "charisma": 1
+            },
+            "choice_attributes": [],
+            "attribute_count": 0,
+            "fixed_perk_ids": [
+              2
+            ],
+            "perk_choice_ids": [
+              3,
+              4,
+              5,
+              6
+            ],
+            "perk_choice_count": 1,
+            "proficiency_choice_mode": "all",
+            "proficiency_choice_count": 1
+          }
+        }
+      ],
+      "skills": [
+        {
+          "id": 1,
+          "name": "Рукопашный бой",
+          "enabled": true,
+          "attribute_id": 1
+        },
+        {
+          "id": 2,
+          "name": "Внимательность",
+          "enabled": true,
+          "attribute_id": 1
+        },
+        {
+          "id": 3,
+          "name": "Кузнечное дело",
+          "enabled": true,
+          "attribute_id": 2
+        },
+        {
+          "id": 4,
+          "name": "Ловкость рук",
+          "enabled": true,
+          "attribute_id": 2
+        },
+        {
+          "id": 5,
+          "name": "Скрытность",
+          "enabled": true,
+          "attribute_id": 2
+        },
+        {
+          "id": 6,
+          "name": "Акробатика",
+          "enabled": true,
+          "attribute_id": 2
+        },
+        {
+          "id": 7,
+          "name": "Алхимия",
+          "enabled": true,
+          "attribute_id": 3
+        },
+        {
+          "id": 8,
+          "name": "Знахарство",
+          "enabled": true,
+          "attribute_id": 3
+        },
+        {
+          "id": 9,
+          "name": "Дипломатия",
+          "enabled": true,
+          "attribute_id": 4
+        },
+        {
+          "id": 10,
+          "name": "Обман",
+          "enabled": true,
+          "attribute_id": 4
+        },
+        {
+          "id": 11,
+          "name": "Проницательность",
+          "enabled": true,
+          "attribute_id": 4
+        }
+      ],
+      "proficiencies": [
+        {
+          "id": 1,
+          "name": "Одноручное оружие",
+          "enabled": true,
+          "slug": "one-handed",
+          "attribute_id": 1
+        },
+        {
+          "id": 2,
+          "name": "Двуручное оружие",
+          "enabled": true,
+          "slug": "two-handed",
+          "attribute_id": 1
+        },
+        {
+          "id": 3,
+          "name": "Щиты",
+          "enabled": true,
+          "slug": "shields",
+          "attribute_id": 1
+        },
+        {
+          "id": 4,
+          "name": "Метательное оружие",
+          "enabled": true,
+          "slug": "throwing",
+          "attribute_id": 2
+        },
+        {
+          "id": 5,
+          "name": "Дальнобойное оружие",
+          "enabled": true,
+          "slug": "ranged",
+          "attribute_id": 2
+        },
+        {
+          "id": 6,
+          "name": "Магическое оружие",
+          "enabled": true,
+          "slug": "magic-weapon",
+          "attribute_id": 3
+        }
+      ],
+      "perks": [
+        {
+          "id": 1,
+          "name": "Родство с природой",
+          "enabled": true,
+          "description": "Ваше присутствие успокаивает диких животных. Вы можете распознавать простые признаки болезни растений.",
+          "image": "/assets/nature.svg",
+          "rarity": "uncommon",
+          "effects": []
+        },
+        {
+          "id": 2,
+          "name": "Наследие фей",
+          "enabled": true,
+          "description": "Вы замечаете следы волшебства и чувствуете настроение окружающего леса.",
+          "image": "/assets/nature.svg",
+          "rarity": "uncommon",
+          "effects": []
+        },
+        {
+          "id": 3,
+          "name": "Острый взгляд",
+          "enabled": true,
+          "description": "Вы замечаете небольшие детали, которые другие могли пропустить.",
+          "image": "/assets/nature.svg",
+          "rarity": "uncommon",
+          "effects": []
+        },
+        {
+          "id": 4,
+          "name": "Древняя магия",
+          "enabled": true,
+          "description": "Вы знакомы с древними обрядами и узнаёте символы забытых традиций.",
+          "image": "/assets/nature.svg",
+          "rarity": "uncommon",
+          "effects": []
+        },
+        {
+          "id": 5,
+          "name": "Упрямство выжившего",
+          "enabled": true,
+          "description": "После тяжёлых испытаний вы находите силы продолжить путь.",
+          "image": "/assets/nature.svg",
+          "rarity": "uncommon",
+          "effects": []
+        },
+        {
+          "id": 6,
+          "name": "Хранитель знаний",
+          "enabled": true,
+          "description": "Вы помните истории, обычаи и легенды своего народа.",
+          "image": "/assets/nature.svg",
+          "rarity": "uncommon",
+          "effects": []
+        }
+      ],
+      "paths": [
+        {
+          "id": 1,
+          "name": "Путь Мороза",
+          "enabled": true,
+          "icon": "fas fa-snowflake",
+          "color": "#84bdd1"
+        },
+        {
+          "id": 2,
+          "name": "Путь Пламени",
+          "enabled": true,
+          "icon": "fas fa-fire",
+          "color": "#bc3d38"
+        }
+      ],
+      "spells": [
+        {
+          "id": 1,
+          "name": "Заморозки",
+          "enabled": true,
+          "magic_path_id": 1,
+          "description": "Вы создаёте один из следующих магических эффектов в пределах дистанции:\n• Сформировать в ладони маленький хрупкий ледяной кристалл произвольной формы — он не может являться оружием.",
+          "level": 1,
+          "distance_mode": "self",
+          "distance_value": null,
+          "radius_value": 0,
+          "duration_value": 2,
+          "duration_unit": "turn",
+          "cast_mode": "instant",
+          "cast_value": 0,
+          "cast_unit": "turn",
+          "cooldown_value": 2,
+          "cooldown_unit": "turn",
+          "mana_cost": 0,
+          "stamina_cost": 0,
+          "other_cost": "",
+          "damage_units": 0
+        },
+        {
+          "id": 2,
+          "name": "Ледяной щит",
+          "enabled": true,
+          "magic_path_id": 1,
+          "description": "Тонкий слой льда защищает цель. Лёд постепенно тает и исчезает после окончания действия заклинания.",
+          "level": 1,
+          "distance_mode": "distance",
+          "distance_value": 10,
+          "radius_value": 0,
+          "duration_value": 2,
+          "duration_unit": "turn",
+          "cast_mode": "instant",
+          "cast_value": 0,
+          "cast_unit": "turn",
+          "cooldown_value": 2,
+          "cooldown_unit": "turn",
+          "mana_cost": 2,
+          "stamina_cost": 0,
+          "other_cost": "",
+          "damage_units": 0
+        },
+        {
+          "id": 3,
+          "name": "Огненные ладони",
+          "enabled": true,
+          "magic_path_id": 2,
+          "description": "Ваши ладони охватывает мягкое пламя. Вы можете осветить тёмный проход или зажечь небольшой костёр.",
+          "level": 1,
+          "distance_mode": "self",
+          "distance_value": null,
+          "radius_value": 0,
+          "duration_value": 2,
+          "duration_unit": "turn",
+          "cast_mode": "instant",
+          "cast_value": 0,
+          "cast_unit": "turn",
+          "cooldown_value": 2,
+          "cooldown_unit": "turn",
+          "mana_cost": 0,
+          "stamina_cost": 0,
+          "other_cost": "",
+          "damage_units": 0
+        },
+        {
+          "id": 4,
+          "name": "Искра",
+          "enabled": true,
+          "magic_path_id": 2,
+          "description": "Создайте короткую вспышку света в выбранной точке.",
+          "level": 1,
+          "distance_mode": "distance",
+          "distance_value": 10,
+          "radius_value": 2,
+          "duration_value": 2,
+          "duration_unit": "turn",
+          "cast_mode": "instant",
+          "cast_value": 0,
+          "cast_unit": "turn",
+          "cooldown_value": 2,
+          "cooldown_unit": "turn",
+          "mana_cost": 2,
+          "stamina_cost": 0,
+          "other_cost": "",
+          "damage_units": 3
+        }
+      ],
+      "items": [
+        {
+          "weight": 1,
+          "base_price": 1,
+          "damage_units": 0,
+          "max_stack": 1,
+          "appearance": "Аккуратно изготовленная вещь со следами долгих путешествий.",
+          "id": 1,
+          "name": "Плащ тихой поступи",
+          "enabled": true,
+          "item_type_id": 2,
+          "rarity": "epic",
+          "is_magical": true,
+          "properties": [
+            {
+              "description": "Ткань поглощает звуки шагов. Пока капюшон поднят, вашу походку сложнее услышать.",
+              "cooldown_value": 2,
+              "cooldown_unit": "turn"
+            }
+          ]
+        },
+        {
+          "weight": 1,
+          "base_price": 1,
+          "damage_units": 3,
+          "max_stack": 1,
+          "appearance": "Аккуратно изготовленная вещь со следами долгих путешествий.",
+          "id": 2,
+          "name": "Меч новичка",
+          "enabled": true,
+          "item_type_id": 1,
+          "rarity": "common",
+          "properties": [
+            {
+              "description": "Простой одноручный меч для путешествий и тренировок.",
+              "cooldown_value": 0
+            }
+          ]
+        },
+        {
+          "weight": 1,
+          "base_price": 1,
+          "damage_units": 3,
+          "max_stack": 1,
+          "appearance": "Аккуратно изготовленная вещь со следами долгих путешествий.",
+          "id": 3,
+          "name": "Дорожный лук",
+          "enabled": true,
+          "item_type_id": 1,
+          "rarity": "uncommon",
+          "properties": [
+            {
+              "description": "Лёгкий лук из гибкого дерева. В комплекте колчан со стрелами.",
+              "cooldown_value": 0
+            }
+          ]
+        },
+        {
+          "weight": 1,
+          "base_price": 1,
+          "damage_units": 0,
+          "max_stack": 1,
+          "appearance": "Аккуратно изготовленная вещь со следами долгих путешествий.",
+          "id": 4,
+          "name": "Дорожная одежда",
+          "enabled": true,
+          "item_type_id": 2,
+          "rarity": "common",
+          "properties": []
+        }
+      ],
+      "item-types": [
+        {
+          "id": 1,
+          "name": "Оружие",
+          "enabled": true,
+          "icon": "fas fa-gavel",
+          "equipment_limit": 2
+        },
+        {
+          "id": 2,
+          "name": "Одежда",
+          "enabled": true,
+          "icon": "fas fa-tshirt",
+          "equipment_limit": 5
+        }
+      ],
+      "sources": [
+        {
+          "id": 1,
+          "name": "Раса",
+          "enabled": true,
+          "icon": "fas fa-dna",
+          "name_source": "race"
+        },
+        {
+          "id": 2,
+          "name": "Навык",
+          "enabled": true,
+          "icon": "fas fa-graduation-cap",
+          "name_source": "skill",
+          "icon_source": "skill"
+        }
+      ],
+      "effects": []
+    },
+    "configuration": {
+      "enabled": true,
+      "attribute_distribution": [
+        3,
+        2,
+        1,
+        1
+      ],
+      "perk_sources": {
+        "race": 1,
+        "skill": 2
+      },
+      "starting_gold": 10,
+      "starting_experience": 0,
+      "loadout": [
+        {
+          "key": "weapon",
+          "name": "Оружие",
+          "min": 1,
+          "max": 1,
+          "automatic": false,
+          "options": [
+            {
+              "key": "sword",
+              "name": "Меч новичка",
+              "items": [
+                {
+                  "item_id": 2,
+                  "quantity": 1
+                }
+              ]
+            },
+            {
+              "key": "bow",
+              "name": "Дорожный лук",
+              "items": [
+                {
+                  "item_id": 3,
+                  "quantity": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "extra",
+          "name": "Дополнительное снаряжение",
+          "min": 0,
+          "max": 1,
+          "automatic": false,
+          "options": [
+            {
+              "key": "cloak",
+              "name": "Плащ тихой поступи",
+              "items": [
+                {
+                  "item_id": 1,
+                  "quantity": 1
+                }
+              ]
+            },
+            {
+              "key": "clothes",
+              "name": "Дорожная одежда",
+              "items": [
+                {
+                  "item_id": 4,
+                  "quantity": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "draft": {
+    "id": 1,
+    "revision": 1,
+    "catalog_revision": 1,
+    "rules_hash": "visual-preview",
+    "step": "basics",
+    "payload": {
+      "first_name": "Лиана",
+      "last_name": "Волкова",
+      "age": 24,
+      "race_id": 2,
+      "base_attributes": {
+        "physiology": 2,
+        "agility": 1,
+        "magic": 3,
+        "charisma": 1
+      },
+      "racial_attributes": [],
+      "skills": [
+        2,
+        7,
+        10
+      ],
+      "proficiencies": [
+        1
+      ],
+      "racial_proficiency_ids": [],
+      "perk_ids": [
+        3
+      ],
+      "spell_ids": [
+        1
+      ],
+      "racial_spell_ids": [],
+      "loadout": {
+        "weapon": [
+          "sword"
+        ]
+      }
+    }
+  },
+  "existing_character_id": null,
+  "preview": {
+    "valid": true,
+    "errors": {},
+    "step_validity": {
+      "basics": true,
+      "attributes": true,
+      "training": true,
+      "perks": true,
+      "spells": true,
+      "loadout": true,
+      "review": true
+    },
+    "attributes": {},
+    "training_slots": [],
+    "racial_proficiency_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "perks": [],
+    "spells": [],
+    "skills": [],
+    "proficiencies": [],
+    "spell_choices": {},
+    "review": {
+      "snapshot": {
+        "character": {},
+        "attributes": {},
+        "skills": [],
+        "proficiencies": [],
+        "perks": [],
+        "spells": [],
+        "inventory": [],
+        "equipment": [],
+        "balances": {
+          "experience_active": 0,
+          "experience_total": 0,
+          "gold": 10
+        },
+        "choices": [],
+        "effect_definitions": {}
+      },
+      "calculation": {
+        "stats": {
+          "mana_max": {
+            "value": 16,
+            "parts": []
+          },
+          "stamina_max": {
+            "value": 12,
+            "parts": []
+          },
+          "carry_capacity": {
+            "value": 16,
+            "parts": []
+          },
+          "ignored_damage": {
+            "value": 0,
+            "parts": []
+          }
+        },
+        "base_damage": {
+          "melee_damage": {
+            "value": 1,
+            "parts": []
+          },
+          "ranged_damage": {
+            "value": 1,
+            "parts": []
+          },
+          "magic_damage": {
+            "value": 3,
+            "parts": []
+          }
+        },
+        "maximum_damage": {
+          "melee_damage": {
+            "damage": {
+              "value": 1,
+              "parts": []
+            }
+          },
+          "ranged_damage": null,
+          "magic_damage": null
+        },
+        "magic_circle": 1,
+        "inventory_weight": {
+          "value": 2,
+          "parts": []
+        },
+        "effective_attributes": {
+          "physiology": {
+            "id": 1,
+            "name": "Физиология",
+            "enabled": true,
+            "slug": "physiology",
+            "icon": "fas fa-fist-raised",
+            "level": 2,
+            "base_value": 2,
+            "racial_bonus": 0,
+            "sources": []
+          },
+          "agility": {
+            "id": 2,
+            "name": "Ловкость",
+            "enabled": true,
+            "slug": "agility",
+            "icon": "fas fa-user-ninja",
+            "level": 2,
+            "base_value": 1,
+            "racial_bonus": 1,
+            "sources": []
+          },
+          "magic": {
+            "id": 3,
+            "name": "Магия",
+            "enabled": true,
+            "slug": "magic",
+            "icon": "fas fa-magic",
+            "level": 4,
+            "base_value": 3,
+            "racial_bonus": 1,
+            "sources": []
+          },
+          "charisma": {
+            "id": 4,
+            "name": "Харизма",
+            "enabled": true,
+            "slug": "charisma",
+            "icon": "fas fa-guitar",
+            "level": 1,
+            "base_value": 1,
+            "racial_bonus": 0,
+            "sources": []
+          }
+        },
+        "acquired_attributes": {
+          "physiology": {
+            "id": 1,
+            "name": "Физиология",
+            "enabled": true,
+            "slug": "physiology",
+            "icon": "fas fa-fist-raised",
+            "level": 2,
+            "base_value": 2,
+            "racial_bonus": 0,
+            "sources": []
+          },
+          "agility": {
+            "id": 2,
+            "name": "Ловкость",
+            "enabled": true,
+            "slug": "agility",
+            "icon": "fas fa-user-ninja",
+            "level": 2,
+            "base_value": 1,
+            "racial_bonus": 1,
+            "sources": []
+          },
+          "magic": {
+            "id": 3,
+            "name": "Магия",
+            "enabled": true,
+            "slug": "magic",
+            "icon": "fas fa-magic",
+            "level": 4,
+            "base_value": 3,
+            "racial_bonus": 1,
+            "sources": []
+          },
+          "charisma": {
+            "id": 4,
+            "name": "Харизма",
+            "enabled": true,
+            "slug": "charisma",
+            "icon": "fas fa-guitar",
+            "level": 1,
+            "base_value": 1,
+            "racial_bonus": 0,
+            "sources": []
+          }
+        },
+        "effects": [],
+        "action_bonuses": [],
+        "skill_check_bonuses": {},
+        "check_effects": {}
+      }
+    }
+  }
+}

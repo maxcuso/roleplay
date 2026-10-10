@@ -1,0 +1,8 @@
+{
+  "common": {"name": "Обычный", "name_neuter": "Обычное", "color": "#b8b8b8"},
+  "uncommon": {"name": "Необычный", "name_neuter": "Необычное", "color": "#80b77e"},
+  "rare": {"name": "Редкий", "name_neuter": "Редкое", "color": "#45698d"},
+  "epic": {"name": "Эпический", "name_neuter": "Эпическое", "color": "#6b4e71"},
+  "legendary": {"name": "Легендарный", "name_neuter": "Легендарное", "color": "#ffcb7f"},
+  "special": {"name": "Особый", "name_neuter": "Особое", "color": "#a4243b"}
+}

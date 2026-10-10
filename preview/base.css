@@ -1,0 +1,30 @@
+/* Только окружение вместо оболочки форума. Правила RpWizard/RpCard здесь не дублируются. */
+:root {
+  --control-bg: #e6e5ee; --text-color: #3b3b3b; --muted-color: #8a8993;
+  --body-bg: #fff; --primary-color: #45698d;
+}
+@font-face {font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900;src:url("/assets/fonts/fa-solid-900.woff2") format("woff2");font-display:swap;}
+@font-face {font-family:"Font Awesome 7 Free";font-style:normal;font-weight:400;src:url("/assets/fonts/fa-regular-400.woff2") format("woff2");font-display:swap;}
+@font-face {font-family:"Font Awesome 7 Brands";font-style:normal;font-weight:400;src:url("/assets/fonts/fa-brands-400.woff2") format("woff2");font-display:swap;}
+
+* {box-sizing:border-box;}
+body {margin:0;background:var(--body-bg);color:var(--text-color);font:15px/1.5 Arial,sans-serif;}
+button,input,select,textarea {font:inherit;}
+button {cursor:pointer;}
+button:disabled {cursor:default;}
+.container {margin-left:auto;margin-right:auto;}
+.FormControl {display:block;padding:10px 14px;color:var(--text-color);background:var(--control-bg);border:0;border-radius:5px;}
+.Button {display:inline-block;border:0;border-radius:5px;padding:12px 22px;color:#45698d;background:var(--control-bg);text-decoration:none;font-weight:500;}
+.Button--primary {color:white;background:#45698d;font-weight:bold;}
+.Button:disabled {opacity:.55;}
+.icon {display:inline-block;}
+.fas,.far,.fa,.fab {font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900;}
+.far {font-weight:400;}
+.fab {font-family:"Font Awesome 7 Brands";}
+.fas:before,.far:before,.fa:before,.fab:before {content:var(--fa);}
+/* Только базовая оболочка Flarum; размеры и прокрутка мастера — в forum.css. */
+.Modal-content {position:relative;background:var(--body-bg);border-radius:10px;overflow:hidden;box-shadow:0 7px 24px #0002;}
+.Modal-header {text-align:center;}
+.Modal-header h3 {margin:0;}
+.Modal-close {position:absolute;right:10px;top:10px;z-index:2;}
+.Modal-close .Button {padding:8px;background:transparent;}

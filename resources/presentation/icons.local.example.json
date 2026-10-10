@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "replacements": {
+    "fas fa-swords": "fas fa-fist-raised",
+    "fad fa-swords": "fas fa-fist-raised",
+    "fad fa-shirt": "fas fa-tshirt",
+    "fas fa-sparkles": "fas fa-star",
+    "fas fa-backpack": "fas fa-suitcase"
+  }
+}

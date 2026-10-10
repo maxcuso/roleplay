@@ -1,0 +1,163 @@
+/*
+ * Общая геометрия трёх карточек. Размеры задаются переменными, чтобы оформление
+ * мастера, профиля и предпросмотра редактора не расходилось.
+ * Высота основного блока ограничена: длинный текст прокручивается внутри.
+ */
+.RpCard {
+  --rp-card-main-height: 156px;
+  --rp-card-padding: 18px;
+  --rp-card-gap: 18px;
+  --rp-card-icon-size: 66px;
+  --rp-card-glyph-size: 55px;
+  --rp-card-title-size: 13px;
+  --rp-card-text-size: 12px;
+  --rp-card-meta-size: 11px;
+
+  --rp-card-footer-height: 36px;
+  --rp-card-footer-size: 11px;
+  --rp-card-stat-gap: 10px;
+  border-radius: 13px; overflow: hidden;
+  background: var(--body-bg); font-size: var(--rp-card-text-size);
+}
+.RpCard-icon { position: relative; display: grid; place-items: center; }
+.RpCard-icon > img { width: 70%; height: 70%; object-fit: contain; }
+.RpCard-icon > .icon { color: var(--rp-card-color); font-size: 42px; }
+.RpCard-heading { min-width: 0; }
+/* Жирное начертание названия не зависит от шрифта темы. На небольшом размере
+ * тонкий контур дополнительно отделяет заголовок от обычного текста описания.
+ */
+.RpCard .RpCard-heading > strong {
+  font-family: Arial, sans-serif; font-size: var(--rp-card-title-size);
+  line-height: 1.3; font-weight: 700; font-synthesis: weight;
+  -webkit-text-stroke: .18px currentColor; text-transform: uppercase;
+}
+
+/* Compact: цветная область с кругом, название, затем постоянная нижняя полоса. */
+.RpCard--compact .RpCard-iconArea { background: var(--rp-card-color); height: 100px; display: flex; justify-content: center; align-items: center; }
+.RpCard--compact .RpCard-icon { width: 74px; height: 74px; border-radius: 50%; background: var(--control-bg); }
+.RpCard--compact .RpCard-body { display: flex; align-items: center; padding: 10px 12px; min-height: 44px; box-sizing: border-box; }
+.RpCard-header { display: flex; align-items: baseline; gap: var(--rp-card-stat-gap); min-width: 0; width: 100%; flex-shrink: 0; }
+.RpCard-header .RpCard-heading { flex: 1; }
+.RpCard--compact .RpCard-footer { background: var(--control-bg); color: var(--muted-color); }
+
+/* Круг типа предмета использует основной фон темы в обоих представлениях:
+ * самый светлый цвет в светлой теме и самый тёмный — в тёмной. */
+.RpCard--item .RpCard-icon { background: var(--body-bg); border-radius: 50%; }
+.RpCard--expanded.RpCard--item .RpCard-icon > .icon { font-size: calc(var(--rp-card-icon-size) * .64); }
+
+/* Expanded: иконка слева, название и параметры на одной строке, описание под ними. */
+.RpCard--expanded { --rp-card-title-size: 15px; }
+.RpCard--expanded .RpCard-main {
+  display: flex; gap: var(--rp-card-gap); padding: var(--rp-card-padding);
+  height: var(--rp-card-main-height); box-sizing: border-box; background: var(--control-bg);
+}
+.RpCard--expanded .RpCard-iconArea { flex: 0 0 var(--rp-card-icon-size); padding-top: 3px; }
+.RpCard--expanded .RpCard-icon { width: var(--rp-card-icon-size); height: var(--rp-card-icon-size); }
+.RpCard--expanded .RpCard-icon > img { width: 100%; height: 100%; }
+.RpCard--expanded .RpCard-icon > .icon { font-size: var(--rp-card-glyph-size); }
+.RpCard--expanded .RpCard-body { flex: 1; min-width: 0; min-height: 0; position: relative; display: flex; flex-direction: column; }
+.RpCard--expanded .RpCard-heading { flex-shrink: 0; color: var(--muted-color); }
+.RpCard--expanded .RpCard-heading strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Путь окрашивает также название заклинания. Цвета остальных подписей берём у темы. */
+.RpCard--expanded.RpCard--spell .RpCard-heading { color: var(--rp-card-color); }
+.RpCard-meta {
+  display: flex; align-items: baseline; flex-shrink: 0;
+  gap: var(--rp-card-stat-gap); max-width: 65%; overflow-x: auto;
+  font-size: var(--rp-card-meta-size); line-height: 1.3; font-weight: 700; color: var(--muted-color);
+}
+.RpCard-meta > span { white-space: nowrap; flex-shrink: 0; font-weight: 700; }
+.RpCard-description {
+  flex: 1; min-height: calc(var(--rp-card-text-size) * 1.35 * 3); margin-top: 8px; line-height: 1.35;
+  overflow-y: auto; white-space: pre-wrap; user-select: text;
+  /* Arial не имеет отдельного начертания Medium: очень тонкий контур
+   * делает текст чуть плотнее обычного, без перехода к полужирному.
+   * Толщину можно менять здесь; названия и параметры этим правилом не затронуты.
+   */
+  font-weight: 500; -webkit-text-stroke: .12px currentColor; color: var(--muted-color);
+}
+.RpCard-property { margin-bottom: 8px; }
+.RpCard-property:last-child { margin-bottom: 0; }
+.RpCard-property small { display: block; text-align: right; font-weight: 700; margin-top: 3px; }
+/* Магический маркер одинаков в двух режимах: маленький круг справа снизу.
+ * Размер пропорционален основной иконке; круг слегка выходит за её край.
+ */
+.RpCard-magical {
+  --rp-magical-size: calc(var(--rp-card-icon-size) * .42);
+  position: absolute; right: -3px; bottom: -3px;
+  width: var(--rp-magical-size); height: var(--rp-magical-size);
+  display: grid; place-items: center; border-radius: 50%;
+  background: #e2e2e2; color: #000; font-size: calc(var(--rp-magical-size) * .65);
+  line-height: 1; pointer-events: none;
+}
+.RpCard--compact .RpCard-magical { --rp-magical-size: 30px; right: -4px; bottom: -2px; }
+/* Собственный четырёхлучевой sparkle не зависит от наличия Font Awesome Pro.
+ * Класс подключается через item.magical в icons.json и может быть заменён там.
+ * Маска — векторная: один и тот же силуэт чётко отображается во всех размерах.
+ */
+.rp-icon-sparkle::before {
+  content: ''; display: block; width: 1em; height: 1em; background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0C10.8 0 11.1 1 12.5 4.5C13.1 6 14 6.9 15.5 7.5C19 8.9 20 9.2 20 10C20 10.8 19 11.1 15.5 12.5C14 13.1 13.1 14 12.5 15.5C11.1 19 10.8 20 10 20C9.2 20 8.9 19 7.5 15.5C6.9 14 6 13.1 4.5 12.5C1 11.1 0 10.8 0 10C0 9.2 1 8.9 4.5 7.5C6 6.9 6.9 6 7.5 4.5C8.9 1 9.2 0 10 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.RpCard-quantity { flex-shrink: 0; font-weight: 700; line-height: 1.3; color: var(--muted-color); }
+
+/* Полоса не растягивается и не исчезает, даже если источник или урон отсутствует.
+ * Урон и время находятся слева, ресурсы — справа; порядок не зависит от числа полей.
+ */
+.RpCard-footer {
+  height: var(--rp-card-footer-height); box-sizing: border-box; flex-shrink: 0;
+  display: flex; align-items: center; padding: 0 calc(var(--rp-card-padding) * .75);
+  background: var(--rp-card-color); color: var(--rp-card-foreground, #151515);
+  font-size: var(--rp-card-footer-size); font-weight: 700; line-height: 1.1;
+}
+/* Подписи остаются целиком, при необходимости занимая две строки полоски.
+ * Небольшой шрифт и плотные отступы освобождают место для урона и ресурсов.
+ */
+.RpCard-footerLabel { text-transform: uppercase; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+.RpCard-footerContents, .RpCard-footerDetails, .RpCard-resources { display: flex; align-items: center; gap: calc(var(--rp-card-stat-gap) * .75); min-width: 0; }
+.RpCard-footerContents { width: 100%; height: 100%; }
+.RpCard-footerDetails { flex: 1; }
+.RpCard-footerDetails > span { flex-shrink: 0; white-space: nowrap; }
+.RpCard-footerDetails > .RpCard-footerLabel:empty { display: none; }
+.RpCard-resources { margin-left: auto; flex-shrink: 0; }
+.RpCard-resources > span { white-space: nowrap; }
+.RpCard--compact .RpCard-resources { margin-left: 0; }
+.RpMana, .RpResource--mana { color: #a35bff; }
+.RpStamina, .RpResource--stamina { color: #ff9900; }
+.RpGold, .RpResource--gold { color: #d3a335; }
+.RpCard--expanded .RpResource { color: inherit; }
+
+/* На узком экране редактора уменьшаем только иконку и отступы. */
+@media (max-width: 700px) {
+  .RpCard--expanded { --rp-card-padding: 12px; --rp-card-gap: 12px; --rp-card-icon-size: 40px; --rp-card-glyph-size: 35px; }
+}
+
+/* Две карточки в строке мастера/профиля. Единая высота оставляет место под
+ * верхнюю строку и три строки описания: 18 px отступов + 16.9 px заголовка
+ * + 5 px зазора + минимум 44.55 px текста. Остаток не обрезает нижнюю строку.
+ */
+:is(.RpWizard, .RpSheet) .RpCard--expanded {
+  --rp-card-main-height: 86px;
+  --rp-card-padding: 9px;
+  --rp-card-gap: 10px;
+  --rp-card-icon-size: 38px;
+  --rp-card-glyph-size: 34px;
+  --rp-card-title-size: 13px;
+  --rp-card-text-size: 11px;
+  --rp-card-meta-size: 10px;
+
+  --rp-card-footer-height: 24px;
+  --rp-card-footer-size: 9px;
+  --rp-card-stat-gap: 6px;
+}
+
+:is(.RpWizard, .RpSheet) .RpCard--expanded .RpCard-description { margin-top: 5px; }
+
+/* Несколько затрат или длинный текст «Другие затраты» доступны по горизонтали.
+ * overflow-x: auto включает также вертикальную прокрутку по умолчанию.
+ * Отключаем её явно; вся высота полоски оставляет место для букв и двух строк.
+ */
+:is(.RpWizard, .RpSheet) .RpCard-footerContents { overflow-x: auto; overflow-y: hidden; }
+/* Узкая горизонтальная прокрутка не перекрывает цифры в фиксированной полоске. */
+.RpCard-footerContents, .RpCard-meta { scrollbar-width: thin; }
+.RpCard-footerContents::-webkit-scrollbar, .RpCard-meta::-webkit-scrollbar { height: 3px; }
+.RpCard-footerContents::-webkit-scrollbar-thumb, .RpCard-meta::-webkit-scrollbar-thumb { background: currentColor; border-radius: 3px; }

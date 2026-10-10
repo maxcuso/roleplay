@@ -1,0 +1,102 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {loadClient} = require('./client-runtime.cjs');
+const clone = value => JSON.parse(JSON.stringify(value));
+const fixture = name => JSON.parse(fs.readFileSync(path.join(__dirname,'.runtime',name),'utf8'));
+const tick = () => new Promise(resolve => setImmediate(resolve));
+
+(async () => {
+  const {modules,m,app,expand}=loadClient('forum');
+  const get=name=>modules.get(name).default||modules.get(name);
+  const State=get('forum/profile/ProfileState'), Modal=get('forum/profile/CharacterManagementModal');
+  let view=fixture('management-view.json'), selectors=fixture('management-lookups.json');
+  selectors.lookups.ranks=[{id:1,level:1,letter:'א',name:'Алеф',enabled:true},{id:2,level:2,letter:'ב',name:'Бет',enabled:true}];
+  const commands=[], creations=[];
+  const state=new State({read:async()=>clone(view),manage:async(id,body)=>{commands.push(clone(body));return clone(view);}},()=>{});
+  await state.select(view.snapshot.character.id);
+  app.request=async req=>{
+    if(req.method==='POST'){
+      const kind=req.url.split('/').pop();
+      const row={id:9000+creations.length,name:req.body.fields.name,level:1,
+        magic_path_id:selectors.lookups.paths[0].id,item_type_id:selectors.lookups['item-types'][0].id};
+      creations.push(req);selectors.lookups[kind].push(row);
+      selectors.revision++;view.snapshot.catalog_revision=selectors.revision;
+      return {data:{id:row.id}};
+    }
+    if(req.url.includes('/management/catalogs/'))return {data:{revision:selectors.revision,rows:[],total:0,page:1,per_page:30,
+      lookups:{...selectors.lookups,effects:[],proficiencies:[]}}};
+    return {data:clone(selectors)};
+  };
+  const open=async(profile=state)=>{const modal=new Modal();modal.oninit(m(Modal,{profile,state:{modalManager:true}}));await tick();return modal;};
+  let modal=await open();
+  assert.equal(modal.category,'resources');
+  assert.equal(expand(modal.view()).filter(n=>n.tag==='input'&&n.attrs.type==='number').length,2);
+  modal.comment='За квест';modal.experience=2;modal.gold=3;
+  await modal.save();
+  assert.deepEqual(commands[0].data,{experience:2,gold:3});
+  assert.equal(commands[0].action,'reward');assert.ok(modal.hidden);
+  modal=await open();modal.comment='Списание';modal.removing=true;modal.experience=1;modal.gold=1;
+  await modal.save();assert.deepEqual(commands[1].data,{experience:-1,gold:-1});
+  modal=await open();modal.comment='Нельзя';modal.removing=true;modal.gold=Number.MAX_SAFE_INTEGER;
+  expand(modal.view());await modal.save();assert.equal(commands.length,2,'Overdraft never submits');
+  modal.chooseCategory('rank');const rank=expand(modal.view());
+  assert.ok(rank.some(n=>n.tag==='select'&&n.attrs['aria-label']==='Ранг'));
+  assert.ok(rank.some(n=>n.tag==='textarea'));
+  assert.ok(!JSON.stringify(rank).includes('В разработке'));
+  modal.comment='Повышение ранга';modal.targetId=2;
+  await modal.save();assert.equal(commands.at(-1).action,'set_rank');
+  assert.deepEqual(commands.at(-1).data,{rank_id:2});commands.length=2;
+  view.snapshot.character.rank_id=2;view.snapshot.character.rank=selectors.lookups.ranks[1];
+  await state.select(view.snapshot.character.id);
+  modal=await open();modal.chooseCategory('rank');assert.equal(modal.targetId,2);
+  modal.comment='Снять ранг';await modal.save();assert.equal(commands.length,2,'Unchanged rank is not submitted');
+  modal.targetId=0;await modal.save();assert.deepEqual(commands.at(-1).data,{rank_id:null});commands.length=2;
+  modal=await open();modal.chooseCategory('rank');modal.lookups.ranks=[selectors.lookups.ranks[0]];
+  assert.ok(expand(modal.view()).some(n=>n.tag==='option'&&n.attrs.disabled),'Disabled current rank remains in selector');
+  for(const kind of ['perk','spell','item']){
+    modal=await open();modal.category=kind;modal.comment='Причина сохранится';modal.gold=4;modal.experience=5;
+    modal.sourceId=selectors.lookups.sources.find(row=>row.name_source==='race').id;
+    modal.quantity=2;modal.search='Несуществующий поиск';
+    await modal.createEntity();
+    const child=app.lastModal;
+    assert.equal(child.stack,true,'Editor stacks above grant modal instead of replacing it');
+    assert.equal(child.attrs.api.imageEndpoint,'/roleplay/management/perk-image');
+    const editor=new child.ModalClass();editor.oninit(m(child.ModalClass,{...child.attrs,state:{}}));
+    expand(editor.view());
+    editor.editor.set('name','Новая сущность '+kind);
+    await editor.save();
+    assert.equal(modal.comment,'Причина сохранится');assert.equal(modal.gold,4);assert.equal(modal.experience,5);
+    assert.equal(modal.quantity,2);assert.equal(modal.targetId,9000+creations.length-1);assert.equal(modal.search,'');
+    assert.equal(state.view.snapshot.catalog_revision,selectors.revision,'Catalogue revision refreshed after creation');
+    assert.equal(commands.length,2,'Creating does not grant anything');
+    assert.ok(expand(modal.view()).some(n=>n.tag==='button'&&n.attrs['aria-pressed']==='true'));
+    modal.search='Новая сущность';
+    assert.equal(expand(modal.view()).filter(n=>n.tag==='button'&&n.attrs.className==='RpManagement-option').length,1);
+    modal.search='';await modal.save();
+    assert.equal(commands.at(-1).action,'grant_'+kind);
+    assert.equal(commands.at(-1).catalog_revision,selectors.revision);
+    // Следующее создание также не должно автоматически выполнить новую выдачу.
+    commands.length=2;
+  }
+  modal=await open();modal.category='item';modal.removing=true;
+  const owned=modal.owned();assert.ok(owned.length);
+  modal.targetId=owned[0].id;modal.quantity=Number(owned[0].quantity)+1;modal.comment='Изъятие';
+  await modal.save();assert.equal(commands.length,2,'Stack quantity checked before submit');
+  const late=await open();late.category='perk';late.disposed=true;await late.createEntity();
+  assert.equal(creations.length,3,'Disposed window cannot create entities');
+  // Реальный отказ проходит через ProfileState: окно показывает причину, а не скрывает её за «недоступна».
+  const message='У персонажа уже установлен этот ранг.';
+  const conflict=new State({read:async()=>clone(view),manage:async()=>{throw {status:409,response:{errors:[{detail:message}]}};}},()=>{});
+  await conflict.select(view.snapshot.character.id);
+  modal=await open(conflict);modal.chooseCategory('rank');modal.targetId=1;modal.comment='Причина назначения';
+  await modal.save();
+  assert.equal(conflict.view.permissions.can_manage,false,'Conflict blocks further commands until refresh');
+  assert.ok(JSON.stringify(expand(modal.view())).includes(message),'Server reason stays visible in grant window');
+  assert.ok(expand(modal.view()).some(n=>n.tag==='button'&&JSON.stringify(n.children).includes('Обновить анкету')));
+  await modal.refreshProfile();
+  assert.equal(conflict.view.permissions.can_manage,true);
+  assert.equal(conflict.actionError,'');assert.equal(modal.targetId,1);assert.equal(modal.comment,'Причина назначения');
+  assert.ok(expand(modal.view()).some(n=>n.tag==='select'&&n.attrs['aria-label']==='Ранг'),'Refresh restores the editor');
+  console.log('Management UI: combined rewards, removals, rank, stacked shared editors, preserved draft, refreshed versions and explicit grant passed.');
+})().catch(e=>{console.error(e);process.exit(1);});

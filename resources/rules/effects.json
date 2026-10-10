@@ -1,0 +1,139 @@
+{
+  "mechanics": {
+    "text": {
+      "label": "Способность / ограничение (текст)",
+      "target": null,
+      "numeric": false,
+      "operations": [
+        "add"
+      ]
+    },
+    "attribute": {
+      "label": "Значение характеристики",
+      "target": "attribute",
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "stat": {
+      "label": "Параметр персонажа / урон",
+      "target": "stat",
+      "numeric": true,
+      "operations": [
+        "add",
+        "percent",
+        "base_percent",
+        "tiers"
+      ]
+    },
+    "attribute_check": {
+      "label": "Бонус к проверкам характеристики",
+      "target": "attribute",
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "all_checks": {
+      "label": "Бонус ко всем проверкам характеристик и навыков",
+      "target": null,
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "skill_check": {
+      "label": "Бонус к проверкам навыка",
+      "target": "skill",
+      "numeric": true,
+      "operations": [
+        "add",
+        "base_percent"
+      ]
+    },
+    "shop_discount": {
+      "label": "Скидка в магазине, %",
+      "target": null,
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "extra_dodges": {
+      "label": "Дополнительные уклонения",
+      "target": null,
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "mana_recovery": {
+      "label": "Восстановление маны",
+      "target": null,
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "stamina_recovery": {
+      "label": "Восстановление выносливости",
+      "target": null,
+      "numeric": true,
+      "operations": [
+        "add"
+      ]
+    },
+    "incoming_damage": {
+      "label": "Снижение входящего урона",
+      "target": null,
+      "numeric": true,
+      "operations": [
+        "add",
+        "percent",
+        "tiers"
+      ],
+      "conditions": [
+        "manual"
+      ]
+    }
+  },
+  "stats": {
+    "mana_max": "Запас маны",
+    "stamina_max": "Запас выносливости",
+    "carry_capacity": "Грузоподъёмность, кг",
+    "melee_damage": "Урон в ближнем бою",
+    "ranged_damage": "Урон в дальнем бою / метательным оружием",
+    "magic_damage": "Магический урон",
+    "all_attacks": "Все виды атак",
+    "ignored_damage": "Игнорируемый урон"
+  },
+  "operations": {
+    "add": "Прибавить величину",
+    "percent": "Изменить на процент",
+    "tiers": "Изменить на ступень урона (×3)",
+    "base_percent": "Прибавить процент от базы"
+  },
+  "conditions": {
+    "always": "Всегда",
+    "unarmed": "Безоружная атака",
+    "manual": "Другое условие (по описанию)"
+  },
+  "scopes": {
+    "all": "Общий эффект",
+    "item_attack": "Только атака этим предметом"
+  },
+  "damage_stats": [
+    "melee_damage",
+    "ranged_damage",
+    "magic_damage",
+    "all_attacks",
+    "ignored_damage"
+  ],
+  "attack_stats": [
+    "melee_damage",
+    "ranged_damage",
+    "magic_damage",
+    "all_attacks"
+  ]
+}

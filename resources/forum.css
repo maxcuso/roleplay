@@ -1,0 +1,306 @@
+/* Поверхности наследуем у форума, синие акценты и зелёный выбор — из согласованного макета. */
+/*
+ * Начертания мастера не зависят от глобальных заголовков и кнопок темы.
+ * Шрифт можно заменить здесь; обычный текст использует 400, акценты — 700.
+ * Цвета по-прежнему берутся из темы форума.
+ */
+.RpWizard {
+  --rp-wizard-font: Arial, sans-serif;
+  max-width: 708px; padding: 32px 24px 48px;
+  font-family: var(--rp-wizard-font); font-size: 16px; font-weight: 400; line-height: 1.3;
+}
+.RpWizard h1 { text-align: center; font-size: 27px; line-height: 1.2; font-weight: 400; margin: 0 0 28px; }
+.RpWizard strong { font-weight: 700; }
+.RpWizard input, .RpWizard select, .RpWizard textarea, .RpWizard .Button { font-family: var(--rp-wizard-font); }
+.RpWizard-progress { display: flex; justify-content: center; margin-bottom: 32px; }
+/*
+ * Полоска перед значком относится к этому шагу. После значка оставляем
+ * увеличенный зазор; округляем только два внешних конца всей шкалы.
+ * Длину линий и правый зазор можно менять независимо от размера иконок.
+ */
+.RpWizard-progress { --rp-progress-line: 13px; --rp-progress-after-icon: 6px; }
+.RpWizard-progress button {
+  display: flex; align-items: center; flex-shrink: 0;
+  height: 26px; padding: 0; background: transparent; border: 0;
+  color: var(--muted-color); font-size: 20px; line-height: 1; cursor: pointer;
+}
+.RpWizard-progressLine { flex: 0 0 var(--rp-progress-line); height: 4px; margin-right: 3px; background: currentColor; }
+.RpWizard-progress button > .icon { width: 22px; margin-right: var(--rp-progress-after-icon); text-align: center; }
+.RpWizard-progress button:first-child .RpWizard-progressLine { border-radius: 999px 0 0 999px; }
+.RpWizard-progress button:last-child::after {
+  content: ''; width: var(--rp-progress-line); height: 4px;
+  background: currentColor; border-radius: 0 999px 999px 0;
+}
+.RpWizard-progress .is-complete { color: #45698d; }
+.RpWizard-progress .is-upcoming { opacity: .35; }
+.RpWizard-progress button:disabled { cursor: default; }
+.RpWizard-progress button:focus-visible { outline: 1px solid #45698d; outline-offset: 5px; border-radius: 4px; }
+.RpWizard-content { border: 0; padding: 0; margin: 0 auto; min-height: 440px; max-width: 584px; min-width: 0; }
+.RpWizard-instruction { color: #45698d; font-size: 16px; font-weight: 400; line-height: 1.3; margin: 0 0 24px; }
+.RpWizard-help, .RpWizard-empty { color: var(--muted-color); font-size: 13px; }
+.RpWizard h3 { font-size: 16px; font-weight: 700; line-height: 1.3; text-align: center; margin: 24px 0 16px; }
+.RpWizard-basics { max-width: 324px; margin: 0 auto; }
+.RpWizard-basics label { display: block; font-size: 16px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+.RpWizard-basics .FormControl { background: var(--control-bg); margin-top: 3px; width: 100%; height: 42px; font-size: 16px; font-weight: 400; line-height: 1.3; }
+.RpWizard-person { display: grid; grid-template-columns: 115px minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+.RpWizard-raceLink { color: #45698d; align-self: end; margin-bottom: 20px; }
+.RpWizard-bonuses { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 18px; }
+.RpWizard-bonuses > span { border: 2px solid #45698d; padding: 10px 16px; border-radius: 4px; color: var(--muted-color); font-size: 14px; }
+.RpWizard-attributes { width: 324px; max-width: 100%; margin: 32px auto 0; }
+.RpWizard-attributeRow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.RpWizard-attribute { text-align: center; }
+.RpWizard-attribute > .icon { font-size: 23px; margin-bottom: 8px; }
+.RpWizard-value { display: block; padding: 10px 4px; background: var(--control-bg); border-radius: 12px; font-size: 16px; font-weight: bold; }
+.RpWizard-adjust { display: flex; gap: 6px; margin-top: 7px; }
+.RpWizard-adjust button { width: 50%; border: 0; border-radius: 4px; background: #45698d; color: white; font-size: 25px; line-height: 28px; font-weight: bold; cursor: pointer; }
+.RpWizard-adjust button:disabled { background: var(--control-bg); color: var(--muted-color); cursor: default; }
+.RpWizard-racialBonuses { position: relative; background: var(--control-bg); border-radius: 12px; padding: 16px 0; margin-top: 20px; }
+.RpWizard-racialBonuses > strong { position: absolute; right: calc(100% + 12px); width: 112px; text-align: right; top: 16px; }
+.RpWizard-racialBonuses label { text-align: center; }
+.RpWizard-racialBonuses input { width: 28px; height: 28px; margin: 0; accent-color: #45698d; }
+.RpWizard-totals { border-top: 3px solid var(--control-bg); padding-top: 24px; margin-top: 25px; }
+.RpWizard-totals strong { text-align: center; background: #45698d; color: white; border-radius: 12px; padding: 10px 4px; font-size: 16px; }
+.RpWizard-trainingGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 46px; margin: 32px 24px; }
+.RpWizard-trainingGroup { text-align: center; min-width: 0; }
+.RpWizard-trainingGroup > .icon { font-size: 24px; margin-bottom: 12px; }
+.RpWizard-trainingGroup select, .RpWizard-racialTraining select { width: 100%; border: 0; background: var(--control-bg); color: var(--text-color); border-radius: 14px; padding: 6px 12px; margin: 0 0 8px; }
+.RpWizard-trainingGroup > small { display: block; color: var(--muted-color); }
+.RpWizard-racialTraining { border-top: 3px solid var(--control-bg); margin: 30px 24px 0; text-align: center; padding-top: 5px; }
+.RpWizard-racialTraining label { display: block; max-width: 230px; margin: 0 auto; }
+.RpWizard-cardGrid, .RpSheet-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.RpWizard-choiceSection { margin-top: 34px; }
+.RpWizard-bundle { display: grid; gap: 8px; }
+.RpWizard-choiceSection > div:not(.RpWizard-cardGrid) { max-width: 286px; margin: auto; }
+.RpWizard-navigation { display: flex; align-items: center; justify-content: flex-end; gap: 16px; max-width: 584px; margin: 28px auto 0; }
+.RpWizard .Button { border-radius: 5px; padding: 12px 22px; font-size: 16px; font-weight: 400; line-height: 20px; }
+.RpWizard .Button--primary { background: #45698d; color: white; font-weight: 700; }
+.RpWizard-saving { color: var(--muted-color); font-size: 11px; margin-right: auto; }
+.RpWizard-error { padding: 14px; background: var(--control-bg); border-left: 3px solid #bc3d38; margin-bottom: 20px; }
+.RpWizard-error .Button { display: block; margin-top: 10px; }
+.RpWizard-errors { color: #bc3d38; padding-left: 20px; font-size: 13px; }
+.RpChoice {
+  --rp-choice-radius: 13px; --rp-choice-border: 2px;
+  position: relative; border: var(--rp-choice-border) solid transparent;
+  border-radius: var(--rp-choice-radius); cursor: pointer; min-width: 0; outline-offset: 3px;
+}
+/* Внутренний радиус меньше внешнего на толщину рамки.
+ * Карточка повторяет её край без зазоров; обе величины задаются у обёртки.
+ */
+.RpChoice .RpCard { border-radius: calc(var(--rp-choice-radius) - var(--rp-choice-border)); }
+.RpChoice:hover:not(.is-disabled):not(.is-readonly):not(.RpChoice--action) { border-color: #80b77e; }
+.RpChoice.is-selected { border-color: #58a700; }
+.RpChoice.is-readonly { cursor: default; }
+.RpChoice.is-disabled { opacity: .45; cursor: default; }
+.RpChoice.is-selected.is-disabled { opacity: .85; }
+/* Отметка внутри правого верхнего угла. В горизонтальной карточке
+ * оставляем место справа от верхней строки, чтобы не перекрывать параметры. */
+.RpChoice.is-selected .RpCard--expanded .RpCard-header { padding-right: 27px; box-sizing: border-box; }
+.RpChoice-check { position: absolute; right: 6px; top: 6px; width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid #fff; border-radius: 50%; background: #58a700; color: white; font-size: 11px; pointer-events: none; }
+.RpSheet { max-width: 980px; margin: auto; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.4; }
+.RpSheet-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.RpSheet-identity { position: relative; display: flex; flex-direction: column; min-height: 184px; box-sizing: border-box; border-radius: 12px; padding: 38px 26px 20px; background: var(--control-bg); }
+.RpSheet-identity > strong { font-size: 26px; line-height: 1.25; font-weight: 700; display: block; overflow-wrap: anywhere; }
+.RpSheet-status { position: absolute; top: 16px; right: 20px; max-width: calc(100% - 40px); font-size: 13px; line-height: 1.3; font-weight: 700; text-align: right; }
+.RpSheet-status.is-creating { color: #a35bff; }
+.RpSheet-status.is-active { color: #80b77e; }
+.RpSheet-status.is-changes_requested { color: #cb8137; }
+.RpSheet-identity p { margin: 8px 0 0; color: var(--muted-color); font-size: 14px; text-transform: uppercase; }
+.RpSheet-resources { display: flex; align-items: center; gap: 18px; margin-top: auto; padding-top: 28px; font-size: 16px; font-weight: 700; }
+.RpSheet-resources > span { display: inline-flex; align-items: center; gap: 5px; }
+.RpSheet-resources > :last-child { margin-left: auto; font-size: 14px; font-weight: 400; }
+.RpSheet-resources > :last-child > .icon { color: #ff9900; font-size: 19px; }
+.RpSheet-numbers { display: grid; align-content: start; gap: 24px; }
+.RpSheet-attributes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.RpSheet-attributes > div { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 60px; box-sizing: border-box; background: var(--control-bg); padding: 8px 5px; border-radius: 12px; text-align: center; }
+.RpSheet-attributes strong { display: block; font-size: 16px; line-height: 20px; }
+.RpSheet-attributes > div > .icon:not(.RpDevelopment-arrow) { font-size: 20px; line-height: 20px; }
+.RpSheet-balances { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.RpSheet-balances span { display: flex; align-items: center; justify-content: center; gap: 6px; height: 50px; box-sizing: border-box; text-align: center; padding: 12px; border-radius: 12px; background: var(--control-bg); font-size: 18px; font-weight: 700; color: var(--text-color); }
+.RpSheet-balances span:first-child > .icon { color: #f3cb34; }
+.RpSheet-balances .RpGold > .icon { color: #d3a335; }
+.RpSheet-combat { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 24px; }
+/* Две строки урона увеличивают высоту всей строки. Короткие подписи остаются по центру. */
+.RpSheet-combat > span { display: flex; align-items: center; justify-content: center; min-width: 0; background: var(--control-bg); border-radius: 12px; padding: 8px; text-align: center; color: var(--muted-color); }
+.RpSheet-combatValue { min-width: 0; line-height: 1.35; }
+.RpSheet-section { margin-top: 26px; }
+.RpSheet-section > header { background: var(--control-bg); display: flex; align-items: center; gap: 14px; border-radius: 12px; padding: 13px 18px; margin-bottom: 14px; }
+/* Общая окружность и полупрозрачная заливка. Меняем только цвет конкретного раздела. */
+.RpSheet-section { --rp-section-color: #a35bff; }
+.RpSheet-sectionIcon {
+  border: 1px solid var(--rp-section-color); border-radius: 50%;
+  width: 42px; height: 42px; flex-shrink: 0; display: grid; place-items: center;
+  color: var(--rp-section-color); background: color-mix(in srgb, var(--rp-section-color) 12%, transparent); font-size: 20px;
+}
+.RpSheet-section > header strong { font-size: 16px; font-weight: 700; }
+.RpSheet-section--equipment { --rp-section-color: #e96368; }
+.RpSheet-section small { display: block; color: var(--muted-color); font-size: 13px; }
+.RpSheet-section > p { color: var(--muted-color); margin: 16px 5px 36px; }
+.RpSheet-section--perks { --rp-section-color: #80b77e; }
+.RpSheet-section--spells { --rp-section-color: #6663ff; }
+.RpSheet-section--inventory { --rp-section-color: #00b8ad; }
+.RpSheet-weight { margin-left: auto; white-space: nowrap; }
+.RpSheet-training { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.RpSheet-training > div { text-align: center; min-width: 0; }
+.RpSheet-training > div > .icon { font-size: 22px; margin-bottom: 12px; }
+.RpSheet-training span { display: block; background: var(--control-bg); border-radius: 14px; padding: 6px; margin-bottom: 8px; font-size: 12px; }
+.RpSheet-equipment { display: flex; gap: 12px; flex-wrap: wrap; }
+/* Сокращённые карточки экипировки: ширина контейнера 160 px, высота карточки 141 px.
+ * Размер ограничиваем у контейнера, чтобы карточка не растягивалась во flex.
+ * Все размеры собраны здесь: основной вид предмета в инвентаре не меняется.
+ */
+.RpSheet-equipment .RpSheet-item { flex: 0 0 160px; width: 160px; }
+.RpSheet-equipment .RpCard {
+  --rp-card-padding: 7px;
+  --rp-card-title-size: 12px;
+  --rp-card-footer-height: 27px;
+  --rp-card-footer-size: 9px;
+  --rp-card-stat-gap: 6px;
+
+}
+.RpSheet-equipment .RpCard-iconArea { height: 75px; }
+.RpSheet-equipment .RpCard-icon { width: 55px; height: 55px; }
+.RpSheet-equipment .RpCard-icon > .icon { font-size: 31px; }
+.RpSheet-equipment .RpCard-body { height: 39px; min-height: 39px; padding: 4px 7px; }
+.RpSheet-equipment .RpCard-heading strong {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden; overflow-wrap: anywhere; line-height: 1.2;
+}
+.RpSheet-equipment .RpCard-magical { --rp-magical-size: 22px; right: -3px; bottom: -2px; }
+.RpSheet-equipment .RpChoice { --rp-choice-radius: 11px; }
+
+@media (max-width: 700px) {
+  .RpSheet-summary { grid-template-columns: 1fr; }
+  .RpSheet-training, .RpSheet-combat { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 580px) {
+  .RpWizard { padding: 24px 16px; }
+  .RpWizard h1 { font-size: 22px; }
+  .RpWizard-racialBonuses > strong { position: static; display: block; width: auto; text-align: center; margin-bottom: 12px; }
+  .RpWizard-trainingGrid { gap: 20px; margin-inline: 0; }
+  .RpWizard-racialTraining { margin-inline: 0; }
+  .RpWizard-person { grid-template-columns: 90px minmax(0, 1fr) auto; gap: 10px; }
+}
+@media (max-width: 480px) {
+  .RpWizard-cardGrid, .RpSheet-cards { grid-template-columns: 1fr; }
+  .RpWizard-progress { --rp-progress-line: 9px; --rp-progress-after-icon: 5px; }
+  .RpWizard-attributeRow { gap: 9px; }
+  .RpWizard-content { min-height: 380px; }
+  .RpWizard-navigation { gap: 10px; flex-wrap: wrap; }
+  .RpWizard-saving { flex-basis: 100%; text-align: right; }
+  .RpSheet-identity { padding: 38px 20px 20px; }
+}
+
+/* Профиль повторно использует общую анкету мастера. Здесь только управление и окно эффектов. */
+/* Верхняя панель профиля отделена от общей анкеты, используемой также в мастере. */
+.RpProfile { max-width: 980px; margin: auto; }
+/* Статистика игрока без отдельной плашки. Цветные только числа, подписи приглушены.
+ * Ширина ограничена: показатели не растягиваются на всю анкету и помещаются на телефоне. */
+.RpRoleplayer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 420px; max-width: 100%; margin: 8px 0 24px; font-family: Arial, sans-serif; }
+.RpRoleplayer > div { display: flex; flex-direction: column; align-items: center; min-width: 0; text-align: center; }
+.RpRoleplayer dt { order: 1; margin-top: 4px; color: var(--muted-color); font-size: 10px; line-height: 1.4; letter-spacing: .35px; text-transform: uppercase; }
+.RpRoleplayer dd { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 700; overflow-wrap: anywhere; }
+.RpRoleplayer-experience dd { color: #a35bff; }
+.RpRoleplayer-characters dd { color: #80b77e; }
+.RpRoleplayer-date dd { color: #4b85d6; }
+.RpProfile-tabs { display: flex; gap: 4px; width: fit-content; max-width: 100%; padding: 4px; margin: 0 0 16px; border-radius: 12px; background: var(--control-bg); }
+.RpProfile-tabs .Button { border-radius: 9px; background: transparent; font-weight: 700; }
+.RpProfile-tabs .Button.is-active { background: var(--body-bg); color: var(--text-color); }
+.RpProfile-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 16px; }
+/* Настоящий select сохраняет клавиатурный выбор; шеврон не перехватывает клики. */
+.RpProfile-characterSelect { position: relative; flex: 0 1 210px; width: 210px; min-width: 160px; }
+.RpProfile-characterSelect .FormControl { width: 100%; height: 36px; border-radius: 12px; padding-right: 36px; appearance: none; background-image: none; cursor: pointer; }
+.RpProfile-selectChevron { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--muted-color); font-size: 12px; line-height: 1; }
+.RpProfile-toolbar .Button { height: 36px; border-radius: 11px; }
+.RpProfile-toolbar .RpProfile-iconButton { width: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; }
+/* Button--icon скрывает пустую подпись ядра; gap: 0 устраняет сдвиг единственного значка. */
+.RpProfile-toolbar .RpProfile-iconButton { gap: 0; flex-shrink: 0; line-height: 1; }
+.RpProfile-iconButton .Button-label { display: none; }
+.RpProfile-iconButton > .icon { margin: 0; font-size: 16px; line-height: 1; }
+.RpProfile-iconButton .rp-icon-sparkle::before { margin: auto; }
+.RpProfile-toolbar .RpProfile-grant { min-width: 116px; font-weight: 700; }
+.RpProfile-toolbarEnd { margin-left: auto; display: flex; gap: 6px; }
+.RpProfile-placeholder { padding: 44px 24px; text-align: center; border-radius: 12px; background: var(--control-bg); }
+.RpProfile-placeholder strong { font-size: 18px; }
+.RpProfile-placeholder p { margin-bottom: 0; color: var(--muted-color); }
+.RpSheet-item { min-width: 0; }
+.RpSheet-item .RpCard { width: 100%; }
+
+/* Компактное объяснение бонусов: источник у иконки, действие в строке, без служебных панелей. */
+.RpEffectsModal { width: 620px; max-width: calc(100vw - 24px); }
+.RpEffectsModal .Modal-header h3 { font-size: 20px; font-weight: 700; }
+.RpEffects-title { display: inline-flex; align-items: center; gap: 8px; }
+.RpEffects-title .icon { display: inline-block; flex-shrink: 0; margin: 0; }
+.RpEffectsModal .Modal-body { padding: 20px 24px; }
+.RpEffects-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px;
+  margin: 0; padding: 0; list-style: none; max-height: 55vh; overflow-y: auto; overscroll-behavior: contain; }
+.RpEffects-list li { display: flex; align-items: flex-start; gap: 8px; min-width: 0; font-size: 14px; line-height: 1.45; }
+.RpEffects-source { flex: 0 0 20px; display: inline-flex; align-items: center; justify-content: center;
+  height: 20px; color: var(--muted-color); cursor: help; border-radius: 4px; }
+.RpEffects-source:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+.RpEffects-label { overflow-wrap: anywhere; }
+.RpEffects-empty { margin: 0; color: var(--muted-color); }
+@media (max-width: 480px) {
+  .RpEffectsModal .Modal-body { padding: 16px; }
+  .RpEffects-list { gap: 12px 16px; }
+}
+@media (max-width: 480px) {
+  .RpProfile-characterSelect { flex-basis: 100%; width: 100%; }
+  .RpProfile-toolbar .RpProfile-grant { min-width: 96px; }
+}
+/* Развитие: выбор и доступность не смешиваются с цветами игровых карточек. */
+.RpSheet-attributes > div {position: relative; border: 2px solid transparent;}
+.RpSheet-attributes > .is-available {cursor: pointer;}
+.RpSheet-attributes > .is-selected, .RpDevelopment-entry.is-selected {border-color: #ff9800;}
+.RpDevelopment-arrow {position: absolute; right: 5px; top: 4px; color: var(--text-color);}
+.RpDevelopment-entry {position: relative; display: block; width: 100%; border: 2px solid transparent;
+  border-radius: 14px; padding: 5px 23px 5px 9px; margin-bottom: 7px; text-align: left; background: var(--control-bg);}
+.RpDevelopment-entry:not(:disabled) {cursor: pointer;}
+/* Наличие навыка/владения отделено от возможности его изучить или повысить.
+ * Поэтому изученный пункт остаётся контрастным, даже когда его кнопка отключена.
+ */
+.RpSheet-training .is-learned { font-weight: 700; color: var(--text-color); opacity: 1; }
+.RpDevelopment-entry.is-unlearned { font-weight: 400; color: var(--muted-color); opacity: .55; }
+.RpDevelopment-entry .RpDevelopment-arrow {top: 6px;}
+.RpDevelopment-confirm {display: flex; justify-content: flex-end; margin-top: 10px;}
+.RpDevelopment-confirm .Button--primary {background: #45698d; color: white; min-height: 36px; padding: 8px 18px; font-weight: 700;}
+/* Слот существует без кнопки: выбор и снятие выбора не сдвигают остальные разделы. */
+.RpDevelopment-confirm--reserved { min-height: 36px; }
+.RpDevelopment-confirm--reserved .Button { height: 36px; box-sizing: border-box; line-height: 20px; }
+.RpSheet-numbers > .RpDevelopment-confirm--reserved { margin-top: -10px; }
+/* Один размер окна для создания и редактора. Внутри прокручивается только шаг;
+ * полоска прогресса и нижние кнопки не уходят за пределы окна.
+ */
+.RpWizardModal.Modal { width: 580px; max-width: calc(100% - 32px); margin: 24px auto; }
+.RpWizardModal .Modal-content { display: flex; flex-direction: column; height: 86dvh; max-height: min(840px, calc(100dvh - 48px)); min-height: min(480px, calc(100dvh - 48px)); }
+.RpWizardModal .Modal-header { flex-shrink: 0; padding: 24px 48px 18px; }
+.RpWizardModal .Modal-header h3 { font-family: Arial, sans-serif; font-size: 24px; line-height: 1.25; font-weight: 400; }
+.RpWizardModal .Modal-body { display: flex; flex-direction: column; flex: 1; min-height: 0; padding: 0; background: var(--body-bg); color: var(--text-color); }
+.RpWizardModal .RpWizard { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100%; max-width: none; padding: 0; margin: 0; }
+.RpWizardModal .RpWizard > .RpWizard-help { margin: 0; padding: 0 24px 12px; flex-shrink: 0; }
+.RpWizardModal .RpWizard-progress { margin: 0; padding: 16px 16px 24px; flex-shrink: 0; }
+.RpWizardModal .RpWizard-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 8px 24px 24px; }
+.RpWizardModal .RpWizard-content { min-height: 0; }
+.RpWizardModal .RpWizard-navigation { flex-shrink: 0; width: 100%; max-width: none; box-sizing: border-box; margin: 0; padding: 14px 24px; border-top: 1px solid var(--control-bg); }
+.RpWizardModal .RpWizard-error { flex-shrink: 0; margin: 0 24px 10px; padding: 10px 14px; font-size: 13px; }
+.RpWizard-discard { flex-shrink: 0; align-self: center; margin-bottom: 8px; }
+@media (max-height: 600px) {
+  .RpWizardModal.Modal { margin: 12px auto; }
+  .RpWizardModal .Modal-content { min-height: 0; height: calc(100dvh - 24px); max-height: calc(100dvh - 24px); }
+}
+@media (max-width: 767px) {
+  .RpWizardModal.Modal { width: 580px; max-width: calc(100% - 16px); margin: 8px auto; }
+  .RpWizardModal .Modal-content { min-height: 0; height: calc(100dvh - 16px); max-height: none; padding-top: 0; border-radius: 10px; }
+  .RpWizardModal .Modal-header { padding: 20px 44px 12px; }
+  .RpWizardModal .Modal-header h3 { font-size: 20px; }
+  /* На телефоне ядро переносит заголовок и крестик в глобальную шапку.
+   * Здесь оставляем их в самом окне, чтобы заголовок не обрезался и крестик был справа.
+   */
+  /* important необходим только для отмены important у мобильных App-* классов ядра. */
+  .RpWizardModal .Modal-header .App-titleControl { position: static !important; top: auto !important; left: auto; right: auto;
+    width: auto; height: auto; max-width: none; margin: 0; padding: 0; overflow: visible; white-space: normal;
+    text-overflow: clip; color: var(--text-color) !important; }
+  .RpWizardModal .Modal-close { position: absolute !important; top: 8px !important; right: 8px; left: auto; bottom: auto; width: auto; height: auto; }
+  .RpWizardModal .RpWizard-progress { padding-bottom: 18px; }
+  .RpWizardModal .RpWizard-scroll { padding: 8px 16px 20px; }
+  .RpWizardModal .RpWizard-navigation { padding: 12px 16px; }
+}

@@ -1,0 +1,58 @@
+const assert = require('node:assert/strict');
+const {loadClient} = require('./client-runtime.cjs');
+const clone = value => JSON.parse(JSON.stringify(value));
+const tick = () => new Promise(resolve => setImmediate(resolve));
+(async () => {
+  const {modules, m, app, expand, pageClass} = loadClient('admin');
+  const exported = name => modules.get(name).default || modules.get(name);
+  const State = exported('admin/application/ApplicationSettingsState');
+  const Panel = exported('admin/application/ApplicationSettingsPanel');
+  const fixture = {revision: 15, application: {tag_id: 4, title_template: 'Анкета: {name}', body_template: '{name}\nБиография:'},
+    tags: [{id: 4, name: 'Анкеты'}, {id: 7, name: 'Другое'}]};
+  const writes = [];
+  const api = {read: async () => clone(fixture), save: async (revision, application) => {writes.push({revision, application});}};
+  const settings = new State(api, () => {});
+  await settings.load();
+  settings.data.application.body_template = 'Изменённый шаблон';
+  await settings.save();
+  assert.equal(writes[0].revision, 15);
+  assert.equal(writes[0].application.body_template, 'Изменённый шаблон');
+  assert.ok(settings.saved);
+  const conflicts = new State({...api, save: async () => {throw {status: 409};}}, () => {});
+  await conflicts.load();
+  await conflicts.save();
+  assert.ok(conflicts.stale && !conflicts.saved);
+  await conflicts.load();
+  assert.equal(conflicts.stale, false);
+
+  const panel = new Panel();
+  panel.attrs = {};
+  panel.settings = settings;
+  const nodes = expand(panel.view());
+  const select = nodes.find(node => node.tag === 'select');
+  assert.equal(nodes.filter(node => node.tag === 'option').length, 3, 'Tag selector includes placeholder and two real tags without mixed vnode keys');
+  select.attrs.onchange({target: {value: '7'}});
+  assert.equal(settings.data.application.tag_id, 7);
+  assert.ok(nodes.find(node => node.tag === 'textarea').attrs.rows >= 8, 'Compact template remains a multiline editor');
+  const form = nodes.find(node => node.tag === 'form');
+  form.attrs.onsubmit({preventDefault() {}});
+  await tick();
+  assert.equal(writes.length, 2);
+  assert.equal(writes[1].application.tag_id, 7);
+
+  app.result = clone(fixture);
+  const page = new pageClass();
+  page.selected = 'application-settings';
+  expand(page.content());
+  await tick();
+  const Api = exported('admin/application/ApplicationSettingsApi');
+  const requests = [];
+  app.request = async request => {requests.push(request); return {data: clone(fixture)};};
+  const transport = new Api();
+  await transport.read();
+  await transport.save(15, fixture.application);
+  assert.ok(requests[0].url.endsWith('/admin/application') && requests[0].method === 'GET');
+  assert.equal(requests[1].method, 'PUT');
+  assert.deepEqual(clone(requests[1].body), {revision: 15, application: fixture.application});
+  console.log('Application settings client checks passed: navigation, keyed selector, submit, version conflicts and narrow transport.');
+})().catch(error => {console.error(error); process.exit(1);});

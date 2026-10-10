@@ -1,0 +1,45 @@
+/* Окно выдачи: поверхности и цвета берутся из темы форума, размеры списка не зависят от количества записей. */
+.RpManagementModal { width: 480px; max-width: calc(100vw - 24px); }
+.RpManagementModal .Modal-header h3 { font-size: 20px; font-weight: 700; }
+.RpManagementModal .Modal-header h3 .icon { margin-right: 8px; }
+.RpManagement { padding: 20px 24px 24px; }
+.RpManagement-character { margin: 0 0 18px; color: var(--muted-color); }
+.RpManagement-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 4px; background: var(--control-bg); border-radius: 10px; }
+.RpManagement-tabs .Button { padding: 9px 2px; background: transparent; min-width: 0; font-size: 12px; }
+.RpManagement-tabs .Button-label { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.RpManagement-tabs .Button-labelText { display: contents; }
+.RpManagement-tabs .icon { font-size: 16px; }
+.RpManagement-tabs [aria-selected="true"] { background: var(--body-bg); color: var(--primary-color); }
+.RpManagement-mode { display: flex; justify-content: center; gap: 8px; margin: 20px 0 18px; }
+.RpManagement-mode [aria-pressed="true"] { background: var(--primary-color); color: var(--body-bg); }
+.RpManagement-mode [aria-pressed="true"]:last-child, .RpManagement-remove { background: #b64b4b; color: white; }
+.RpManagement-resources, .RpManagement-source { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.RpManagement-field { display: flex; flex-direction: column; min-width: 0; gap: 6px; margin-bottom: 12px; }
+.RpManagement-field > span:first-child { font-weight: 700; }
+.RpManagement-field > span:first-child .icon { margin-right: 5px; }
+.RpManagement-field .FormControl { width: 100%; }
+.RpManagement-resources input { font-size: 20px; font-weight: 700; }
+.RpManagement-result { display: flex; align-items: center; gap: 8px; color: var(--muted-color); font-variant-numeric: tabular-nums; }
+.RpManagement-result strong { color: var(--text-color); font-size: 18px; }
+.RpManagement-result.is-invalid strong, .RpManagement-error { color: #b64b4b; }
+.RpManagement-error { grid-column: 1 / -1; }
+.RpManagement-listToolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.RpManagement-listToolbar .FormControl { flex: 1; width: 100%; min-width: 0; }
+.RpManagement-listToolbar .Button { flex-shrink: 0; }
+.RpManagement-options { max-height: 176px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.RpManagement-option { flex-shrink: 0; display: flex; align-items: center; gap: 10px; text-align: left; padding: 10px; border: 1px solid var(--control-bg); border-radius: 9px; background: var(--body-bg); color: var(--text-color); cursor: pointer; }
+.RpManagement-option > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.RpManagement-option strong { display: block; font-weight: 700; }
+.RpManagement-option small { display: block; color: var(--muted-color); }
+.RpManagement-option > .icon, .RpManagement-option img { flex-shrink: 0; width: 24px; height: 24px; object-fit: contain; display: inline-flex; align-items: center; justify-content: center; color: var(--primary-color); }
+.RpManagement-option[aria-pressed="true"] { border-color: var(--primary-color); background: var(--control-bg); }
+.RpManagement-option:disabled { cursor: default; opacity: .6; }
+.RpManagement-reason { margin-top: 18px; }
+.RpManagement-reason textarea { min-height: 64px; resize: vertical; }
+.RpManagement-footer { display: flex; justify-content: flex-end; margin-top: 16px; }
+.RpManagement-placeholder { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 150px; color: var(--muted-color); }
+@media (max-width: 420px) {
+  .RpManagement { padding: 16px; }
+  .RpManagement-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .RpManagement-source { grid-template-columns: 1fr; }
+}
