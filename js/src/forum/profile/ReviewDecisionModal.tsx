@@ -1,4 +1,5 @@
-import Modal, {type IInternalModalAttrs} from 'flarum/common/components/Modal';
+import Feedback from '../../common/components/Feedback';
+import Modal, {type IInternalModalAttrs, type ModalHeading} from '../../common/components/RoleplayModal';
 import Button from 'flarum/common/components/Button';
 import type Mithril from 'mithril';
 import type ProfileState from './ProfileState';
@@ -10,21 +11,23 @@ interface Attrs extends IInternalModalAttrs {
 /** При возврате замечание обязательно и на клиенте, и на сервере. */
 export default class ReviewDecisionModal extends Modal<Attrs> {
   comment = '';
-  className(): string {return 'RpReviewModal';}
-  title(): string {
-    return (this.attrs.action === 'approve' ? 'Одобрить' : 'Вернуть на исправление') + ' '
-      + (this.attrs.part === 'mechanics' ? 'техническую часть' : 'литературную часть');
+  protected modalClassName(): string {return 'RpReviewModal';}
+  protected modalHeading(): ModalHeading {
+    const approving = this.attrs.action === 'approve';
+    const part = this.attrs.part === 'mechanics' ? 'технической части' : 'литературной части';
+    return {label: approving ? 'Одобрение ' + part : 'Возврат ' + part + ' на исправление', purpose: approving ? 'approve' : 'return'};
   }
   content(): Mithril.Children {
     const state = this.attrs.profile;
-    return <form className="Modal-body RpReview-form" onsubmit={(event: Event) => {event.preventDefault(); void this.save();}}>
+    return <form className="Modal-body RpReview-form" oninput={() => state.clearInputError()} onchange={() => state.clearInputError()}
+      onsubmit={(event: Event) => {event.preventDefault(); void this.save();}}>
       <p>{this.attrs.action === 'approve' ? 'Подтверди проверку актуальной версии анкеты.' : 'Укажи, что игроку нужно исправить.'}</p>
       <label>Замечания{this.attrs.action === 'request_changes' ? ' (обязательно)' : ''}
         <textarea className="FormControl" value={this.comment} maxlength={4000}
           disabled={state.actionsBlocked} required={this.attrs.action === 'request_changes'}
           oninput={(event: Event) => {this.comment = (event.target as HTMLTextAreaElement).value;}}/>
       </label>
-      {state.actionError && <p role="alert">{state.actionError}</p>}
+      {state.actionError && <Feedback message={state.actionError}/>}
       {state.retryAvailable ? <Button type="button" className="Button Button--primary" loading={state.changing}
         disabled={state.changing} onclick={async () => {if (await state.retryOperation()) this.hide();}}>Повторить действие</Button>
         : <Button type="submit" className="Button Button--primary" loading={state.changing} disabled={state.actionsBlocked

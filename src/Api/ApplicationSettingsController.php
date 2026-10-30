@@ -33,11 +33,11 @@ final class ApplicationSettingsController implements RequestHandlerInterface
                     ])->all(),
                 ]));
             }
-            if ($request->getMethod() !== 'PUT') throw new ApiProblem('invalid_request', 'Неизвестная операция.', 400);
+            if ($request->getMethod() !== 'PUT') throw new ApiProblem('invalid_request', 'Не удалось определить действие. Попробуйте обновить страницу', 400);
             $body = OperationRequest::body($request->getParsedBody(), ['revision', 'application']);
             $application = (new ApplicationConfiguration())->normalize($body['application'] ?? null);
             if ($application['tag_id'] !== null && !Tag::query()->where('id', $application['tag_id'])->exists()) {
-                throw new ApiProblem('application_tag_missing', 'Тег не найден.');
+                throw new ApiProblem('application_tag_missing', 'Раздел не найден. Обновите список и выберите доступный раздел');
             }
             $configuration = (new CatalogRevision($this->db))->read(fn () => $store->read());
             $configuration['application'] = $application;

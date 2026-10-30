@@ -31,7 +31,7 @@ final class AdminCharacterController implements RequestHandlerInterface
                 $result['lookups'] = $this->catalogs->references($actor);
                 return ApiResponse::data($result);
             }
-            if (!in_array($request->getMethod(), ['PUT', 'DELETE'], true)) throw new ApiProblem('invalid_request', 'Неизвестная операция.', 400);
+            if (!in_array($request->getMethod(), ['PUT', 'DELETE'], true)) throw new ApiProblem('invalid_request', 'Не удалось определить действие. Попробуйте обновить страницу', 400);
             $body = CatalogRequest::body($request->getParsedBody());
             if ($request->getMethod() === 'DELETE') {
                 FieldValues::allowed($body, ['revision']);
@@ -40,7 +40,7 @@ final class AdminCharacterController implements RequestHandlerInterface
                     CatalogRequest::positive($body['revision'] ?? null, 'Версия'), $actor));
             }
             FieldValues::allowed($body, ['revision', 'fields']);
-            if (!is_array($body['fields'] ?? null)) FieldValues::invalid('Нужен объект полей формы.');
+            if (!is_array($body['fields'] ?? null)) FieldValues::invalid('Не удалось обработать данные формы: ожидается объект полей. Попробуйте обновить страницу');
             return ApiResponse::data($this->characters->save(
                 CatalogRequest::positive($query['id'] ?? null, 'Персонаж'),
                 CatalogRequest::positive($body['revision'] ?? null, 'Версия'), $body['fields'], $actor));
@@ -48,7 +48,7 @@ final class AdminCharacterController implements RequestHandlerInterface
             return ApiResponse::problem($problem);
         } catch (\Illuminate\Database\QueryException $error) {
             if ((int) ($error->errorInfo[1] ?? 0) === 1062) {
-                return ApiResponse::problem(new ApiProblem('discussion_already_linked', 'Тема уже привязана к другому персонажу.', 409));
+                return ApiResponse::problem(new ApiProblem('discussion_already_linked', 'Эта тема уже привязана к другому персонажу. Укажите другую тему', 409));
             }
             throw $error;
         }

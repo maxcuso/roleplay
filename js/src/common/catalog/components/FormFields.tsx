@@ -23,11 +23,12 @@ interface FieldAttrs {
  * в resources/presentation/icons.json, без миграций и правок каждого редактора. */
 const fieldIcons: Readonly<Record<string, UiIconName>> = {
   name: 'fields.name', first_name: 'fields.name', last_name: 'fields.name',
-  description: 'fields.description', appearance: 'fields.description', icon: 'fields.icon',
+  description: 'fields.description', appearance: 'fields.description', quote: 'fields.description', icon: 'fields.icon',
   color: 'fields.color', rarity: 'fields.rarity', image: 'fields.image', level: 'fields.level',
   magic_path_id: 'sections.paths', item_type_id: 'fields.itemType', attribute_id: 'fields.attribute',
   skill_id: 'sections.training', rules_url: 'fields.link', discussion_link: 'fields.link',
   min_age: 'fields.age', max_age: 'fields.age', equipment_limit: 'fields.equipment',
+  average_height: 'fields.height', distinctive_traits: 'fields.property', background_color: 'fields.color',
   distance_mode: 'fields.distance', distance_value: 'fields.distance', radius_value: 'fields.radius',
   cast_mode: 'fields.castTime', mana_cost: 'resources.mana', stamina_cost: 'resources.stamina',
   other_cost: 'sections.items', base_price: 'resources.gold', weight: 'resources.weight', max_stack: 'fields.stack',

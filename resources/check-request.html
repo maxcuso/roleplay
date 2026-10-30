@@ -1,0 +1,6 @@
+<xsl:choose><xsl:when test="@available = 1">
+  <div class="RpCheck RpCheck--request" data-check-request="{@check-request}" data-discussion="{@discussion}">
+    <div class="RpCheck-heading"><span class="RpCheck-mark" aria-hidden="true"><i class="icon fas fa-dice"/></span><strong>Проверка «<xsl:value-of select="@name"/>»</strong><span class="RpCheck-difficulty"><xsl:value-of select="@difficulty"/></span></div>
+    <div class="RpCheck-requestBody"><xsl:if test="string-length(@description) &gt; 0"><span class="RpCheck-description"><xsl:value-of select="@description"/></span></xsl:if><xsl:if test="@can_roll = 1"><button class="Button RpCheck-button" type="button" data-roleplay-roll="{@check-request}"><i class="icon fas fa-dice" aria-hidden="true"/>Сделать бросок</button></xsl:if></div>
+  </div>
+</xsl:when><xsl:otherwise><span class="RpCheck-unavailable">Запрос проверки</span></xsl:otherwise></xsl:choose>

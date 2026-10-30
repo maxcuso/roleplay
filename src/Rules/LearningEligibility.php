@@ -13,16 +13,16 @@ abstract class LearningEligibility
     {
         $attributeId = (int) ($attribute['id'] ?? 0);
         if ($attributeId < 1 || (int) ($definition['attribute_id'] ?? 0) !== $attributeId) {
-            return $this->denied('wrong_attribute', 'Выбор относится к другой характеристике.');
+            return $this->denied('wrong_attribute', 'Этот выбор относится к другой характеристике. Выберите соответствующую характеристику');
         }
         if ($attributeLevel < 1 || $attributeLevel > $this->rules->maximumAttributeLevel()) {
-            return $this->denied('invalid_attribute_level', 'Некорректный уровень характеристики.');
+            return $this->denied('invalid_attribute_level', 'Не удалось определить уровень характеристики. Попробуйте обновить страницу');
         }
         if (!$this->rules->hasAttribute($attribute['slug'] ?? '')) {
-            return $this->denied('missing_attribute_rules', 'Для характеристики не заданы правила обучения.');
+            return $this->denied('missing_attribute_rules', 'Правила обучения для этой характеристики не настроены. Обратитесь к администратору');
         }
         if (empty($attribute['enabled']) || empty($definition['enabled'])) {
-            return $this->denied('definition_disabled', 'Характеристика или выбранная запись выключена.');
+            return $this->denied('definition_disabled', 'Характеристика или выбранная запись отключена. Новое получение недоступно');
         }
         return null;
     }

@@ -38,4 +38,17 @@ $racial = $check(array_combine($slugs, [2, 2, 2, 1]), true);
 if ($racial['attributes']['physiology']['level'] !== 4) {
     throw new RuntimeException('Racial bonuses must be added outside the starting budget and bounds.');
 }
-echo "Starting allocation: free combinations, budget, bounds and separate racial bonuses passed.\n";
+// Продолжительность жизни описывает расу, а не минимальный возраст героя.
+$ageCatalog = $catalog;
+$ageCatalog['races'][1]['min_age'] = 100;
+$ageCatalog['races'][1]['max_age'] = 200;
+foreach ([0 => true, 20 => true, 200 => true, 201 => false] as $age => $expected) {
+    $result = $validator->attributes(array_replace($payload, ['age' => $age,
+        'base_attributes' => array_combine($slugs, [2, 2, 2, 1])]), $ageCatalog, $config);
+    if ($result['valid'] !== $expected) throw new RuntimeException('Only the lifespan maximum may limit age: '.$age);
+}
+$ageCatalog['races'][1]['max_age'] = null;
+$result = $validator->attributes($payload + ['base_attributes' => array_combine($slugs, [2, 2, 2, 1])], $ageCatalog, $config);
+if (!$result['valid']) throw new RuntimeException('An empty lifespan maximum must not restrict character age.');
+
+echo "Starting allocation and lifespan: free combinations, budget, bounds, racial bonuses and maximum-only age check passed.\n";

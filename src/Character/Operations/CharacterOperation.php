@@ -19,7 +19,7 @@ final class CharacterOperation
     public function run(int $id, User $actor, string $type, array $body, callable $authorize, callable $change): array
     {
         Access::view($actor);
-        if (!$actor->exists) throw new ApiProblem('operation_forbidden', 'Войдите в аккаунт.', 403);
+        if (!$actor->exists) throw new ApiProblem('operation_forbidden', 'Войдите в аккаунт, чтобы продолжить', 403);
         $key = OperationRequest::key($body['operation_key'] ?? null);
         $expected = OperationRequest::revision($body['revision'] ?? null);
         $expectedCatalog = OperationRequest::revision($body['catalog_revision'] ?? null);
@@ -33,19 +33,19 @@ final class CharacterOperation
             ): array {
                 ActorOperationLock::acquire($this->db, (int) $actor->id);
                 $character = $this->db->table('roleplay_characters')->where('id', $id)->lockForUpdate()->first();
-                if (!$character) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+                if (!$character) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
                 // Права проверяются и для повтора. Переход состояния проверяется только у новой команды.
                 $authorize((array) $character);
                 $previous = $this->db->table('roleplay_operations')->where('id', $key)->first();
                 if ($previous) {
                     if ((int) $previous->actor_user_id !== (int) $actor->id || $previous->type !== $type
                         || !hash_equals($previous->request_hash, $hash)) {
-                        throw new ApiProblem('operation_key_conflict', 'Ключ уже использован для другого действия.', 409);
+                        throw new ApiProblem('operation_key_conflict', 'Не удалось выполнить действие: данные повторного запроса отличаются от исходных. Попробуйте обновить страницу', 409);
                     }
                     return json_decode($previous->result, true, flags: JSON_THROW_ON_ERROR);
                 }
                 if ((int) $character->revision !== $expected || $catalog !== $expectedCatalog) {
-                    throw new ApiProblem('character_revision_conflict', 'Анкета или настройки изменились. Обнови страницу.', 409);
+                    throw new ApiProblem('character_revision_conflict', 'Данные анкеты или настроек изменились. Попробуйте обновить страницу', 409);
                 }
                 $changed = $change((array) $character);
                 $now = gmdate('Y-m-d H:i:s');
@@ -56,17 +56,19 @@ final class CharacterOperation
                     'id' => $key, 'type' => $type, 'actor_user_id' => $actor->id, 'character_id' => $id,
                     'request_hash' => $hash, 'result' => json_encode($result, JSON_THROW_ON_ERROR), 'created_at' => $now,
                 ]);
-                $this->db->table('roleplay_character_events')->insert([
+                $eventId = $this->db->table('roleplay_character_events')->insertGetId([
                     'character_id' => $id, 'actor_user_id' => $actor->id, 'operation_id' => $key,
                     'type' => $changed['event'], 'payload' => json_encode($changed['payload'], JSON_THROW_ON_ERROR),
                     'created_at' => $now,
                 ]);
+                \Maxcuso\Roleplay\Notification\CharacterNotifications::afterEvent($this->db, (array) $character,
+                    $changed['event'], $changed['payload'], $eventId, (int) $actor->id);
                 return $result;
             });
         } catch (QueryException $error) {
             // Другой аккаунт мог одновременно занять тот же UUID. Уникальный ключ откатывает все изменения.
             if (($error->errorInfo[1] ?? null) === 1062) {
-                throw new ApiProblem('operation_key_conflict', 'Ключ уже использован. Обнови анкету.', 409);
+                throw new ApiProblem('operation_key_conflict', 'Этот запрос уже обработан. Попробуйте обновить страницу', 409);
             }
             throw $error;
         }

@@ -18,7 +18,7 @@ final class PerkGrantSource
             if ($kind === 'race' || $kind === 'skill') {
                 $id = FieldValues::integer($input[$kind.'_id'] ?? null, 'Источник '.$kind, 1, PHP_INT_MAX);
                 $definition = $definitions[$kind === 'race' ? 'races' : 'skills'][$id] ?? null;
-                if (!$definition) throw new ApiProblem('source_context_missing', 'Связанная запись источника не найдена.');
+                if (!$definition) throw new ApiProblem('source_context_missing', 'Не удалось найти запись источника получения. Обратитесь к администратору');
                 $context[$kind.'_id'] = $id;
                 $context[$kind.'_name'] = $definition['name'];
                 if ($kind === 'skill') {

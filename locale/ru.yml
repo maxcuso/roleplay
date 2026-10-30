@@ -5,3 +5,28 @@ maxcuso-roleplay:
       view: Просматривать персонажей
       create: Создавать персонажей
       moderate: Просматривать незавершённые анкеты для модерации
+  forum:
+    notification_settings:
+      roleplayReview: Проверка и принятие персонажей
+      roleplayGrants: Начисления, выдачи и изъятия у персонажей
+      roleplayRank: Изменение ранга персонажей
+    notifications:
+      mechanics_approved: 'Техническая часть анкеты «{character}» одобрена'
+      mechanics_changes: 'Техническая часть анкеты «{character}» требует исправлений'
+      literature_approved: 'Художественная часть анкеты «{character}» принята'
+      literature_review: 'Художественная часть анкеты «{character}» снова требует проверки'
+      activated: 'Персонаж «{character}» принят в игру'
+      reward: 'Персонаж «{character}» получил {resources}'
+      topic_reward: 'Персонаж «{character}» получил награду'
+      episode_reward: 'Персонаж «{character}» получил награду за эпизод «{name}»'
+      deduction: 'У персонажа «{character}» списано {resources}'
+      experience: '{amount} опыта'
+      gold: '{amount} золота'
+      grant_item: 'Персонаж «{character}» получил предмет «{name}»{quantity}'
+      remove_item: 'У персонажа «{character}» изъят предмет «{name}»{quantity}'
+      grant_perk: 'Персонаж «{character}» получил перк «{name}»'
+      remove_perk: 'У персонажа «{character}» изъят перк «{name}»'
+      grant_spell: 'Персонаж «{character}» получил заклинание «{name}»'
+      remove_spell: 'У персонажа «{character}» изъято заклинание «{name}»'
+      rank_changed: 'Ранг персонажа «{character}» изменён на «{name}»'
+      rank_removed: 'У персонажа «{character}» снят ранг'

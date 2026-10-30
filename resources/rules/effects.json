@@ -52,6 +52,13 @@
         "base_percent"
       ]
     },
+    "quest_experience": {
+      "label": "Бонус к опыту за квесты, %",
+      "target": null,
+      "numeric": true,
+      "operations": ["percent"],
+      "conditions": ["always"]
+    },
     "shop_discount": {
       "label": "Скидка в магазине, %",
       "target": null,

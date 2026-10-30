@@ -22,7 +22,7 @@ try {
         $table->unsignedBigInteger('base_price')->default(0);
     });
     $db->table('roleplay_items')->insert(['base_price' => 5]);
-    (require __DIR__.'/../migrations/2026_10_10_000001_fractional_item_prices.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000001_fractional_item_prices.php')['up']($schema);
     if ((float) $db->table('roleplay_items')->value('base_price') !== 5.0) {
         throw new RuntimeException('Migration changed the existing whole price');
     }

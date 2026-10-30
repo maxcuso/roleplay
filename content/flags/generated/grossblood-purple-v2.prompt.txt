@@ -1,0 +1,8 @@
+Tool: built-in image_gen.imagegen
+Reference: C:/Forum/Flarum/packages/roleplay-new/content/flags/generated/grossblood-purple-v1.png
+Transparent background: true
+
+Prompt:
+Precise edit of the supplied finished heraldic banner. REMOVE ONLY the thin GOLD/YELLOW outer separating outline around the red dragon and the spear. Replace that narrow gold edging with the adjacent purple background, leaving the existing black ink outlines intact. The dragon must be red with BLACK contours directly against the purple field, without a gold halo or gold tracing. Remove gold edging from all exterior edges including head, tongue, horns, wing, all four legs, the SINGLE tail and the spear blade and shaft. Keep the solid gold spear tie/tassel and the small golden eye unchanged: those are actual filled objects, not outlines.
+Preserve EVERYTHING ELSE exactly: five-sided banner shape and proportions, purple field, red dragon pose and anatomy, ONE tail only, FOUR legs only, the correct gripping foreclaw on the viewer's RIGHT of the spear with fingers curling LEFT, head, wing, black spear shaft, steel blade, all black internal linework and composition. Do not add limbs, duplicate tails, symbols or text. No other redesign or recoloring. Transparent only outside the complete opaque banner. Deliver the edited PNG with alpha transparency.
+

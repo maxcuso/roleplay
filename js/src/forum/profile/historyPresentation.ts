@@ -14,6 +14,8 @@ const actions: Record<string, {label: string; icon: UiIconName}> = {
   grant_item: {label: 'Выданы предметы', icon: 'sections.items'},
   remove_item: {label: 'Изъяты предметы', icon: 'sections.items'},
   set_rank: {label: 'Изменён ранг', icon: 'management.rank'},
+  topic_reward: {label: 'Награда', icon: 'management.title'},
+  episode_reward: {label: 'Награда за эпизод', icon: 'management.title'},
 };
 
 /** SQL-время сервера хранится в UTC. День и часы показываем в часовом поясе браузера,
@@ -52,7 +54,7 @@ export function historyResources(details: Fields): HistoryResource[] {
     resources.push({kind, value, label: (value > 0 ? '+' : '−') + amount + (kind === 'gold' ? ' золота' : ' опыта')});
   };
   if (details.experience_spent) add('experience', -Number(details.experience_spent));
-  if (details.action === 'reward') {
+  if (details.action === 'reward' || details.action === 'episode_reward' || details.action === 'topic_reward') {
     add('experience', Number(details.experience));
     add('gold', Number(details.gold));
   } else if (details.action === 'balance') {
@@ -70,7 +72,10 @@ export function historyHeading(event: HistoryEvent, lookups: Lookups): {label: s
   const removed = object(details.removed);
   const target = lookup(lookups, catalog, removed[kind + '_id'] ?? details.target_id);
   const name = text(details, 'name') || target?.name || '';
+  if (details.action === 'topic_reward') return {label: 'Награда', icon: uiIcon('management.title'), caption: ''};
+  if (details.action === 'episode_reward') return {label: 'Награда за эпизод', icon: uiIcon('management.title'), caption: ''};
   if (event.type === 'character_developed') {
+    if (kind === 'spell') return {label: name + ' · ' + roman(Number(details.level)), icon: uiIcon('sections.spells'), caption: 'Изучено заклинание' + (details.source ? ' · ' + text(details, 'source') : '')};
     const attribute = kind === 'attribute' ? target : lookup(lookups, 'attributes', target?.attribute_id);
     const icon = attribute?.icon ? catalogueIcon(text(attribute, 'icon')) : uiIcon('sections.training');
     const level = kind === 'attribute' ? text(details, 'level') : roman(Number(details.level));

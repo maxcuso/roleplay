@@ -1,0 +1,11 @@
+Built-in imagegen.
+
+Use case: precise-object-edit.
+Image 1 is a SHAPE REFERENCE ONLY. Image 2 is the College emblem to edit.
+Change only Image 2's shield contour to closely match Image 1: horizontal top about 60% of total width, short diagonal cuts at the upper left and upper right corners, then LONG PERFECTLY VERTICAL parallel sides. At the bottom the sides turn through subtly rounded corners into two short diagonal lower edges meeting in one low central point. Seven-sided heraldic shield, NOT an elongated tapering polygon: side width remains constant from upper clipped corners down to the lower corners. Bottom point occupies only the last roughly one fifth of the total height. Reference silhouette is essential.
+Keep exactly the current silver owl, pale cyan eyes, gold open book, ivory crescent, black drawing outlines, scale and placement. Purple field #352648 remains solid and opaque. Preserve all artwork and keep book fully visible. Do NOT copy gray fill, double rim or white background from Image 1. Only a simple black outer stroke, no ornament.
+Portrait canvas 1200x1600, shield fills full height and width, actual transparent background outside shape. Suggested contour: top corners (240,6) and (959,6), upper shoulder corners (1193,220) and (6,220), vertical sides down to roughly y1210, lower central point (600,1592). Slight rounding ONLY at the transition from vertical side to lower diagonals. No changes inside shield, no gradients, no texture, no crown.
+
+Generated source: C:\Users\KusoT\.codex\generated_images\01a149af-703a-7770-91da-8fdb295c9ba6\exec-12a39972-f1e1-4a0d-b094-da37e2a0acb4.png
+Final preparation: reference shield contour with clipped upper corners, vertical sides, slightly rounded lower corners and short bottom point; solid field #352648; exact 1200x1600. Original emblem transferred from v1 without rescaling or redrawing. Previous versions retained.
+

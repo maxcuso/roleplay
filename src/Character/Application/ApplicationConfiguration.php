@@ -20,7 +20,7 @@ final class ApplicationConfiguration
 
     public function normalize(mixed $input): array
     {
-        if (!is_array($input)) FieldValues::invalid('Нужен объект настроек темы анкеты.');
+        if (!is_array($input)) FieldValues::invalid('Не удалось обработать настройки темы анкеты: ожидается объект JSON. Попробуйте обновить страницу');
         FieldValues::allowed($input, ['tag_id', 'title_template', 'body_template']);
         $input += self::defaults();
         return [
@@ -37,7 +37,7 @@ final class ApplicationConfiguration
         $title = mb_substr(strtr($configuration['title_template'], $values), 0, 80);
         $body = strtr($configuration['body_template'], $values);
         if (mb_strlen($title) < 3 || mb_strlen($body) > 63000) {
-            FieldValues::invalid('Проверь длину заголовка и шаблона после подстановки имени.');
+            FieldValues::invalid('Проверьте длину заголовка и шаблона после подстановки имени персонажа');
         }
         return ['title' => $title, 'content' => $body];
     }

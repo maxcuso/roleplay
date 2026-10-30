@@ -5,12 +5,15 @@
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
     "typecheck": "tsc --noEmit",
+    "types:sync": "node scripts/sync-flarum-types.cjs",
     "preview": "node ../preview/server.cjs",
     "typecheck:preview": "tsc --noEmit -p tsconfig.preview.json"
   },
   "devDependencies": {
     "@types/mithril": "^2.2.7",
+    "flarum-tsconfig": "^2.0.0",
     "flarum-webpack-config": "^3.0.4",
+    "postcss": "^8.5.6",
     "typescript": "^5.9.3",
     "webpack": "^5.104.1",
     "webpack-cli": "^4.9.1"

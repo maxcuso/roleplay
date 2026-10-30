@@ -12,7 +12,7 @@ final class OperationRequest
     public static function body(mixed $input, array $fields): array
     {
         if (!is_array($input) || array_diff(array_keys($input), $fields)) {
-            throw new ApiProblem('invalid_request', 'Некорректные поля запроса.', 400);
+            throw new ApiProblem('invalid_request', 'Не удалось обработать поля запроса. Попробуйте обновить страницу', 400);
         }
         return $input;
     }
@@ -25,7 +25,7 @@ final class OperationRequest
     public static function key(mixed $value): string
     {
         if (!is_string($value) || !preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/D', $value)) {
-            throw new ApiProblem('invalid_request', 'Нужен уникальный UUID v4 запроса.', 400);
+            throw new ApiProblem('invalid_request', 'Не удалось определить запрос. Попробуйте обновить страницу', 400);
         }
         return $value;
     }

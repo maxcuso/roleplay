@@ -37,7 +37,7 @@ export default class ProgressionTraining extends Component<Attrs> {
       </button>;
     };
     return <div>
-      <div className="RpSheet-training">{view.lookups.attributes.map(attribute => <div key={attribute.id}>
+      <div className="RpSheet-training">{view.lookups.attributes.map(attribute => <div key={attribute.id} data-attribute={text(attribute, 'slug')}>
         <Icon name={catalogueIcon(text(attribute, 'icon'))}/>
         {list.filter(row => row.attribute_id === attribute.id && row.kind === 'skill').map(entry)}
         <hr/>

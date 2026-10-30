@@ -25,7 +25,7 @@ final class DefinitionStore
     public function list(string $name, User $actor, string $search = '', ?bool $enabled = null,
         int $page = 1, ?callable $filter = null): array
     {
-        Access::admin($actor);
+        \Maxcuso\Roleplay\Workspace\WorkspaceAccess::store($actor, $name, 'view');
         return $this->revision->read(function (int $revision) use ($name, $search, $enabled, $page, $filter): array {
             $query = $this->db->table($this->table($name));
             if (trim($search) !== '') {
@@ -49,9 +49,10 @@ final class DefinitionStore
 
     public function save(string $name, ?int $id, int $revision, array $input, User $actor, callable $validate, ?callable $saveRelated = null): array
     {
-        // Только создание трёх выдаваемых сущностей. Правка, удаление и переключение статуса остаются административными.
+        // Старое создание из окна выдачи сохраняется. Правка и удаление трёх
+        // каталогов отдельно проверяют права рабочего пространства.
         if ($id === null && in_array($name, ['perks', 'spells', 'items'], true)) Access::catalogCreate($actor);
-        else Access::admin($actor);
+        else \Maxcuso\Roleplay\Workspace\WorkspaceAccess::store($actor, $name, 'edit');
         return $this->revision->write($revision, function () use ($name, $id, $input, $validate, $saveRelated): array {
             $table = $this->table($name);
             if ($id !== null) $this->requireEntry($name, $id);
@@ -78,7 +79,7 @@ final class DefinitionStore
 
     public function toggle(string $name, int $id, int $revision, bool $enabled, User $actor, ?callable $beforeToggle = null): array
     {
-        Access::admin($actor);
+        \Maxcuso\Roleplay\Workspace\WorkspaceAccess::store($actor, $name, 'edit');
         return $this->revision->write($revision, function () use ($name, $id, $enabled, $beforeToggle): array {
             $this->requireEntry($name, $id);
             if ($beforeToggle !== null) $beforeToggle();
@@ -91,7 +92,7 @@ final class DefinitionStore
 
     public function remove(string $name, int $id, int $revision, User $actor): array
     {
-        Access::admin($actor);
+        \Maxcuso\Roleplay\Workspace\WorkspaceAccess::store($actor, $name, 'delete');
         return $this->revision->write($revision, function () use ($name, $id): array {
             $this->requireEntry($name, $id);
             (new CatalogUsage($this->db))->assertUnused($name, $id);
@@ -117,17 +118,17 @@ final class DefinitionStore
     public function requireEntry(string $name, int $id): void
     {
         if ($id < 1 || !$this->db->table($this->table($name))->where('id', $id)->exists()) {
-            throw new ApiProblem('catalog_entry_not_found', 'Запись не найдена.', 404);
+            throw new ApiProblem('catalog_entry_not_found', 'Запись не найдена. Попробуйте обновить страницу', 404);
         }
     }
 
     public function requireIds(string $name, array $ids): array
     {
-        if (!array_is_list($ids) || count($ids) > 1000) FieldValues::invalid('Некорректный список выбранных записей.');
+        if (!array_is_list($ids) || count($ids) > 1000) FieldValues::invalid('Проверьте список выбранных записей');
         foreach ($ids as $id) FieldValues::integer($id, 'Выбранная запись', 1, PHP_INT_MAX);
         $ids = array_values(array_unique($ids));
         if ($this->db->table($this->table($name))->whereIn('id', $ids)->count() !== count($ids)) {
-            FieldValues::invalid('Одна из выбранных записей больше не существует.');
+            FieldValues::invalid('Одна из выбранных записей больше не существует. Попробуйте обновить страницу');
         }
         return $ids;
     }

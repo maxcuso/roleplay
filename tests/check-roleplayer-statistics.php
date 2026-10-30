@@ -47,7 +47,7 @@ try {
     $event(2, 'character_managed', ['action' => 'balance', 'resource' => 'gold', 'delta' => 100]);
     $event(1, 'review_decided', ['activated' => true], '2026-09-12 12:00:00');
     $event(2, 'review_decided', ['activated' => true], '2026-09-11 12:00:00');
-    (require __DIR__.'/../migrations/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
     $stats = new RoleplayerStatistics($db);
     $assert($stats->read(123) === ['earned_experience' => 13, 'active_characters' => 2,
         'started_at' => '2026-09-11T12:00:00Z'], 'Backfill must exclude starting XP/removals/gold and use earliest activation');

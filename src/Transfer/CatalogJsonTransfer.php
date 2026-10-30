@@ -36,7 +36,7 @@ final class CatalogJsonTransfer
     {
         Access::admin($actor);
         $this->registry->get($catalog);
-        if (!in_array($scope, ['section', 'filtered', 'all'], true)) $this->invalid('Неизвестный объём экспорта.');
+        if (!in_array($scope, ['section', 'filtered', 'all'], true)) $this->invalid('Выберите доступный объём экспорта');
         return (new CatalogRevision($this->db))->read(function () use ($actor, $catalog, $scope, $params): array {
             $snapshot = $this->snapshot();
             $selected = [];
@@ -60,13 +60,13 @@ final class CatalogJsonTransfer
                 [$type, $id] = $queue[$index];
                 if (isset($selected[$type][$id])) continue;
                 $row = $snapshot[$type][$id] ?? null;
-                if (!$row) $this->invalid('Не найдена зависимость '.$type.'.');
+                if (!$row) $this->invalid('Не удалось найти зависимость '.$type.'. Проверьте связи записей в справочниках');
                 $fields = $this->fields($row);
                 $fields = $this->references->convert($type, $fields, false,
                     function (string $target, mixed $value, bool $alreadyKey = false) use ($snapshot, $byKey, &$queue): string {
                         $id = $alreadyKey ? ($byKey[$target][$value] ?? null) : $value;
                         $entry = $snapshot[$target][$id] ?? null;
-                        if (!$entry) $this->invalid('Не найдена связь '.$target.': '.(string) $value);
+                        if (!$entry) $this->invalid('Связанная запись '.$target.': '.(string) $value.' не найдена. Проверьте её системный ключ и наличие в справочнике');
                         $queue[] = [$target, $entry['id']];
                         return $entry['slug'];
                     });
@@ -84,10 +84,10 @@ final class CatalogJsonTransfer
                 $catalogs[$type] = array_values(array_intersect_key($snapshot[$type], $selected[$type]));
                 $catalogs[$type] = array_map(fn ($row) => $selected[$type][$row['id']], $catalogs[$type]);
             }
-            if (array_sum(array_map('count', $catalogs)) > self::MAX_RECORDS) $this->invalid('В одном файле допускается не более 5000 записей.');
+            if (array_sum(array_map('count', $catalogs)) > self::MAX_RECORDS) $this->invalid('В одном файле допускается не более 5000 записей. Разделите записи на несколько файлов');
             $document = ['format' => 'roleplay-catalogs', 'version' => 1, 'catalogs' => (object) $catalogs];
             if (strlen(json_encode($document, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) > self::MAX_BYTES) {
-                $this->invalid('Экспорт превышает 10 МБ. Выгрузи разделы отдельно.');
+                $this->invalid('Размер экспорта превышает 10 МБ. Выгрузите разделы отдельно');
             }
             return $document;
         });
@@ -96,12 +96,12 @@ final class CatalogJsonTransfer
     public function import(User $actor, array $document, string $mode, int $revision, bool $apply): array
     {
         Access::admin($actor);
-        if (!in_array($mode, ['skip', 'update'], true)) $this->invalid('Неизвестный режим импорта.');
+        if (!in_array($mode, ['skip', 'update'], true)) $this->invalid('Не удалось определить режим импорта. Попробуйте обновить страницу');
         $catalogs = $this->document($document);
         try {
             return $this->db->transaction(function () use ($actor, $catalogs, $mode, $revision, $apply): array {
                 $current = (int) $this->db->table('roleplay_catalog_state')->where('id', 1)->lockForUpdate()->value('revision');
-                if ($current !== $revision) throw new ApiProblem('catalog_revision_conflict', 'Справочники изменились. Проверь файл ещё раз.', 409);
+                if ($current !== $revision) throw new ApiProblem('catalog_revision_conflict', 'Справочники изменились. Проверьте файл перед импортом', 409);
                 $snapshot = $this->snapshot();
                 $ids = [];
                 foreach ($snapshot as $type => $rows) foreach ($rows as $row) $ids[$type][$row['slug']] = $row['id'];
@@ -169,22 +169,22 @@ final class CatalogJsonTransfer
     {
         FieldValues::allowed($document, ['format', 'version', 'catalogs']);
         if (($document['format'] ?? null) !== 'roleplay-catalogs' || ($document['version'] ?? null) !== 1) {
-            $this->invalid('Нужен файл roleplay-catalogs версии 1.');
+            $this->invalid('Выберите файл в формате roleplay-catalogs версии 1');
         }
         $catalogs = $document['catalogs'] ?? null;
-        if (!is_array($catalogs) || array_diff(array_keys($catalogs), [...CatalogRegistry::keys(), 'effects'])) $this->invalid('Неизвестные разделы в файле.');
-        if (strlen(json_encode($document, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) > self::MAX_BYTES) $this->invalid('Размер файла — не более 10 МБ.');
+        if (!is_array($catalogs) || array_diff(array_keys($catalogs), [...CatalogRegistry::keys(), 'effects'])) $this->invalid('В файле есть неизвестные разделы. Уберите их или проверьте формат файла');
+        if (strlen(json_encode($document, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)) > self::MAX_BYTES) $this->invalid('Выберите файл размером не более 10 МБ');
         $count = 0;
         foreach ($catalogs as $type => $rows) {
-            if (!is_array($rows) || !array_is_list($rows)) $this->invalid($type.': нужен список записей.');
+            if (!is_array($rows) || !array_is_list($rows)) $this->invalid($type.': укажите записи списком');
             $keys = [];
             foreach ($rows as $row) {
                 if (!is_array($row) || !is_string($row['key'] ?? null)
-                    || !preg_match('/^[a-z0-9][a-z0-9_-]{0,99}$/D', $row['key'])) $this->invalid($type.': неверный системный ключ записи.');
-                if (isset($keys[$row['key']])) $this->invalid($type.' / '.$row['key'].': ключ повторяется в файле.');
+                    || !preg_match('/^[a-z0-9][a-z0-9_-]{0,99}$/D', $row['key'])) $this->invalid($type.': проверьте системный ключ записи');
+                if (isset($keys[$row['key']])) $this->invalid($type.' / '.$row['key'].': системный ключ повторяется в файле. Укажите для каждой записи отдельный ключ');
                 FieldValues::text($row['name'] ?? null, $type.' / '.$row['key'].' / Название', 100, true);
                 $keys[$row['key']] = true;
-                if (++$count > self::MAX_RECORDS) $this->invalid('В одном файле допускается не более 5000 записей.');
+                if (++$count > self::MAX_RECORDS) $this->invalid('В одном файле допускается не более 5000 записей. Разделите записи на несколько файлов');
             }
         }
         return (new LegacyEffectDocument())->convert($catalogs);
@@ -198,7 +198,7 @@ final class CatalogJsonTransfer
             unset($input['key']);
             $fields = $this->registry->get('ranks')->validate($input);
             if ($this->db->table('roleplay_ranks')->where('level', $fields['level'])->exists()) {
-                throw new ApiProblem('rank_level_taken', 'Этот номер ранга уже занят. Для обновления сохраняй системный ключ записи.', 409);
+                throw new ApiProblem('rank_level_taken', 'Этот номер ранга уже занят. Для обновления существующего ранга сохраните его системный ключ. Для нового ранга укажите другой номер', 409);
             }
         }
         $extra = match ($type) {
@@ -219,7 +219,7 @@ final class CatalogJsonTransfer
 
     private function resolve(array $ids, string $type, mixed $key): int
     {
-        if (!is_string($key) || !isset($ids[$type][$key])) $this->invalid('Не найдена связь '.$type.' / '.(is_scalar($key) ? (string) $key : 'пустой ключ').'.');
+        if (!is_string($key) || !isset($ids[$type][$key])) $this->invalid('Связанная запись '.$type.' / '.(is_scalar($key) ? (string) $key : 'пустой ключ').' не найдена. Проверьте системный ключ и добавьте недостающую запись');
         return $ids[$type][$key];
     }
 

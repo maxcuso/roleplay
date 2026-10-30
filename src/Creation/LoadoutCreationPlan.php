@@ -13,13 +13,13 @@ final class LoadoutCreationPlan
         $items = [];
         $manualKeys = array_column(array_filter($configuration['loadout'], fn (array $group) => !$group['automatic']), 'key');
         if (array_diff(array_keys($payload['loadout']), $manualKeys)) {
-            $errors[] = 'Есть выбор из неизвестной или автоматической группы снаряжения.';
+            $errors[] = 'В выборе снаряжения есть неизвестная группа или группа с автоматической выдачей. Уберите этот выбор';
         }
         foreach ($configuration['loadout'] as $group) {
             $selected = $group['automatic'] ? [$group['options'][0]['key']] : ($payload['loadout'][$group['key']] ?? []);
             if (count($selected) < $group['min'] || count($selected) > $group['max']
                 || array_diff($selected, array_column($group['options'], 'key'))) {
-                $errors[] = 'Проверь выбор снаряжения: '.$group['name'].'.';
+                $errors[] = 'Проверьте количество и доступность снаряжения в группе «'.$group['name'].'»';
                 continue;
             }
             foreach ($group['options'] as $option) {
@@ -30,12 +30,12 @@ final class LoadoutCreationPlan
                     $definition = $catalog['items'][$id] ?? null;
                     if ($definition === null || !$definition['enabled']
                         || !($catalog['item-types'][$definition['item_type_id']]['enabled'] ?? false)) {
-                        $errors[] = 'Стартовая вещь или её тип выключены.';
+                        $errors[] = 'Выбранный предмет или его тип больше недоступны. Выберите другой доступный предмет';
                         continue;
                     }
                     $quantity = ($items[$id]['quantity'] ?? 0) + $entry['quantity'];
                     if ($quantity > 1000000) {
-                        $errors[] = 'Превышено количество стартовых вещей.';
+                        $errors[] = 'Выбрано слишком много стартовых предметов. Уменьшите их количество';
                         continue;
                     }
                     $items[$id] = ['id' => $id, 'name' => $definition['name'], 'quantity' => $quantity,
@@ -47,7 +47,7 @@ final class LoadoutCreationPlan
         foreach ($items as $item) {
             $rows += intdiv($item['quantity'] - 1, $item['max_stack']) + 1;
         }
-        if ($rows > 1000) $errors[] = 'Стартовый инвентарь превышает 1000 стопок.';
+        if ($rows > 1000) $errors[] = 'Не удалось выдать стартовое снаряжение: количество стопок превышает 1000. Обратитесь к администратору';
         return ['items' => array_values($items), 'errors' => $errors];
     }
 }

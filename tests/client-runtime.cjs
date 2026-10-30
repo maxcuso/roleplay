@@ -32,7 +32,7 @@ function mithril() {
   m.route = {param: () => '', set: () => {}};
   return m;
 }
-function loadClient(kind = 'admin') {
+function loadClient(kind = 'admin', environment = {}) {
   const m = mithril();
   const modules = new Map();
   let pageClass;
@@ -60,7 +60,38 @@ function loadClient(kind = 'admin') {
   class Icon extends Component {
     view() { return m('i', {className: this.attrs.name, title: this.attrs.title}); }
   }
+  class Dropdown extends Component {
+    showing = false;
+    view(vnode) {
+      return m('div.Dropdown', [this.getButton(), this.getMenu((vnode.children || []).filter(Boolean).map(child => m('li', child)))]);
+    }
+  }
+  class Tooltip extends Component {
+    view() {
+      const child = this.children[0];
+      child.attrs = {...child.attrs, 'aria-label': this.attrs.text};
+      return child;
+    }
+  }
+  class LoadingIndicator extends Component {
+    view() { return m('span', {role: 'status'}); }
+  }
+  class Alert extends Component {
+    view() { return m('div', {className: 'Alert Alert--' + (this.attrs.type || 'warning'), role: 'alert'}, this.children, this.attrs.controls); }
+  }
   class Page extends Component { onremove() {} }
+  class Model {}
+  class Post extends Model {
+    constructor(data = {}, store) {super(); this.data = data; this.store = store;}
+    attribute(name) {return this.data.attributes?.[name];}
+    contentHtml() {return this.attribute('contentHtml');}
+  }
+  class Notification extends Component {
+    view() { return m('div', {className: 'Notification'}, this.content()); }
+  }
+  class NotificationGrid extends Component {
+    notificationTypes() {const entries = new Map(); return {add: (key, value) => entries.set(key, value), entries};}
+  }
   class ModalManager extends Component {
     animateHide(callback) {this.hidden = true; callback?.();}
   }
@@ -82,32 +113,51 @@ function loadClient(kind = 'admin') {
         className: 'Button Button--primary IndexPage-newDiscussion', itemClassName: 'App-primaryControl',
         onclick: () => {app.discussionOpened = true;},
       }, 'Start a Discussion')]]);
+      const priorities = new Map([['newDiscussion', 0]]);
       return {
         has: key => values.has(key), get: key => values.get(key), remove: key => values.delete(key),
-        add: (key, value) => values.set(key, value),
+        add: (key, value, priority = 0) => {values.set(key, value); priorities.set(key, priority);},
+        toArray: () => [...values.entries()].sort(([a], [b]) => (priorities.get(b) || 0) - (priorities.get(a) || 0)).map(([, value]) => value),
       };
     }
   }
-  const requests = [];
+  const requests = [], initializers = new Map();
+  let alertId = 0;
+  const alertEntries = new Map(), alertCalls = [];
   const app = {
-    initializers: {add(_name, initialize) { initialize(); }},
+    data: {resources: [{type: 'forums', id: '1', attributes: {}}], settings: {}},
+    initializers: {add(name, initialize) { initializers.set(name, initialize); initialize(); }},
     session: {user: {id: () => 1, slug: () => 'player'}}, routes: {}, setTitle() {}, setTitleCount() {},
     search: {state: {params: () => ({})}},
     route(name, params = {}) { return (this.routes[name]?.path || '/').replace(/:([a-z]+)/g, (_match, key) => encodeURIComponent(params[key] ?? ':' + key)); },
     translator: {trans(key) { return key; }},
     registry: {for() { return {registerPage(Page) { pageClass = Page; }, registerPermission() {}}; }},
     forum: {attribute() { return '/api'; }},
+    store: {all: () => [], models: {}}, notificationComponents: {},
+    alerts: {
+      entries: alertEntries, calls: alertCalls,
+      show(attrs, children) {const id = ++alertId; alertEntries.set(id, {attrs, children}); alertCalls.push({id, attrs, children}); return id;},
+      dismiss(id) {alertEntries.delete(id);},
+    },
     modal: {show(ModalClass, attrs, stack = false) { app.lastModal = {ModalClass, attrs, stack}; return Promise.resolve(); }},
     request: async request => {requests.push(request); return {data: app.result};},
   };
   const dependencies = new Map([
     ['common/app', app], ['admin/app', app], ['common/Component', Component], ['admin/components/ExtensionPage', ExtensionPage],
     ['common/components/Modal', Modal], ['common/components/Button', Button], ['common/components/Icon', Icon],
+    ['common/components/Dropdown', Dropdown],
+    ['common/components/TextEditor', Component], ['forum/components/CommentPost', Component],
+    ['common/components/Tooltip', Tooltip],
+    ['common/components/LoadingIndicator', LoadingIndicator],
+    ['common/components/Alert', Alert],
+    ['common/Model', Model], ['common/models/Post', Post], ['forum/components/Notification', Notification], ['forum/components/NotificationGrid', NotificationGrid],
+    ['common/helpers/textContrastClass', () => 'text-contrast--dark'],
     ['forum/components/UserPage', UserPage], ['forum/app', app], ['common/components/Page', Page], ['forum/components/HeaderSecondary', HeaderSecondary],
     ['common/components/LinkButton', Button],
     ['forum/components/IndexSidebar', IndexSidebar],
     ['common/components/ModalManager', ModalManager],
     ['common/extend', {extend(prototype, name, callback) {
+      if (typeof prototype === 'string') prototype = dependencies.get(prototype.replace(/^flarum\//, '')).prototype;
       const previous = prototype[name];
       prototype[name] = function(...args) { const result = previous.apply(this, args); callback.call(this, result, ...args); return result; };
     }, override(prototype, name, callback) {
@@ -125,6 +175,7 @@ function loadClient(kind = 'admin') {
       },
       add(_package, name, value) { modules.set(name, value); },
     }},
+    ...environment,
   });
   /** Раскрываем дерево и вызываем lifecycle/view каждого компонента, включая вложенные карточки. */
   function expand(vnode, collected = []) {
@@ -139,6 +190,6 @@ function loadClient(kind = 'admin') {
     } else if (Array.isArray(vnode.children)) vnode.children.forEach(child => expand(child, collected));
     return collected;
   }
-  return {modules, m, app, requests, pageClass, expand, IndexSidebar, HeaderSecondary, ModalManager};
+  return {modules, m, app, requests, initializers, pageClass, expand, IndexSidebar, HeaderSecondary, ModalManager};
 }
 module.exports = {loadClient};

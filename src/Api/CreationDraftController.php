@@ -22,7 +22,7 @@ final class CreationDraftController implements RequestHandlerInterface
             $data = match ($request->getMethod()) {
                 'GET' => $this->draft->read($actor),
                 'PUT' => $this->draft->save($actor, $request->getParsedBody()),
-                default => throw new ApiProblem('invalid_request', 'Неизвестная операция.', 400),
+                default => throw new ApiProblem('invalid_request', 'Не удалось определить действие. Попробуйте обновить страницу', 400),
             };
             // Эти поля — карты с именованными ключами, даже когда пока пусты.
             // Внутренние PHP-планы используют массивы; на границе JSON нужен объект {}.

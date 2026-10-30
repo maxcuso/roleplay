@@ -44,13 +44,16 @@ final class LiteratureSynchronizer
                 'status' => $activate ? 'active' : 'creating', 'revision' => $result['revision'],
                 'lore_revision' => (int) $character->lore_revision + 1, 'updated_at' => $now,
             ]);
-            $this->db->table('roleplay_character_events')->insert([
+            $details = ['part' => 'literature', 'action' => 'observe', 'before' => $character->literature_status,
+                'after' => $status, 'activated' => $activate, 'comment' => '',
+                'acceptance_post_id' => $topic['acceptance_post_id'] ?? null];
+            $eventId = $this->db->table('roleplay_character_events')->insertGetId([
                 'character_id' => $character->id, 'actor_user_id' => $reviewerId, 'operation_id' => $key,
                 'type' => 'review_decided', 'created_at' => $now,
-                'payload' => json_encode(['part' => 'literature', 'action' => 'observe', 'before' => $character->literature_status,
-                    'after' => $status, 'activated' => $activate, 'comment' => '',
-                    'acceptance_post_id' => $topic['acceptance_post_id'] ?? null], JSON_THROW_ON_ERROR),
+                'payload' => json_encode($details, JSON_THROW_ON_ERROR),
             ]);
+            \Maxcuso\Roleplay\Notification\CharacterNotifications::afterEvent($this->db, (array) $character,
+                'review_decided', $details, $eventId, $reviewerId);
         });
     }
 }

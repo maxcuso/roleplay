@@ -15,6 +15,7 @@ const statTargets: Record<string, string> = {
 };
 const actionTargets: Record<string, string> = {
   shop_discount: 'к скидке в магазине',
+  quest_experience: 'к опыту за квесты',
   extra_dodges: 'к количеству уклонений',
   mana_recovery: 'к восстановлению маны',
   stamina_recovery: 'к восстановлению выносливости',
@@ -84,6 +85,7 @@ export function effectIcon(effect: Fields, lookups: Lookups = {}): string {
     ignored_damage: 'combat.defense', all_attacks: 'fields.damage',
     mana_recovery: 'resources.mana', stamina_recovery: 'resources.stamina',
     shop_discount: 'resources.gold', skill_check: 'sections.training',
+    quest_experience: 'resources.activeExperience',
     incoming_damage: 'combat.defense',
   };
   return uiIcon(targets[text(definition, 'stat')] ?? targets[text(definition, 'mechanic')] ?? 'sections.effects');

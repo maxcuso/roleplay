@@ -14,7 +14,7 @@ abstract class EffectBoundCatalog extends AbstractCatalog
         $fields = $this->validate($input);
         $effects = (new InlineEffects($this->store))->normalize($input['effects'] ?? [], static::TABLE);
         if (static::TABLE === 'items' && !$fields['is_magical'] && $effects) {
-            FieldValues::invalid('Эффекты доступны только магическим предметам. Сначала убери эффекты.');
+            FieldValues::invalid('Эффекты доступны только магическим предметам. Уберите эффекты перед изменением типа предмета');
         }
         return $fields + ['effects' => json_encode($effects, JSON_THROW_ON_ERROR)];
     }

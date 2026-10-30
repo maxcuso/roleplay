@@ -1,0 +1,13 @@
+Tool: built-in image_gen.imagegen
+Transparent background: true
+Reference: C:/Forum/Flarum/packages/roleplay-new/content/flags/generated/1200x1600-full/espada-v1.png
+Final asset: C:\Forum\Flarum\packages\roleplay-new\content\flags\generated\1200x1600-full\espada-v2.png
+Canvas normalized separately to 1200x1600 with the same full-bleed swallowtail and ivory field; generated emblem preserved without scaling.
+
+Prompt:
+Edit ONLY the central black skull emblem on this Espada heraldic banner. It is currently a near-exact angular modern logo; adapt it into an original, slightly more organic MEDIEVAL HERALDIC SKULL while preserving its recognisable broad angular silhouette and sinister character.
+Keep the skull BLACK on the IVORY field, as in the current banner. Black skull mass with ivory negative-space features, NOT a white skull with black eye sockets. Preserve the approximate placement and scale of the central emblem.
+Redesign the cranium with a subtly faceted domed top, strong projecting angular cheekbones, two distinct sloping angular ivory eye sockets under a heavy menacing brow, a small clear ivory inverted-heart/triangular nasal opening, and a believable compact jaw with SIX simple squared teeth separated by narrow ivory gaps. Connect the lower jaw visually to the cheekbones rather than making four huge floating geometric bars. Preserve one diagonal pale crack/cut on the upper RIGHT forehead as a recognisable reference to the old mark; a single controlled scar, not many decorative cracks. Simplify boldly, original fantasy heraldic identity, slightly hand-drawn but clean black contours. Do not become a photorealistic anatomical skull, a pirate skull, a Punisher logo, an animal skull, or a helmet. No horns, no crossbones, no crown, no extra objects. Fewer, stronger shapes readable at small size; no shading or ornamental engraving. No separate outside outline or halo.
+KEEP THE FLAG ITSELF UNCHANGED: full-bleed ivory rectangular pennon with straight top and sides, two equal bottom corner tails and one central V notch rising to 80% height. Plain black outer edge. Canvas 1200x1600 pixels, 3:4. Flag fills entire file without outside padding. Only the bottom notch is transparent. All actual flag area opaque.
+Strictly uniform FLAT BLACK and FLAT IVORY fills; no gradient, texture, grain, lighting, gloss, fabric folds or 3D. No text, no motto. Deliver one edited complete banner PNG.
+

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Maxcuso\Roleplay\Creation;
 
 use Maxcuso\Roleplay\Rules\DevelopmentRules;
+use Maxcuso\Roleplay\Rules\DevelopmentConfiguration;
 
 /** Координатор чистых проверок. Не читает SQL, не доверяет клиентским итогам и не делает выдач. */
 final class CreationPlanBuilder
@@ -14,12 +15,12 @@ final class CreationPlanBuilder
     private readonly AbilityCreationPlan $abilities;
     private readonly LoadoutCreationPlan $loadout;
 
-    public function __construct()
+    public function __construct(?DevelopmentConfiguration $configuration = null)
     {
-        $rules = DevelopmentRules::defaults();
+        $rules = DevelopmentRules::defaults($configuration);
         $this->validator = new CreationValidator($rules);
         $this->training = new TrainingCreationPlan($rules);
-        $this->abilities = new AbilityCreationPlan();
+        $this->abilities = new AbilityCreationPlan($configuration);
         $this->loadout = new LoadoutCreationPlan();
     }
 

@@ -24,7 +24,7 @@ export default definition({
   ],
   defaults: {item_type_id: null, rarity: 'common', appearance: '', is_magical: false,
     is_melee_weapon: false, is_ranged_weapon: false, is_magic_weapon: false, is_armor: false,
-    is_ingredient: false, is_literature: false,
+    is_ingredient: false, is_literature: false, consumed_on_learning: false, literature_contents: [],
     damage_units: 0, ignored_damage_units: 0,
     melee_proficiency_id: null, ranged_proficiency_id: null, magic_proficiency_id: null,
     weight: 0, base_price: 0, max_stack: 1, properties: [], effects: []}, editor: ItemEditor,

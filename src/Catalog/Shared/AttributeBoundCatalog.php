@@ -26,7 +26,7 @@ abstract class AttributeBoundCatalog extends AbstractCatalog
             return;
         }
         if (!is_string($value) || !ctype_digit($value)) {
-            FieldValues::invalid('Некорректный фильтр характеристики.');
+            FieldValues::invalid('Не удалось применить фильтр характеристики. Попробуйте обновить страницу');
         }
         $id = FieldValues::integer((int) $value, 'Характеристика', 1, PHP_INT_MAX);
         $query->where('attribute_id', $id);

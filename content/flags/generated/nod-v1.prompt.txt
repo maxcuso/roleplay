@@ -1,0 +1,8 @@
+Tool: built-in image_gen.imagegen
+Transparent background: true
+Reference images:
+1. C:/Users/KusoT/.codex/generated_images/01a149af-703a-7770-91da-8fdb295c9ba6/exec-a9b74ed6-c494-478a-84f6-b69f6d735d4c.png (first Nod banner based on the original clan emblem)
+2. C:/Forum/Flarum/packages/roleplay-new/content/flags/251623.png (flat-fill style reference)
+
+Final prompt:
+Precise style correction of image 1. Preserve exactly its eye emblem silhouette, arch, iris, short lower stem, layout, black outlines, and five-sided pennon geometry. Image 2 is the exact FLAT FILL style reference. Remove ALL texture, grain, mottling, gradients, highlights and lighting from image 1. Every dark charcoal field region must be one absolutely uniform solid opaque fill #191b1b; every ivory region one absolutely uniform solid opaque fill #efe8d7; outlines solid black. Clean flat vector-like heraldic illustration, not painted, not fabric. Remove the little white reflection dot inside the pupil so the pupil is one solid black disk, no eye shine. Keep banner fully opaque, transparent ONLY outside its outer black border. No new motifs, no text, no colors, no borders, no dimensional effects. One isolated complete banner, upright and front-on with small equal transparent margins. It must look like the same flat graphic asset set as image 2.

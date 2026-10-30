@@ -19,7 +19,7 @@ final class FlarumApplicationTopics implements ApplicationTopics
     public function create(User $actor, int $tagId, string $title, string $content): int
     {
         $tag = Tag::query()->find($tagId);
-        if (!$tag) throw new ApiProblem('application_tag_missing', 'Тег литературных анкет больше не существует.');
+        if (!$tag) throw new ApiProblem('application_tag_missing', 'Тег для анкет больше не существует. Обратитесь к администратору');
         // При выборе дочернего тега Flarum ожидает также его родительский основной тег.
         $tagIds = $tag->parent_id ? [(int) $tag->parent_id, $tagId] : [$tagId];
         $response = $this->client->withActor($actor)->withBody([
@@ -31,7 +31,7 @@ final class FlarumApplicationTopics implements ApplicationTopics
         ])->post('/discussions');
         $body = json_decode((string) $response->getBody(), true, flags: JSON_THROW_ON_ERROR);
         if ($response->getStatusCode() !== 201) {
-            $detail = $body['errors'][0]['detail'] ?? 'Не удалось создать тему. Проверь доступ к тегу анкет.';
+            $detail = $body['errors'][0]['detail'] ?? 'Не удалось создать тему анкеты. Попробуйте ещё раз или обратитесь к администратору';
             throw new ApiProblem('application_topic_failed', (string) $detail, 422);
         }
         $id = $body['data']['id'] ?? null;

@@ -1,0 +1,50 @@
+/* Рабочее пространство живёт в профиле аккаунта и использует системные цвета. */
+.RpWorkspace { min-width: 0; font-family: 'Jost', var(--font-family, sans-serif); }
+.RpWorkspace-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+.RpWorkspace-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.RpWorkspace-toolbar > input { flex: 1 1 180px; min-width: 150px; }
+.RpWorkspace-toolbar > select { width: auto; min-width: 130px; max-width: 100%; }
+.RpWorkspace-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 16px 14px; }
+.RpWorkspace-entry { min-width: 0; }
+.RpWorkspace-entry .RpCard { width: 100%; }
+/* Плотность рабочего списка задаётся переменными общей карточки. */
+.RpWorkspace-entry .RpCard--expanded {
+  --rp-card-main-height: 104px;
+  --rp-card-padding: 10px;
+  --rp-card-gap: 8px;
+  --rp-card-icon-size: 34px;
+  --rp-card-glyph-size: 30px;
+  --rp-card-title-size: 12px;
+  --rp-card-text-size: 11px;
+  --rp-card-meta-size: 10px;
+  --rp-card-footer-height: 24px;
+  --rp-card-footer-size: 10px;
+  --rp-card-stat-gap: 5px;
+  --rp-card-stat-padding: 4px;
+}
+.RpWorkspace-entry .RpCard-descriptionArea { margin-top: 4px; }
+.RpWorkspace-entry .RpCard-footerContents { overflow-x: auto; overflow-y: hidden; }
+.RpWorkspace-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.RpWorkspace-entry .RpWorkspace-actions { gap: 2px; margin-top: 4px; }
+.RpWorkspace-entry .RpWorkspace-actions .Button { padding: 5px 6px; font-size: 12px; }
+.RpWorkspace-actions .helpText { margin: 0 auto 0 0; }
+.RpWorkspace-pagination { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 22px; }
+.RpWorkspace-episodes { display: grid; gap: 14px; margin-bottom: 18px; }
+.RpWorkspace-episode { padding: 18px; border-radius: 12px; background: var(--control-bg); min-width: 0; }
+.RpWorkspace-episodeHeading { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+.RpWorkspace-episodeHeading h3 { margin: 0; font: inherit; font-size: 18px; font-weight: 700; overflow-wrap: anywhere; }
+.RpWorkspace-episodeHeading .helpText { flex-shrink: 0; }
+.RpWorkspace-episode > p { margin: 10px 0 0; }
+.RpWorkspace-participants { display: flex; gap: 8px 16px; flex-wrap: wrap; padding: 0; margin: 10px 0 0; list-style: none; }
+@media (max-width: 1199px) {
+  .RpWorkspace-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .RpWorkspace-cards { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .RpWorkspace-tabs { gap: 6px; }
+  .RpWorkspace-tabs .Button { flex: 1 1 calc(50% - 6px); }
+  .RpWorkspace-toolbar > input { flex-basis: 100%; }
+  .RpWorkspace-toolbar > select { flex: 1; min-width: 0; }
+  .RpWorkspace-episodeHeading { align-items: start; }
+  .RpWorkspace-pagination .Button { padding-left: 10px; padding-right: 10px; }
+}

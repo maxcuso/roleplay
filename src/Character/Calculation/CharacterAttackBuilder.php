@@ -8,8 +8,9 @@ use Maxcuso\Roleplay\Character\State\CharacterSnapshot;
 use Maxcuso\Roleplay\Rules\ItemAttackRules;
 
 /**
- * Готовит потенциальные атаки для анкеты, не проводит бой и не выполняет SQL.
+ * Готовит атаки оружием и безоружную атаку для анкеты, не проводит бой и не выполняет SQL.
  * Владения берём только из приобретённого состояния: бонус характеристики их не выдаёт.
+ * Заклинания используют собственный урон из карточки и сюда не входят.
  */
 final class CharacterAttackBuilder
 {
@@ -55,28 +56,6 @@ final class CharacterAttackBuilder
             $attacks[] = [
                 'id' => 'unarmed', 'mode' => 'melee', 'damage_units' => 0, 'unarmed' => true,
                 'source' => ['kind' => 'attack', 'label' => 'Безоружная атака'],
-            ];
-        }
-
-        // Уже изученное остаётся доступным при выключении справочника или пути.
-        // Круг, затраты и перезарядка относятся к изучению/применению, а не к максимуму урона анкеты.
-        $seenSpells = [];
-        foreach ($snapshot->spells as $spell) {
-            if (isset($seenSpells[$spell['id']])) {
-                throw new \DomainException('Изученное заклинание повторяется в состоянии.');
-            }
-            $seenSpells[$spell['id']] = true;
-            if ($spell['definition']['damage_units'] === 0) {
-                continue;
-            }
-            $attacks[] = [
-                'id' => 'spell:'.$spell['grant_id'], 'mode' => 'magic',
-                'damage_units' => $spell['definition']['damage_units'],
-                'source' => [
-                    'kind' => 'spell', 'id' => $spell['grant_id'], 'definition_id' => $spell['id'],
-                    'label' => $spell['name'], 'magic_path_id' => $spell['definition']['magic_path_id'],
-                    'level' => $spell['definition']['level'],
-                ],
             ];
         }
         return $attacks;

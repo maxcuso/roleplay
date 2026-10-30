@@ -28,7 +28,7 @@ final class CreationRequest
     public static function rulesHash(mixed $value): string
     {
         if (!is_string($value) || !preg_match('/^[0-9a-f]{64}$/D', $value)) {
-            throw new ApiProblem('invalid_request', 'Некорректная версия правил.', 400);
+            throw new ApiProblem('invalid_request', 'Не удалось определить версию правил. Попробуйте обновить страницу', 400);
         }
         return $value;
     }
@@ -36,7 +36,7 @@ final class CreationRequest
     public static function current(array $catalog, int $revision, string $hash): void
     {
         if ($catalog['revision'] !== $revision || !hash_equals($catalog['rules_hash'], $hash)) {
-            throw new ApiProblem('creation_rules_changed', 'Правила изменились. Обнови мастер и проверь выбор.', 409);
+            throw new ApiProblem('creation_rules_changed', 'Правила изменились. Попробуйте обновить страницу', 409);
         }
     }
 }

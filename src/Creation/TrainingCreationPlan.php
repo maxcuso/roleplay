@@ -22,13 +22,9 @@ final class TrainingCreationPlan
         $choices = [];
         $attributesById = array_column($attributes, null, 'id');
         foreach ($attributes as $slug => $attribute) {
-            foreach (['skill' => $this->rules->skillChoiceLevels($slug),
-                'proficiency' => $this->rules->proficiencyChoiceLevels($slug)] as $kind => $levels) {
-                foreach ($levels as $threshold) {
-                    if ($threshold <= $attribute['level']) {
-                        $choices[] = ['attribute_id' => $attribute['id'], 'kind' => $kind, 'threshold' => $threshold,
-                            'target_id' => null, 'target_level' => null];
-                    }
+            foreach ($this->rules->choiceSlots($slug) as $slot) {
+                if ($slot['threshold'] <= $attribute['level']) {
+                    $choices[] = ['attribute_id' => $attribute['id'], 'target_id' => null, 'target_level' => null] + $slot;
                 }
             }
             foreach ($this->rules->automaticProficienciesReached($slug, $attribute['level']) as $key) {
@@ -40,7 +36,7 @@ final class TrainingCreationPlan
                     }
                 }
                 if ($found === null) {
-                    $errors[] = 'Не настроено автоматическое владение: '.$key.'.';
+                    $errors[] = 'Автоматическая выдача владения '.$key.' не настроена. Обратитесь к администратору';
                 } else {
                     $proficiencies[$found['id']] = $found;
                 }
@@ -51,12 +47,12 @@ final class TrainingCreationPlan
         $pool = self::racialPool($race, $catalog);
         $selected = $payload['racial_proficiency_ids'] ?? [];
         if (count($selected) !== ($racial['proficiency_choice_count'] ?? 0) || array_diff($selected, $pool)) {
-            $errors[] = 'Проверь расовый выбор владений.';
+            $errors[] = 'Проверьте количество и доступность выбранных расовых владений';
         }
         foreach ($selected as $id) {
             if (!in_array($id, $pool, true)) continue;
             if (isset($proficiencies[$id])) {
-                $errors[] = 'Расовое владение уже получено автоматически.';
+                $errors[] = 'Это расовое владение уже получено автоматически. Уберите повторный выбор';
                 continue;
             }
             $proficiencies[$id] = $catalog['proficiencies'][$id];
@@ -66,7 +62,7 @@ final class TrainingCreationPlan
             $skill = $catalog['skills'][$id] ?? null;
             $attribute = $attributesById[$skill['attribute_id'] ?? 0] ?? null;
             if ($skill === null || $attribute === null) {
-                $errors[] = 'Выбран неизвестный навык.';
+                $errors[] = 'Выбранный навык не найден. Выберите другой доступный навык';
                 continue;
             }
             $slot = $this->availableChoice($choices, $attribute['id'], 'skill');
@@ -91,7 +87,7 @@ final class TrainingCreationPlan
             $proficiency = $catalog['proficiencies'][$id] ?? null;
             $attribute = $attributesById[$proficiency['attribute_id'] ?? 0] ?? null;
             if ($proficiency === null || $attribute === null) {
-                $errors[] = 'Выбрано неизвестное владение.';
+                $errors[] = 'Выбранное владение не найдено. Выберите другое доступное владение';
                 continue;
             }
             $slot = $this->availableChoice($choices, $attribute['id'], 'proficiency');

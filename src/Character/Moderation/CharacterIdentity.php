@@ -25,15 +25,15 @@ final class CharacterIdentity
         $age = FieldValues::integer($body['age'] ?? null, 'Возраст', 0, 1000000);
         return (new CharacterOperation($this->db))->run($id, $actor, 'identity_correction', $body,
             function (array $character) use ($actor): void {
-                if (!ReviewPermissions::owner($character, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+                if (!ReviewPermissions::owner($character, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             },
             function (array $character) use ($actor, $first, $last, $age): array {
                 if (!ReviewPermissions::describe($character, $actor, $character['literature_status'])['can_edit_identity']) {
-                    throw new ApiProblem('identity_forbidden', 'Исправление доступно после возврата технической части.', 403);
+                    throw new ApiProblem('identity_forbidden', 'Исправление станет доступно после возврата технической части анкеты на доработку', 403);
                 }
                 $race = (new CatalogRegistry($this->db))->definitionsFor('races', [(int) $character['race_id']])[0];
-                if ($age < $race['min_age'] || $age > $race['max_age']) {
-                    throw new ApiProblem('invalid_age', 'Возраст выходит за допустимые пределы выбранной расы.');
+                if ($race['max_age'] !== null && $age > $race['max_age']) {
+                    throw new ApiProblem('invalid_age', 'Укажите возраст в пределах, допустимых для выбранной расы');
                 }
                 return [
                     'fields' => ['first_name' => $first, 'last_name' => $last, 'age' => $age, 'mechanics_status' => 'draft'],

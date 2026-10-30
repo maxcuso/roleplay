@@ -34,7 +34,7 @@ final class RoleplayerStatistics
         // Блокировка общего счётчика защищает одновременные выдачи разным персонажам игрока.
         $before = (int) (clone $query)->lockForUpdate()->value('earned_experience');
         if ($amount > 9007199254740991 - $before) {
-            throw new ApiProblem('roleplayer_experience_limit', 'Превышен допустимый общий опыт ролевика.', 409);
+            throw new ApiProblem('roleplayer_experience_limit', 'Общий опыт ролевика превышает допустимое значение. Обратитесь к администратору', 409);
         }
         $query->update(['earned_experience' => $before + $amount]);
     }

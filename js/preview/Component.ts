@@ -12,4 +12,5 @@ export default class Component<Attrs = Record<string, unknown>> {
     this.attrs = vnode.attrs;
     this.children = vnode.children;
   }
+  onremove(_vnode: Mithril.VnodeDOM<Attrs, this>): void {}
 }

@@ -6,7 +6,7 @@ import {uiIcon, type UiIconName} from '../../common/uiIcons';
 
 interface Attrs {title: string; icon: UiIconName; caption?: string; disabled: boolean; refresh: () => void}
 
-/** Общий заголовок трёх форм; обновление занимает одну иконку, а не отдельную строку. */
+/** Общий заголовок форм настроек; обновление занимает одну иконку, а не отдельную строку. */
 export default class SettingsHeader extends Component<Attrs> {
   view(vnode: Mithril.Vnode<Attrs, this>): JSX.Element {
     return <header className="RpSettings-header">

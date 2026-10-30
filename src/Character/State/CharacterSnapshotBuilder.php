@@ -237,12 +237,16 @@ final class CharacterSnapshotBuilder
             $row['character_id'] = $characterId;
             $row['attribute_id'] = $this->integer($row['attribute_id'], 'Характеристика выбора', 1);
             $row['threshold'] = $this->integer($row['threshold'], 'Порог выбора', 1);
-            if (!in_array($row['kind'], ['skill', 'proficiency'], true) || $row['threshold'] >= 25) {
+            if (!in_array($row['kind'], ['skill', 'proficiency'], true) || $row['threshold'] > 255
+                || (!isset($row['rule_key']) && $row['threshold'] >= $this->rules->maximumAttributeLevel())) {
                 throw new \DomainException('Некорректный порог или тип выбора.');
             }
             $row['target_id'] = $row['target_id'] === null ? null : $this->integer($row['target_id'], 'Цель выбора', 1);
             $row['target_level'] = $row['target_level'] === null ? null : $this->integer($row['target_level'], 'Уровень выбора', 1);
-            $key = $row['attribute_id'].':'.$row['kind'].':'.$row['threshold'];
+            // Старые пороги сохраняются после редактирования правил. Ключ и номер отличают
+            // несколько выборов одного уровня; для старого снимка остаётся прежняя проверка.
+            $key = isset($row['rule_key']) ? $row['rule_key'].':'.$this->integer($row['rule_ordinal'], 'Номер выбора', 1)
+                : $row['attribute_id'].':'.$row['kind'].':'.$row['threshold'];
             if (isset($seen[$key]) || ($row['target_id'] === null && $row['target_level'] !== null)
                 || ($row['kind'] === 'proficiency' && $row['target_level'] !== null)
                 || ($row['kind'] === 'skill' && $row['target_id'] !== null

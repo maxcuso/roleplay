@@ -1,18 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
+use Flarum\Database\Migration;
+use Flarum\Group\Group;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Database\Schema\Blueprint;
+use Maxcuso\Roleplay\Events\EventSchema;
+use Maxcuso\Roleplay\Rules\DevelopmentConfiguration;
 
-// Чистая схема новой версии ещё не установлена. Оформление и игровые данные здесь не задаются.
+/** Единая схема первого выпуска по состоянию на 30 октября 2026 года.
+ * Имя сохранено: существующая локальная установка уже выполнила эту миграцию.
+ * Только структура и технические начальные строки; персонажи и справочники не выдаются.
+ * Историческая цепочка хранится исключительно в tests/fixtures/migrations-2026-10-30.
+ */
 return [
     'up' => function (Builder $schema): void {
+        // 01. Справочники и версия настроек.
         $schema->create('roleplay_catalog_state', function (Blueprint $table): void {
             $table->unsignedTinyInteger('id')->primary();
             $table->unsignedInteger('revision')->default(1);
             $table->dateTime('updated_at');
         });
-        foreach (['attributes', 'magic_paths', 'item_types', 'perk_sources', 'perks', 'spells', 'skills', 'weapon_proficiencies', 'items', 'races', 'effects'] as $name) {
-            $schema->create('roleplay_'.$name, function (Blueprint $table) use ($name): void {
+        $indexPrefix = 'rp_'.substr(sha1($schema->getConnection()->getTablePrefix()), 0, 8).'_';
+        foreach (['attributes', 'magic_paths', 'item_types', 'perk_sources', 'perks', 'spells', 'skills', 'weapon_proficiencies', 'items', 'races'] as $name) {
+            $schema->create('roleplay_'.$name, function (Blueprint $table) use ($name, $indexPrefix): void {
                 $table->increments('id');
                 $table->string('name', 100);
                 $table->string('slug', 100)->unique();
@@ -22,23 +34,15 @@ return [
                 $table->dateTime('created_at');
                 $table->dateTime('updated_at');
                 // Короткое имя индекса оставляет место для префикса таблиц форума.
-                $table->index(['enabled', 'sort_order', 'id'], 'rp_catalog_order_index');
+                // В PostgreSQL/SQLite имена индексов уникальны во всей схеме.
+                $table->index(['enabled', 'sort_order', 'id'], $indexPrefix.$name.'_order');
 
-                if (in_array($name, ['attributes', 'magic_paths', 'item_types', 'perk_sources', 'effects'], true)) {
+                if (in_array($name, ['attributes', 'magic_paths', 'item_types', 'perk_sources'], true)) {
                     $table->string('icon', 100)->nullable();
                 }
                 if (in_array($name, ['skills', 'weapon_proficiencies'], true)) {
                     $table->unsignedInteger('attribute_id');
                     $table->foreign('attribute_id')->references('id')->on('roleplay_attributes')->restrictOnDelete();
-                }
-                if ($name === 'effects') {
-                    $table->string('mechanic', 32)->default('text');
-                    $table->string('operation', 16)->default('add');
-                    $table->string('stat', 32)->nullable();
-                    $table->unsignedInteger('attribute_id')->nullable();
-                    $table->unsignedInteger('skill_id')->nullable();
-                    $table->foreign('attribute_id')->references('id')->on('roleplay_attributes')->restrictOnDelete();
-                    $table->foreign('skill_id')->references('id')->on('roleplay_skills')->restrictOnDelete();
                 }
                 if ($name === 'magic_paths') $table->string('color', 7)->nullable();
                 if ($name === 'item_types') {
@@ -52,11 +56,13 @@ return [
                 }
                 if ($name === 'perks') $table->string('image', 1000)->nullable();
                 if (in_array($name, ['perks', 'items'], true)) $table->string('rarity', 16)->default('common');
+                if (in_array($name, ['perks', 'items'], true)) $table->json('effects')->nullable();
                 if ($name === 'spells') {
                     $table->unsignedInteger('magic_path_id');
                     $table->unsignedTinyInteger('level')->default(1);
+                    $table->boolean('is_starting')->default(true);
                     $table->string('distance_mode', 16)->default('self');
-                    $table->unsignedInteger('distance_value')->nullable();
+                    $table->decimal('distance_value', 10, 3)->unsigned()->nullable();
                     $table->unsignedInteger('radius_value')->default(0);
                     $table->unsignedInteger('damage_units')->default(0);
                     $table->string('cast_mode', 16)->default('instant');
@@ -75,6 +81,10 @@ return [
                     $table->unsignedInteger('item_type_id');
                     $table->text('appearance')->nullable();
                     $table->boolean('is_magical')->default(false);
+                    $table->boolean('is_ingredient')->default(false);
+                    $table->boolean('is_literature')->default(false);
+                    $table->text('literature_contents')->nullable();
+                    $table->boolean('consumed_on_learning')->default(false);
                     // Применение задаётся у конкретного предмета. Флаги независимы от его типа.
                     foreach (['is_melee_weapon', 'is_ranged_weapon', 'is_magic_weapon', 'is_armor'] as $flag) {
                         $table->boolean($flag)->default(false);
@@ -87,7 +97,7 @@ return [
                     $table->unsignedInteger('ignored_damage_units')->default(0);
                     $table->unsignedInteger('damage_units')->default(0);
                     $table->decimal('weight', 10, 3)->default(0);
-                    $table->unsignedBigInteger('base_price')->default(0);
+                    $table->decimal('base_price', 19, 3)->unsigned()->default(0);
                     $table->unsignedInteger('max_stack')->default(1);
                     $table->json('properties');
                     $table->foreign('item_type_id')->references('id')->on('roleplay_item_types')->restrictOnDelete();
@@ -97,23 +107,12 @@ return [
                     $table->unsignedInteger('min_age')->nullable();
                     $table->unsignedInteger('max_age')->nullable();
                     $table->json('rules');
+                    $table->string('average_height', 255)->nullable();
+                    $table->text('distinctive_traits')->nullable();
+                    $table->string('background_color', 7)->nullable();
+                    $table->text('quote')->nullable();
+                    $table->string('image', 1000)->nullable();
                 }
-            });
-        }
-
-        // Величины живут у владельца; один эффект можно использовать с разными числами.
-        foreach (['perk' => 'perks', 'item' => 'items'] as $owner => $catalog) {
-            $schema->create('roleplay_'.$owner.'_effects', function (Blueprint $table) use ($owner, $catalog): void {
-                $table->increments('id');
-                $table->unsignedInteger($owner.'_id');
-                $table->unsignedInteger('effect_id');
-                $table->decimal('value', 16, 3)->nullable();
-                $table->string('condition', 16)->default('always');
-                $table->string('condition_text', 1000)->nullable();
-                $table->string('scope', 16)->default('all');
-                $table->unique([$owner.'_id', 'effect_id'], 'rp_owner_effect_unique');
-                $table->foreign($owner.'_id')->references('id')->on('roleplay_'.$catalog)->cascadeOnDelete();
-                $table->foreign('effect_id')->references('id')->on('roleplay_effects')->restrictOnDelete();
             });
         }
 
@@ -128,13 +127,29 @@ return [
             $table->foreign('perk_id')->references('id')->on('roleplay_perks')->restrictOnDelete();
         });
 
-        // Идентичность персонажа и его выдачи. Создание/развитие подключатся отдельными подсистемами.
+        $schema->create('roleplay_ranks', function (Blueprint $table): void {
+            $table->increments('id');
+            $table->string('name', 100);
+            $table->string('slug', 100)->unique();
+            $table->string('letter', 4);
+            $table->unsignedTinyInteger('level')->unique();
+            $table->text('description')->nullable();
+            $table->boolean('enabled')->default(true);
+            $table->integer('sort_order')->default(0);
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
+        });
+
+        // 02. Персонажи, способности и инвентарь. Существующих персонажей не создаём.
         $schema->create('roleplay_characters', function (Blueprint $table): void {
             $table->increments('id');
             $table->unsignedInteger('user_id')->index();
             $table->unsignedInteger('race_id');
             $table->string('first_name', 100);
             $table->string('last_name', 100)->nullable();
+            $table->string('avatar', 100)->nullable();
+            $table->unsignedInteger('rank_id')->nullable();
+            $table->foreign('rank_id')->references('id')->on('roleplay_ranks')->restrictOnDelete();
             $table->unsignedInteger('age')->nullable();
             $table->unsignedInteger('creation_catalog_revision')->nullable();
             $table->unsignedInteger('discussion_id')->nullable()->unique();
@@ -158,7 +173,7 @@ return [
                 $table->increments('id');
                 $table->unsignedInteger('character_id');
                 $table->unsignedInteger($column);
-                $table->unique(['character_id', $column], 'rp_character_definition_unique');
+                $table->unique(['character_id', $column], $constraintPrefix.$name.'_unique');
                 $key = match ($name) {
                     'attributes' => 'ca', 'skills' => 'cs', 'weapon_proficiencies' => 'cw',
                 };
@@ -180,6 +195,7 @@ return [
                 $table->increments('id');
                 $table->unsignedInteger('character_id');
                 $table->unsignedInteger($column);
+                $table->boolean('is_starting')->default(false);
                 $table->foreign('character_id')->references('id')->on('roleplay_characters')->restrictOnDelete();
                 $table->foreign($column)->references('id')->on('roleplay_'.$name)->restrictOnDelete();
                 if ($name === 'perks') {
@@ -241,7 +257,9 @@ return [
             // Разный тип цели определяется kind. Реальное владение/навык хранится в своей таблице.
             $table->unsignedInteger('target_id')->nullable();
             $table->unsignedTinyInteger('target_level')->nullable();
-            $table->unique(['character_id', 'attribute_id', 'kind', 'threshold'], 'rp_choice_threshold_unique');
+            $table->string('rule_key', 64)->nullable();
+            $table->unsignedSmallInteger('rule_ordinal')->nullable();
+            $table->unique(['character_id', 'rule_key', 'rule_ordinal'], 'rp_choice_rule_unique');
             $table->foreign('character_id')->references('id')->on('roleplay_characters')->restrictOnDelete();
             $table->foreign('attribute_id')->references('id')->on('roleplay_attributes')->restrictOnDelete();
         });
@@ -266,11 +284,70 @@ return [
             $table->foreign('character_id')->references('id')->on('roleplay_characters')->restrictOnDelete();
             $table->foreign('operation_id')->references('id')->on('roleplay_operations')->restrictOnDelete();
         });
+        // 03. Настройки развития и накопленная статистика ролевика.
+        $schema->create('roleplay_development_config', function (Blueprint $table): void {
+            $table->unsignedTinyInteger('id')->primary();
+            $table->json('configuration');
+            $table->dateTime('updated_at');
+        });
+        $schema->create('roleplay_player_statistics', function (Blueprint $table): void {
+            $table->unsignedInteger('user_id')->primary();
+            $table->unsignedBigInteger('earned_experience')->default(0);
+            $table->dateTime('started_at')->nullable();
+        });
+
+        // 04. Участие персонажа в квесте, планы наград и неизменяемые итоги.
+        $questPrefix = 'rpq_'.substr(sha1($schema->getConnection()->getTablePrefix()), 0, 8).'_';
+        $schema->create('roleplay_quest_participants', function (Blueprint $table) use ($questPrefix): void {
+            $table->unsignedInteger('event_id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('character_id')->nullable();
+            $table->string('character_name', 201);
+            $table->dateTime('created_at');
+            $table->unique(['event_id', 'user_id'], $questPrefix.'participation');
+            $table->foreign('character_id', $questPrefix.'character')->references('id')->on('roleplay_characters')->nullOnDelete();
+        });
+        $schema->create('roleplay_episode_plans', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->unsignedInteger('event_id')->nullable()->index();
+            $table->unsignedInteger('discussion_id')->index();
+            $table->unsignedInteger('actor_user_id');
+            $table->longText('payload');
+            $table->dateTime('created_at');
+        });
+        $schema->create('roleplay_episode_completions', function (Blueprint $table): void {
+            $table->unsignedInteger('event_id')->nullable()->unique();
+            $table->uuid('plan_id')->primary();
+            $table->unsignedInteger('post_id')->index();
+            $table->unsignedInteger('actor_user_id');
+            $table->longText('result');
+            $table->dateTime('created_at');
+        });
+
+        // 05. Запросы и результаты проверок, бросок фиксируется при публикации.
+        $schema->create('roleplay_checks', function (Blueprint $table): void {
+            $table->uuid('id')->primary();
+            $table->string('type', 12);
+            $table->unsignedInteger('actor_user_id')->index();
+            $table->unsignedInteger('discussion_id')->nullable()->index();
+            $table->unsignedInteger('post_id')->nullable()->index();
+            $table->longText('payload');
+            $table->longText('result')->nullable();
+            $table->dateTime('created_at');
+        });
+
         $db = $schema->getConnection();
         // Только техническая строка. Стартовые данные настраиваются явно, не миграцией.
         $db->table('roleplay_creation_config')->insert(['id' => 1, 'configuration' => '{}', 'updated_at' => gmdate('Y-m-d H:i:s')]);
-        $db->table('roleplay_catalog_state')->insert(['id' => 1, 'revision' => 1, 'updated_at' => gmdate('Y-m-d H:i:s')]);
-        foreach ([
+        // Ревизия 2 совпадает с чистой установкой прежней цепочки после добавления описаний.
+        $db->table('roleplay_catalog_state')->insert(['id' => 1, 'revision' => 2, 'updated_at' => gmdate('Y-m-d H:i:s')]);
+        $db->table('roleplay_development_config')->insert([
+            'id' => 1, 'configuration' => json_encode(DevelopmentConfiguration::defaults()->values, JSON_THROW_ON_ERROR),
+            'updated_at' => gmdate('Y-m-d H:i:s'),
+        ]);
+        // Дополнительная защита MySQL/MariaDB. SQLite не поддерживает ALTER ADD CHECK,
+        // а PostgreSQL — CAST AS SIGNED. Проверки приложения действуют на всех СУБД.
+        $databaseChecks = [
             'catalog_state' => 'id = 1 AND revision >= 1',
             'creation_config' => 'id = 1',
             'creation_drafts' => 'revision >= 1 AND catalog_revision >= 1 AND payload_version = 1',
@@ -288,18 +365,40 @@ return [
                 .' AND (is_melee_weapon = 0 OR melee_proficiency_id IS NOT NULL)'
                 .' AND (is_ranged_weapon = 0 OR ranged_proficiency_id IS NOT NULL)'
                 .' AND (is_magic_weapon = 0 OR magic_proficiency_id IS NOT NULL)',
-        ] as $name => $condition) {
-            $table = $db->getQueryGrammar()->wrapTable('roleplay_'.$name);
-            $db->statement("ALTER TABLE $table ADD CHECK ($condition)");
+        ];
+        if (in_array($db->getDriverName(), ['mysql', 'mariadb'], true)) {
+            foreach ($databaseChecks as $name => $condition) {
+                $table = $db->getQueryGrammar()->wrapTable('roleplay_'.$name);
+                $db->statement("ALTER TABLE $table ADD CHECK ($condition)");
+            }
         }
+
+        // 06. Форумные события: при наличии QuestEvents сохраняем таблицы и их содержимое.
+        EventSchema::up($schema);
+        $permissions = Migration::addPermissions([
+            'roleplay.workspace' => Group::MODERATOR_ID,
+            'roleplay.catalog.view' => Group::MODERATOR_ID,
+            'quest-events.createForum' => Group::MEMBER_ID,
+        ]);
+        $permissions['up']($schema);
     },
     'down' => function (Builder $schema): void {
-        foreach (['character_events', 'operations', 'character_balances', 'character_choices',
+        // Удаление данных выполняется только явной штатной очисткой расширения.
+        // Форумные события, которые мог создать прежний QuestEvents, остаются нетронутыми.
+        foreach (['checks', 'episode_completions', 'episode_plans', 'quest_participants',
+            'character_events', 'operations', 'character_balances', 'character_choices',
             'creation_drafts', 'actor_states', 'creation_config', 'character_items', 'character_spells', 'character_perks',
             'character_attributes', 'character_skills', 'character_weapon_proficiencies', 'characters',
-            'perk_effects', 'item_effects', 'effects', 'skill_levels', 'races', 'items', 'skills', 'weapon_proficiencies',
-            'spells', 'perks', 'perk_sources', 'item_types', 'magic_paths', 'attributes', 'catalog_state'] as $name) {
+            'ranks', 'skill_levels', 'races', 'items', 'skills', 'weapon_proficiencies',
+            'spells', 'perks', 'perk_sources', 'item_types', 'magic_paths', 'attributes', 'catalog_state',
+            'development_config', 'player_statistics'] as $name) {
             $schema->dropIfExists('roleplay_'.$name);
         }
+        $permissions = Migration::addPermissions([
+            'roleplay.workspace' => Group::MODERATOR_ID,
+            'roleplay.catalog.view' => Group::MODERATOR_ID,
+            'quest-events.createForum' => Group::MEMBER_ID,
+        ]);
+        $permissions['down']($schema);
     },
 ];

@@ -27,7 +27,7 @@ final class CatalogRevision
             $revision = (int) $this->db->table('roleplay_catalog_state')
                 ->where('id', 1)->lockForUpdate()->value('revision');
             if ($revision !== $expected) {
-                throw new ApiProblem('catalog_revision_conflict', 'Справочник изменился. Обнови список.', 409);
+                throw new ApiProblem('catalog_revision_conflict', 'Справочник изменился. Попробуйте обновить страницу', 409);
             }
             // Если действие завершится ошибкой, запись и изменение версии откатятся вместе.
             $result = $action();

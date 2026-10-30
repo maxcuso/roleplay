@@ -1,3 +1,4 @@
+import Feedback from '../../common/components/Feedback';
 import Component from 'flarum/common/Component';
 import app from 'flarum/forum/app';
 import Button from 'flarum/common/components/Button';
@@ -38,9 +39,7 @@ export default class ReviewPanel extends Component<Attrs> {
           <span className="RpReview-progress" title="Количество одобренных частей">{approvedCount}/2</span>
         </div>
       </header>
-      {!review.topic_available && <p className="RpReview-warning" role="alert">
-        <Icon name={uiIcon('review.warning')}/> Литературная тема недоступна. Обратись к администратору.
-      </p>}
+      {!review.topic_available && <Feedback message="Литературная тема недоступна. Обратитесь к администратору" kind="input"/>}
       <div className="RpReview-parts">{(['mechanics', 'literature'] as ReviewPart[]).map(part => {
         const status = part === 'mechanics' ? review.mechanics_status : review.literature_status;
         const presentation = reviewStatus(part, status);
@@ -67,7 +66,7 @@ export default class ReviewPanel extends Component<Attrs> {
           <div className="RpReview-actions">
             {part === 'mechanics' && review.permissions.can_edit_mechanics && <Button className="Button RpReview-editButton"
               icon={uiIcon('actions.edit')} disabled={state.actionsBlocked}
-              onclick={() => showModal(CreationWizardModal, {profile: state})}>Редактировать</Button>}
+              onclick={() => void CreationWizardModal.open(state)}>Редактировать</Button>}
             {part === 'literature' && review.permissions.can_submit_literature && <Button className="Button RpReview-editButton"
               icon={uiIcon('review.submit')} disabled={state.actionsBlocked} loading={state.changing}
               onclick={() => void state.changeReview('literature', 'submit')}>На проверку</Button>}

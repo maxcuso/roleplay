@@ -41,7 +41,8 @@ const {loadClient} = require('./client-runtime.cjs');
       {id: 2, name: 'Перк II', enabled: true}, {id: 3, name: 'Перк III', enabled: true}],
     spells: [{id: 1, name: 'Заклинание', magic_path_id: 1, level: 1, damage_units: 14, mana_cost: 2, distance_mode: 'self', cast_mode: 'instant', enabled: true}],
     items: [{id: 1, name: 'Плащ', item_type_id: 1, weight: 1.25, is_magical: true, rarity: 'epic', properties: [{description: 'Текст свойства', cooldown_value: 2, cooldown_unit: 'turn'}], enabled: true}],
-    races: [{id: 1, name: 'Человек', rules: {fixed_bonuses: {magic: 1}, fixed_perk_ids: [1], choice_attributes: ['agility']}, enabled: true}],
+    races: [{id: 1, name: 'Человек', quote: '«Мы не дали угаснуть огням»', image: '/role/media/races/Human.png/file',
+      rules: {fixed_bonuses: {magic: 1}, fixed_perk_ids: [1], choice_attributes: ['agility']}, enabled: true}],
   };
   const result = {rows: [], total: 0, page: 1, per_page: 30, revision: 7, lookups: refs};
   app.result = result;
@@ -60,6 +61,29 @@ const {loadClient} = require('./client-runtime.cjs');
       assert.ok(nodes.some(node => node.tag === 'form' && node.attrs.onsubmit), definition.key + ' has submit form');
       assert.ok(nodes.some(node => node.tag === 'button' && node.attrs.type === 'submit'), definition.key + ' has save button');
       assert.notEqual(modal.editor.values, selected, 'Editor owns a separate draft');
+      if (definition.key === 'spells') {
+        const label = nodes.find(node => node.tag === 'label' && JSON.stringify(node).includes('Стартовое'));
+        const checkbox = label && expand(label).find(node => node.tag === 'input' && node.attrs.type === 'checkbox');
+        assert.ok(checkbox, 'Spell editor exposes the starting switch');
+        assert.equal(checkbox.attrs.checked, true, 'Starting flag defaults to the existing availability');
+        checkbox.attrs.onchange({target: {checked: false}});
+        assert.equal(modal.editor.values.is_starting, false, 'Starting switch updates the saved draft');
+      }
+      if (definition.key === 'items') {
+        assert.equal(modal.modalHeading().label, selected ? 'Редактирование предмета' : 'Создание предмета');
+      }
+      if (definition.key === 'races') {
+        const ImageUpload = exported('common/catalog/components/ImageUpload');
+        assert.equal(nodes.filter(node => node.tag === ImageUpload).length, 1, 'Race editor reuses one shared image uploader');
+        assert.ok(nodes.some(node => node.tag === 'input' && node.attrs['aria-label'] === 'Файл изображения расы'));
+        if (selected) {
+          const quote = nodes.find(node => node.tag === 'textarea' && node.attrs.value === selected.quote);
+          assert.ok(quote, 'Race quote is separate from the description');
+          quote.attrs.oninput({target: {value: '«Новая цитата»'}});
+          assert.equal(modal.editor.values.quote, '«Новая цитата»');
+          assert.equal(modal.editor.values.image, selected.image);
+        }
+      }
     }
     const section = new Section();
     section.oninit(m(Section, {definition}));
@@ -135,6 +159,47 @@ const {loadClient} = require('./client-runtime.cjs');
   assert.equal(expand(itemModal.view()).filter(node => node.tag === DamageEditor).length, 1, 'Unselecting armor hides its editor');
   assert.equal(itemModal.editor.values.ignored_damage_units, 21, 'Hidden armor value is preserved in the draft');
   const itemTypeDefinition = definitions.find(value => value.key === 'item-types');
+  // Содержимое литературы: поиск и фильтры не теряют уже выбранные знания.
+  {
+  const LiteratureEditor = exported('common/editors/LiteratureEditor');
+  const MultiPicker = exported('common/catalog/components/MultiPicker');
+  const literatureRefs = {...refs, spells: [refs.spells[0],
+    {...refs.spells[0], id: 2, name: 'Второе заклинание', level: 2},
+    {...refs.spells[0], id: 3, name: 'Иной путь', magic_path_id: 2}],
+    paths: [...refs.paths, {id: 2, name: 'Вода', enabled: true}]};
+  const literatureState = new Editor(itemDefinition.initial(null), null, 7, api);
+  literatureState.set('is_literature', true);
+  const literature = new LiteratureEditor();
+  literature.oninit(m(LiteratureEditor, {state: literatureState, lookups: literatureRefs}));
+  let literatureNodes = expand(literature.view());
+  assert.ok(!literatureNodes.some(node => node.tag === MultiPicker), 'Knowledge selector starts collapsed');
+  literatureNodes.find(node => node.tag === 'button' && node.attrs['aria-expanded']).attrs.onclick();
+  literatureNodes = expand(literature.view());
+  let picker = literatureNodes.find(node => node.tag === MultiPicker);
+  picker.attrs.onchange([1, 2]);
+  assert.deepEqual(literatureState.values.literature_contents.map(row => row.knowledge_id), [1, 2]);
+  literature.circle = '2';
+  literatureNodes = expand(literature.view());
+  picker = literatureNodes.find(node => node.tag === MultiPicker);
+  assert.deepEqual(picker.attrs.rows.map(row => row.id), [2], 'Circle filter limits choices');
+  assert.deepEqual(Array.from(picker.attrs.selected), [1, 2], 'Filtering keeps contents from other circles');
+  assert.ok(literatureNodes.find(node => node.tag === 'input' && node.attrs.type === 'checkbox').attrs.disabled,
+    'Multiple knowledge entries cannot become a consumable source');
+  literatureNodes.find(node => node.tag === 'button' && node.attrs['aria-label'] === 'Убрать Второе заклинание').attrs.onclick();
+  literatureState.set('consumed_on_learning', true);
+  literature.circle = '';
+  literature.path = '1';
+  literatureNodes = expand(literature.view());
+  picker = literatureNodes.find(node => node.tag === MultiPicker);
+  assert.deepEqual(picker.attrs.rows.map(row => row.id), [1, 2], 'Path filter limits choices');
+  const pickerInstance = new MultiPicker();
+  pickerInstance.oninit(picker);
+  pickerInstance.search = 'Второе';
+  const matches = expand(pickerInstance.view()).filter(node => node.tag === 'button');
+  assert.equal(matches.length, 1, 'Knowledge search limits visible choices');
+  assert.ok(matches[0].attrs.disabled, 'Consumable source blocks a second knowledge entry');
+  assert.deepEqual(literatureState.values.literature_contents.map(row => row.knowledge_id), [1]);
+  }
   assert.ok(!Object.hasOwn(itemTypeDefinition.initial(null), 'is_weapon'), 'Item types no longer classify weapons');
 
   // Разметка реальной собранной страницы раскрывается без ошибок keyed fragments.
@@ -142,7 +207,9 @@ const {loadClient} = require('./client-runtime.cjs');
   page.oninit(m(pageClass, {}));
   const pageNodes = expand(page.view());
   const navigation = pageNodes.find(node => node.tag === 'nav');
-  assert.equal(navigation.children.length, 10, 'Ten main sections including ranks and the training group are visible');
+  for (const label of ['Ранги', 'Навыки и владения', 'Настройки', 'События']) {
+    assert.ok(JSON.stringify(navigation).includes(label), 'Main navigation includes ' + label);
+  }
   page.selected = 'skills';
   const trainingNodes = expand(page.view());
   const subnav = trainingNodes.find(node => node.tag === 'nav' && node.attrs?.className.includes('RpAdmin-subtabs'));
@@ -198,8 +265,9 @@ const {loadClient} = require('./client-runtime.cjs');
   assert.equal(effectModal.editor.values.effects.length, 2);
   assert.equal(effectModal.editor.values.effects[0].value, 7, 'Removing first row preserves next value');
   itemModal.editor.set('effects', [{mechanic: 'stat', stat: 'mana_max', operation: 'add', value: 4, condition: 'always', scope: 'all'}]);
-  const itemChecksWithEffects = expand(itemModal.view()).filter(node => node.tag === 'input' && node.attrs?.type === 'checkbox');
-  assert.equal(itemChecksWithEffects[6].attrs.disabled, true, 'Magical flag cannot be removed while effects remain');
+  const itemMagicArea = expand(itemModal.view()).find(node => node.tag === 'div' && node.attrs?.className === 'RpItemMagic');
+  const magicalCheck = expand(itemMagicArea).find(node => node.tag === 'input' && node.attrs?.type === 'checkbox');
+  assert.equal(magicalCheck.attrs.disabled, true, 'Magical flag cannot be removed while effects remain');
   assert.ok(expand(itemModal.view()).some(node => node.tag === 'button' && node.attrs?.className === 'Button RpEffects-add'),
     'Magical item shares the inline editor');
   effectModal.editor.set('effects', [{mechanic: 'stat', stat: 'melee_damage', operation: 'base_percent',
@@ -249,7 +317,7 @@ const {loadClient} = require('./client-runtime.cjs');
   const presentation = exported('common/presentation');
   assert.equal(presentation.damage(14), 'Средний + Малый + Незначительный ×2');
   assert.equal(presentation.damage(18), 'Средний ×2');
-  const RacePicker = exported('admin/catalog/components/MultiPicker');
+  const RacePicker = exported('common/catalog/components/MultiPicker');
   const picker = new RacePicker();
   let chosen;
   picker.oninit(m(RacePicker, {rows: refs.perks, selected: [], blocked: [1], onchange: value => {chosen = value;}}));

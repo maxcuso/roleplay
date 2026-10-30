@@ -33,5 +33,5 @@ export default definition({
     {key: 'perks', title: 'Перки', render: (row, refs) => listIcons(refs, 'perks', object(row.rules).fixed_perk_ids)},
     {key: 'choices', title: 'Перки на выбор', render: (row, refs) => listIcons(refs, 'perks', object(row.rules).perk_choice_ids)},
   ],
-  defaults: {min_age: null, max_age: null, rules_url: '', rules}, editor: RaceEditor,
+  defaults: {min_age: null, max_age: null, average_height: '', distinctive_traits: '', background_color: '', quote: '', image: '', rules_url: '', rules}, editor: RaceEditor,
 });

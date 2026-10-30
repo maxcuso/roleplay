@@ -3,6 +3,7 @@ import type Mithril from 'mithril';
 import Icon from 'flarum/common/components/Icon';
 import {catalogueIcon, uiIcon} from '../uiIcons';
 import {safeImage} from '../presentation';
+import CardDescription from './CardDescription';
 
 export interface CardFrameAttrs {
   mode: 'compact' | 'expanded';
@@ -40,7 +41,7 @@ function renderCard(attrs: CardFrameAttrs): JSX.Element {
           {attrs.meta}
           {attrs.quantity !== undefined && <span className="RpCard-quantity">×{attrs.quantity}</span>}
         </div>
-        {attrs.mode === 'expanded' && <div className="RpCard-description">{attrs.description}</div>}
+        {attrs.mode === 'expanded' && <CardDescription name={attrs.name} description={attrs.description}/>}
       </div>
     </div>
     <div className="RpCard-footer">{attrs.footer}</div>

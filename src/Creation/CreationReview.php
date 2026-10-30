@@ -10,6 +10,7 @@ use Maxcuso\Roleplay\Character\Calculation\CharacterCalculationBuilder;
 /** Виртуальное состояние использует общий расчёт профиля. Ни персонаж, ни выдачи в БД не создаются. */
 final class CreationReview
 {
+    public function __construct(private readonly ?\Maxcuso\Roleplay\Rules\DevelopmentConfiguration $configuration = null) {}
     public function build(array $payload, array $catalog, array $plan, int $revision): ?array
     {
         // Полный итог строится только для допустимого плана, в том числе не более 1000 стопок.
@@ -53,9 +54,9 @@ final class CreationReview
         }
         $snapshot = new CharacterSnapshot($revision,
             ['first_name' => $payload['first_name'], 'last_name' => $payload['last_name'], 'age' => $payload['age'],
-                'race' => $race, 'status' => 'creating', 'rank' => null],
+                'avatar' => $payload['avatar'] ?? null, 'race' => $race, 'status' => 'creating', 'rank' => null],
             $attributes, $skills, $proficiencies, $perks, $spells, $inventory, [], [],
             $plan['balances'], $plan['choices']);
-        return ['snapshot' => $snapshot, 'calculation' => CharacterCalculationBuilder::defaults()->calculate($snapshot)];
+        return ['snapshot' => $snapshot, 'calculation' => CharacterCalculationBuilder::defaults($this->configuration)->calculate($snapshot)];
     }
 }

@@ -37,17 +37,17 @@ export default class CatalogTransferState {
     this.error = '';
     m.redraw();
     try {
-      if (file.size > 10 * 1024 * 1024) throw new Error('Размер JSON-файла — не более 10 МБ.');
+      if (file.size > 10 * 1024 * 1024) throw new Error('Выберите JSON-файл размером не более 10 МБ');
       // BOM встречается в файлах из текстовых редакторов Windows.
       const document = JSON.parse((await file.text()).replace(/^\uFEFF/, '')) as TransferDocument;
       if (!document || document.format !== 'roleplay-catalogs' || document.version !== 1
           || !document.catalogs || Array.isArray(document.catalogs) || typeof document.catalogs !== 'object') {
-        throw new Error('Нужен файл roleplay-catalogs версии 1.');
+        throw new Error('Выберите файл в формате roleplay-catalogs версии 1');
       }
       this.document = document;
     } catch (error) {
-      this.error = error instanceof SyntaxError ? 'Не удалось прочитать JSON. Проверь запятые и кавычки.'
-        : error instanceof Error ? error.message : 'Не удалось прочитать файл.';
+      this.error = error instanceof SyntaxError ? 'Не удалось прочитать JSON. Проверьте запятые, кавычки и структуру файла'
+        : error instanceof Error ? error.message : 'Не удалось прочитать файл. Попробуйте выбрать его заново';
     } finally {this.busy = false; m.redraw();}
   }
 
@@ -87,7 +87,7 @@ export default class CatalogTransferState {
       const response = await app.request<{data: TransferDocument}>({method: 'GET', url: this.url(),
         params: {catalog, scope, ...(scope === 'filtered' ? filters : {})}, errorHandler: () => {}});
       return response.data;
-    } catch (error) {this.error = requestMessage(error);}
+    } catch (error) {this.error = requestMessage(error); return undefined;}
     finally {this.busy = false; m.redraw();}
   }
 }

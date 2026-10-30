@@ -12,14 +12,14 @@ final class AbilityValues
 
     public static function option(mixed $value, array $options, string $label): string
     {
-        if (!is_string($value) || !in_array($value, $options, true)) FieldValues::invalid($label.': неизвестное значение.');
+        if (!is_string($value) || !in_array($value, $options, true)) FieldValues::invalid($label.': выберите доступное значение');
         return $value;
     }
 
     public static function number(mixed $value, string $label, float $max = 9999999): float
     {
         if ((!is_float($value) && !is_int($value)) || !is_finite((float) $value) || $value < 0 || $value > $max) {
-            FieldValues::invalid($label.': нужно неотрицательное число.');
+            FieldValues::invalid($label.': укажите число не меньше нуля');
         }
         return round((float) $value, 3);
     }
@@ -28,12 +28,14 @@ final class AbilityValues
     {
         $image = FieldValues::text($value, 'Изображение', 1000);
         if ($image === null) return null;
+        // Готовые портреты страницы доступны по стабильному адресу без привязки к домену.
+        if (preg_match('~^/role/media/races/[a-zA-Z0-9_-]+\.(?:png|jpe?g|webp|svg)/file$~D', $image)) return $image;
         if (str_starts_with($image, '/assets/') && !str_contains($image, '..')
             && !str_contains($image, '\\') && !preg_match('/[\x00-\x20]/', $image)) return $image;
         $parts = parse_url($image);
         if (is_array($parts) && in_array($parts['scheme'] ?? '', ['http', 'https'], true)
             && !empty($parts['host']) && !isset($parts['user']) && !isset($parts['pass'])) return $image;
-        FieldValues::invalid('Изображение: нужен адрес HTTP(S) или путь /assets/.');
+        FieldValues::invalid('Укажите для изображения ссылку с http:// или https://, путь /assets/ или адрес портрета /role/media/races/.../file');
     }
 
     public static function reference(DefinitionStore $store, string $catalog, mixed $value): int

@@ -28,7 +28,7 @@ final class CharacterVisibility
         $published = in_array($character['status'], ['active', 'dead', 'archived'], true)
             && (bool) $character['literature_approved'] && $character['mechanics_status'] === 'approved';
         if (!$owner && !$published && !$this->staff($actor)) {
-            throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+            throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
         }
     }
 

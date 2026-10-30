@@ -20,7 +20,7 @@ final class CreateCharacterController implements RequestHandlerInterface
         Access::create($actor);
         try {
             if ($request->getMethod() !== 'POST') {
-                throw new ApiProblem('invalid_request', 'Нужен запрос создания.', 400);
+                throw new ApiProblem('invalid_request', 'Не удалось получить данные для создания персонажа. Попробуйте обновить страницу', 400);
             }
             return ApiResponse::data($this->create->create($actor, $request->getParsedBody()), 201);
         } catch (ApiProblem $problem) {

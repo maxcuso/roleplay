@@ -21,10 +21,10 @@ final class ManagementCatalogController implements RequestHandlerInterface
         try {
             $key = FieldValues::text($request->getQueryParams()['catalog'] ?? null, 'Справочник', 32, true);
             if ($request->getMethod() === 'GET') return ApiResponse::data($this->catalogs->creationForm($key, $actor));
-            if ($request->getMethod() !== 'POST') throw new ApiProblem('invalid_request', 'Неизвестная операция.', 400);
+            if ($request->getMethod() !== 'POST') throw new ApiProblem('invalid_request', 'Не удалось определить действие. Попробуйте обновить страницу', 400);
             $body = CatalogRequest::body($request->getParsedBody());
             FieldValues::allowed($body, ['revision', 'fields']);
-            if (!is_array($body['fields'] ?? null)) FieldValues::invalid('Нужен объект полей формы.');
+            if (!is_array($body['fields'] ?? null)) FieldValues::invalid('Не удалось обработать данные формы: ожидается объект полей. Попробуйте обновить страницу');
             return ApiResponse::data($this->catalogs->createForModerator($key,
                 CatalogRequest::positive($body['revision'] ?? null, 'Версия'), $body['fields'], $actor), 201);
         } catch (ApiProblem $problem) {

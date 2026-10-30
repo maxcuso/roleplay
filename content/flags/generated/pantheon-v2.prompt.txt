@@ -1,0 +1,12 @@
+Built-in imagegen.
+
+Use case: precise-object-edit.
+Input image 1 is the Pantheon coat of arms to modify. Input image 2 is a POSE REFERENCE ONLY for two open supporting hands; draw original hands in the existing heraldic style, do not reproduce its watermark or lettering.
+Keep the same deep crimson #702E36 shield, exact outer silhouette, solid gold five-petalled rosette and plain ivory central disc. Make the existing flower about 25% smaller, preserving its design and exactly FIVE equal petals, and shift it into the upper-middle area. Add two symmetrical SILVER/IVORY hands BELOW the flower: palms open upward and inward as if gently supporting or safeguarding it. The hands resemble the reference gesture: wrists approach each other near the lower center, palms spread to both sides, fingers lift along the outer sides, thumbs extend inward. Keep hands and flower visually distinct, with enough breathing room. Exactly two hands, anatomically coherent fingers, no sleeves, no extra arms. Use clean simplified icon-like silhouettes, strong black outlines of the same weight as the flower, very few internal lines; avoid realistic anatomy, wrinkles and fingernails.
+Composition: flower about 700-760px wide, roughly y220-920; supporting hands roughly x150-1050 and y850-1330. Everything centered and fits well inside the shield. No clipping or overlap with shield border.
+Strictly flat frontal medieval fantasy heraldry with solid colors. No gradients, texture, glow, perspective, 3D, new symbols, crown, frame, text or decorative lines.
+Canvas 1200x1600. Outer shield must match image 1: clipped upper corners, vertical parallel sides, subtly rounded lower corners and short lower point. Full opaque crimson field and actual transparency ONLY outside shield.
+
+Generated source: C:\Users\KusoT\.codex\generated_images\01a149af-703a-7770-91da-8fdb295c9ba6\exec-5d9076c7-b7d4-4320-b336-9c3b8d602420.png
+Final preparation: 1200x1600; uniform field #702E36; same outer contour as collegium-v4.png; outside contour transparent, inside fully opaque. Generated artwork copied at original scale without distortion or clipping. Previous version preserved.
+

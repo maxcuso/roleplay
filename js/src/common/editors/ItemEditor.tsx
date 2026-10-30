@@ -4,6 +4,7 @@ import {TextField, TextArea, NumberField, SelectField, CheckField} from '../cata
 import CardPreviews from '../catalog/components/CardPreviews';
 import DamageEditor from '../catalog/components/DamageEditor';
 import ItemPropertiesEditor from './ItemPropertiesEditor';
+import LiteratureEditor from './LiteratureEditor';
 import ItemCard from '../cards/ItemCard';
 import {rarityOptions} from '../presentation';
 import {lookup, options} from '../catalog/helpers';
@@ -11,7 +12,7 @@ import {itemAttackModes} from '../itemAttackRules';
 import EditorSection from '../catalog/components/EditorSection';
 
 /** Назначения независимы: предмет может быть оружием, бронёй и материалом.
- * Ингредиент и литература пока только классифицируют предмет для будущих систем. */
+ * У литературы отдельно задаётся содержимое из существующих справочников. */
 export default function ItemEditor({state, lookups}: EditorContext): JSX.Element {
   return <div>
     <CardPreviews render={(mode: 'compact' | 'expanded') => <ItemCard mode={mode} item={state.values}
@@ -47,6 +48,7 @@ export default function ItemEditor({state, lookups}: EditorContext): JSX.Element
       <DamageEditor state={state}/>
       {state.flag('is_armor') && <DamageEditor state={state} field="ignored_damage_units" label="Игнорируемый урон"/>}
     </EditorSection>
+    {state.flag('is_literature') && <LiteratureEditor state={state} lookups={lookups}/>}
     <div className="RpItemMagic">
       {CheckField({state, field: 'is_magical', label: 'Магический предмет', disabled: Array.isArray(state.values.effects) && state.values.effects.length > 0})}
       {state.flag('is_magical') && Array.isArray(state.values.effects) && state.values.effects.length > 0 &&

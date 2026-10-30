@@ -1,150 +1,2928 @@
-/* Переменные — первое место для изменения цветов и геометрии макета. */
+/*
+ * СТРАНИЦА /role — карта оформления
+ *
+ * Все итоговые стили одного элемента находятся рядом, без истории переопределений.
+ * Для копирования блока нужны его HTML-классы, раздел CSS и общие переменные (01–04).
+ * Примеры и зависимости: EDITING.md. JavaScript не задаёт размеры блоков.
+ */
+
+/* ==========================================================================
+   01. Палитра и размеры
+   Меняйте переменные здесь: цвета темы, ширина страницы, отступ от края.
+   ========================================================================== */
 :root {
   color-scheme: light;
-  --role-bg: #f9fafb; --role-surface: #fff; --role-text: #273240;
-  --role-muted: #718091; --role-line: #e4e8ed; --role-soft: #eef1f5;
-  --role-primary: #45698d; --role-gold: #e2bf86;
-  --role-width: 1160px; --role-gutter: 36px; --role-radius: 16px;
+  --role-bg: #f9fafb;
+  --role-surface: #fff;
+  --role-text: #273240;
+  --role-muted: #7b7d7e;
+  --role-line: #e4e8ed;
+  --role-soft: #eef1f5;
+  --role-primary: #45698d;
+  --role-violet: #8054bd;
+  --role-teal: #228977;
+  --role-blue: #367cc4;
+  --role-ember: #cc6245;
+  --role-earth: #a47546;
+  --role-forest: #4b8b56;
+  --role-air: #3095a8;
+  --role-amber: #b78321;
+
+/* Геометрия: страница, единая ширина документов и доля иллюстраций в колонках. */
+  --role-width: 1160px;
+  --role-document-width: 860px;
+  --role-media-width: 350px;
+  --role-gutter: 36px;
+  --role-radius: 16px;
 }
+
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --role-bg: #181b20; --role-surface: #22262d; --role-text: #edf0f5;
-  --role-muted: #a0a8b4; --role-line: #333943; --role-soft: #2b313b;
+  --role-bg: #181b20;
+  --role-surface: #22262d;
+  --role-text: #edf0f5;
+  --role-muted: #b3b4b6;
+  --role-line: #333943;
+  --role-soft: #2b313b;
   --role-primary: #8bb0d7;
+  --role-violet: #b78aee;
+  --role-teal: #58c3ad;
+  --role-blue: #78b4ee;
+  --role-ember: #f09a77;
+  --role-earth: #d4ab7c;
+  --role-forest: #90c47a;
+  --role-air: #6ac9d9;
+  --role-amber: #e7b85f;
 }
-@font-face {font-family:"Role Icons";font-style:normal;font-weight:900;src:url("/assets/fonts/fa-solid-900.woff2") format("woff2");font-display:block;}
-* {box-sizing:border-box;}
-html {scroll-behavior:smooth;scroll-padding-top:30px;}
-body {margin:0;color:var(--role-text);background:var(--role-bg);font:15px/1.55 Arial,sans-serif;}
-button,a {-webkit-tap-highlight-color:transparent;}
-button {font:inherit;cursor:pointer;}
-a {color:inherit;text-decoration:none;}
-h1,h2,h3,p {margin:0;}
-button:disabled {cursor:default;}
-:focus-visible {outline:3px solid #7999bf;outline-offset:5px;}
-.RoleIcon {display:inline-block;flex-shrink:0;font-family:"Role Icons";font-style:normal;font-weight:900;line-height:1;}
-.RoleIcon:before {content:var(--fa);}
-.RoleContainer {width:min(var(--role-width),calc(100% - var(--role-gutter) * 2));margin-inline:auto;}
-.RoleSiteHeader {background:var(--role-surface);border-bottom:1px solid var(--role-line);}
-.RoleSiteHeader-inner {height:76px;width:min(var(--role-width),calc(100% - var(--role-gutter) * 2));margin:auto;display:flex;align-items:center;gap:48px;}
-.RoleBrand {display:flex;align-items:center;gap:11px;font-size:20px;letter-spacing:-.7px;}
-.RoleBrand-mark {position:relative;display:grid;place-items:center;width:35px;height:35px;color:white;background:#45698d;border-radius:10px;font-size:24px;font-weight:800;}
-.RoleBrand-mark span {position:absolute;right:-3px;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--role-gold);border:2px solid var(--role-surface);}
-.RoleSiteNav {display:flex;gap:27px;font-size:13px;color:var(--role-muted);}
-.RoleSiteNav a:hover {color:var(--role-text);}
-.RoleSiteActions {margin-left:auto;display:flex;align-items:center;gap:23px;}
-.RoleForumLink {font-size:13px;font-weight:700;display:flex;align-items:center;gap:12px;color:var(--role-primary);}
-.RoleIconButton {display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--role-line);border-radius:50%;color:var(--role-text);background:var(--role-surface);font-size:13px;transition:background .15s,opacity .15s;}
-.RoleIconButton:hover:not(:disabled) {background:var(--role-soft);}
-.RoleIconButton:disabled {opacity:.3;}
 
-/* Однотонная подложка вместо иллюстрации. Высота задаётся здесь, а не картинкой. */
-.RoleHero {color:#fff;background:#263744;}
-.RoleHero-inner {min-height:320px;display:flex;align-items:center;padding-block:44px;}
-.RoleHero-copy {width:100%;min-width:0;max-width:720px;}
-.RoleHero-genre {display:inline-block;padding:4px 11px;border:1px solid #ffffff30;border-radius:999px;color:#d9e2e8;font-size:10px;font-weight:600;letter-spacing:.7px;}
-.RoleHero h1 {margin-top:14px;font-size:clamp(38px,4vw,50px);font-weight:800;line-height:1.1;letter-spacing:-1.7px;}
-.RoleHero-copy > p {max-width:610px;margin-top:16px;font-size:16px;line-height:1.7;color:#d7dce1;}
-.RoleHero-actions {display:flex;align-items:center;gap:12px;margin-top:24px;}
-.RoleButton {display:inline-flex;justify-content:center;align-items:center;gap:11px;min-height:47px;padding:0 23px;border:0;border-radius:999px;font-size:13px;font-weight:700;transition:transform .15s,background .15s;}
-.RoleButton:hover {transform:translateY(-2px);}
-.RoleButton--gold {background:var(--role-gold);color:#252720;box-shadow:0 6px 22px #0002;}
-.RoleButton--ghost {color:#f6f4ef;border:1px solid #ffffff42;background:transparent;}
-.RoleButton--primary {color:white;background:#45698d;}
-
-/* Плитки образуют одну спокойную строку с одинаковой высотой. */
-.RoleGuides {padding-top:28px;}
-.RoleSectionHeading {display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:23px;}
-.RoleSectionKicker {display:block;color:var(--role-muted);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;}
-.RoleSectionHeading h2 {font-size:30px;line-height:1.2;letter-spacing:-1px;margin-top:9px;}
-.RoleSectionHeading > p {font-size:12px;color:var(--role-muted);padding-bottom:3px;}
-.RoleGuideGrid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
-.RoleGuide {color:var(--role-text);background:var(--role-surface);border:1px solid var(--role-line);border-radius:var(--role-radius);padding:19px 22px;display:grid;grid-template-columns:36px minmax(0,1fr);gap:5px 13px;text-align:left;transition:border-color .2s,background .2s;}
-.RoleGuide:hover {border-color:color-mix(in srgb,var(--guide-color) 55%,var(--role-line));}
-.RoleGuide[aria-selected="true"] {border-color:var(--guide-color);background:color-mix(in srgb,var(--guide-color) 9%,var(--role-surface));}
-.RoleGuide--rules {--guide-color:#7b70ad;--guide-tint:#7b70ad13;}
-.RoleGuide--lore {--guide-color:#589689;--guide-tint:#58968913;}
-.RoleGuide--application {--guide-color:#577fa9;--guide-tint:#577fa913;}
-.RoleGuide-emblem {height:36px;width:36px;border-radius:11px;display:grid;place-items:center;background:var(--guide-tint);color:var(--guide-color);font-size:17px;}
-.RoleGuide-title {align-self:center;font-size:20px;line-height:1.2;font-weight:700;letter-spacing:-.4px;}
-.RoleGuide-description {grid-column:1 / -1;font-size:12px;line-height:1.5;color:var(--role-muted);margin-top:4px;}
-/* Все разделы используют одну оболочку; скрытые панели не занимают место. */
-.RoleGuidePanel {margin-top:18px;padding:28px 30px;border:1px solid var(--role-line);border-radius:var(--role-radius);background:var(--role-surface);}
-.RoleGuidePanel[hidden] {display:none;}
-.RoleGuidePanel > h2 {font-size:25px;line-height:1.2;letter-spacing:-.6px;}
-.RoleGuidePanel-intro {max-width:800px;margin-top:12px;color:var(--role-muted);font-size:14px;line-height:1.75;}
-.RoleGuidePanel-chapters {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 36px;margin-top:25px;padding-top:24px;border-top:1px solid var(--role-line);}
-.RoleGuidePanel-chapters h3 {font-size:15px;line-height:1.4;}
-.RoleGuidePanel-chapters p {margin-top:7px;font-size:13px;line-height:1.8;color:var(--role-muted);}
-
-/* В слайдере на широком экране три анкеты, на телефоне одна с краем следующей. */
-.RoleCharacters {padding-top:57px;padding-bottom:44px;}
-.RoleSliderActions {display:flex;gap:9px;align-items:center;}
-.RoleSliderCounter {font-size:11px;color:var(--role-muted);font-variant-numeric:tabular-nums;margin-right:9px;}
-.RoleCharacterRail {display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:3px;overscroll-behavior-x:contain;}
-.RoleCharacterRail::-webkit-scrollbar {display:none;}
-.RoleCharacter {flex:0 0 calc((100% - 40px) / 3);min-width:0;border-radius:var(--role-radius);background:var(--role-surface);border:1px solid var(--role-line);overflow:hidden;scroll-snap-align:start;}
-.RoleCharacter-portrait {height:270px;position:relative;background-image:url('/role/assets/character-portraits.png');background-size:400% auto;background-position:var(--portrait-position) 25%;background-repeat:no-repeat;background-color:#263038;}
-.RoleCharacter-portrait:after {content:"";position:absolute;inset:0;background:linear-gradient(0deg,#11182079,transparent 55%);}
-.RoleCharacter-tag {position:absolute;left:19px;bottom:15px;z-index:1;padding:5px 9px;background:#111c2580;border:1px solid #ffffff30;backdrop-filter:blur(5px);border-radius:5px;font-size:10px;color:#f4f1ea;}
-.RoleCharacter-body {padding:22px 23px 20px;}
-.RoleCharacter-race {font-size:9px;text-transform:uppercase;letter-spacing:1.4px;font-weight:700;color:var(--role-muted);}
-.RoleCharacter h3 {font-size:21px;line-height:1.3;letter-spacing:-.5px;margin-top:5px;}
-.RoleCharacter p {margin-top:10px;font-size:12px;line-height:1.7;color:var(--role-muted);min-height:62px;}
-.RoleCharacter-link {display:flex;align-items:center;gap:11px;background:none;border:0;padding:0;margin-top:18px;color:var(--role-primary);font:700 11px Arial,sans-serif;}
-.RoleCharacter-link:hover {text-decoration:underline;}
-.RoleCharacter-link .RoleIcon {font-size:10px;}
-.RoleCharacters-footer {display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:18px;font-size:11px;color:var(--role-muted);}
-.RoleDemoLabel {display:flex;align-items:center;gap:7px;font-size:9px;white-space:nowrap;}
-.RolePreviewFooter {border-top:1px solid var(--role-line);width:min(var(--role-width),calc(100% - var(--role-gutter) * 2));margin:auto;display:flex;gap:30px;align-items:center;min-height:69px;font-size:10px;color:var(--role-muted);}
-.RolePreviewFooter > span:first-child {font-weight:bold;color:var(--role-text);}
-.RolePreviewFooter a {margin-left:auto;display:flex;align-items:center;gap:8px;}
-
-.RoleDialog {width:min(480px,calc(100% - 36px));padding:34px;border:1px solid var(--role-line);border-radius:18px;color:var(--role-text);background:var(--role-surface);box-shadow:0 24px 90px #0004;}
-.RoleDialog::backdrop {background:#1019238c;backdrop-filter:blur(4px);}
-.RoleDialog-close {position:absolute;right:14px;top:14px;border:0;background:transparent;width:29px;height:29px;}
-.RoleDialog h2 {font-size:26px;line-height:1.2;margin:13px 0 17px;letter-spacing:-.7px;}
-.RoleDialog p {font-size:13px;color:var(--role-muted);line-height:1.8;}
-.RoleDialog-actions {display:flex;justify-content:center;margin-top:24px;}
-.RoleDialog-actions:empty {display:none;}
-
-@media (max-width:1000px) {
-  :root {--role-gutter:24px;}
-  .RoleSiteHeader-inner {gap:30px;}
-  .RoleGuide {padding:17px;column-gap:11px;}
-  .RoleCharacter-portrait {height:245px;}
-  .RoleCharacter p {min-height:82px;}
+/* ==========================================================================
+   02. Шрифты
+   Jost — Jost для заголовков; Role Icons — символы Font Awesome.
+   ========================================================================== */
+@font-face {
+  font-family: "Role Icons";
+  font-style: normal;
+  font-weight: 900;
+  src: url("/assets/fonts/fa-solid-900.woff2") format("woff2");
+  font-display: block;
 }
-@media (max-width:760px) {
-  :root {--role-gutter:20px;}
-  .RoleSiteHeader-inner {height:64px;}.RoleSiteNav {display:none;}
-  .RoleBrand {font-size:18px;}.RoleSiteActions {gap:15px;}.RoleForumLink {font-size:11px;}
-  .RoleHero-inner {min-height:0;padding-block:36px;}
-  .RoleHero h1 {font-size:38px;letter-spacing:-1.2px;}
-  .RoleHero-copy > p {font-size:14px;max-width:540px;}
-  .RoleGuides {padding-top:22px;}.RoleSectionHeading {align-items:flex-start;gap:15px;}.RoleSectionHeading > p {display:none;}
-  .RoleSectionHeading h2 {font-size:27px;}.RoleGuideGrid {gap:9px;}
-  .RoleGuide {display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 9px;gap:10px;}
-  .RoleGuide-title {font-size:18px;}.RoleGuide-description {font-size:11px;margin-top:0;}
-  .RoleGuidePanel {padding:23px;}.RoleGuidePanel-chapters {grid-template-columns:1fr;gap:20px;}
-  .RoleCharacters {padding-top:35px;padding-bottom:28px;}.RoleCharacter {flex-basis:calc((100% - 18px) / 2);}.RoleCharacterRail {gap:18px;}
-  .RoleCharacter-portrait {height:228px;}.RoleCharacter p {min-height:82px;}
-  .RoleCharacters-footer {align-items:flex-start;flex-direction:column;gap:8px;}.RolePreviewFooter {gap:14px;flex-wrap:wrap;padding-block:18px;}
-  .RolePreviewFooter > span:nth-child(2) {display:none;}
+
+@font-face {
+  font-family: "Jost";
+  src: url("./assets/fonts/Jost-400-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
-@media (max-width:480px) {
-  :root {--role-gutter:18px;}
-  .RoleSiteHeader-inner {gap:12px;}
-  .RoleBrand {font-size:17px;gap:9px;}.RoleBrand-mark {width:30px;height:30px;font-size:22px;}
-  .RoleForumLink {gap:7px;}.RoleSiteActions {gap:12px;}.RoleSiteActions .RoleIconButton {height:32px;width:32px;}
-  .RoleHero h1 {font-size:32px;letter-spacing:-1px;}.RoleHero-inner {padding-block:30px;}
-  .RoleHero-actions {flex-direction:column;align-items:stretch;max-width:300px;gap:10px;margin-top:22px;}.RoleButton {min-height:45px;font-size:12px;}
-  .RoleHero-copy > p {max-width:340px;font-size:13px;margin-top:14px;}
-  .RoleGuide {padding:14px 7px;border-radius:12px;}.RoleGuide-title {font-size:16px;}.RoleGuide-description {font-size:10px;}
-  .RoleGuidePanel {padding:20px;}.RoleGuidePanel-intro {font-size:13px;}
-  .RoleSectionKicker {font-size:8px;letter-spacing:1.1px;}.RoleSectionHeading h2 {font-size:25px;}
-  .RoleSliderCounter {display:none;}.RoleSliderActions {gap:6px;align-self:flex-end;}.RoleSliderActions .RoleIconButton {height:32px;width:32px;font-size:11px;}
-  .RoleCharacter {flex-basis:86%;}.RoleCharacter-portrait {height:245px;}.RoleCharacter p {min-height:62px;}
-  .RoleCharacter-body {padding:20px;}.RoleDialog {padding:29px;}
+
+@font-face {
+  font-family: "Jost";
+  src: url("./assets/fonts/Jost-500-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
 }
-@media (prefers-reduced-motion:reduce) {html {scroll-behavior:auto;}* {transition:none!important;}}
+
+@font-face {
+  font-family: "Jost";
+  src: url("./assets/fonts/Jost-700-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("./assets/fonts/Jost-400-BookItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Oracle";
+  src: url("./assets/fonts/VALVEOracle-Thin.woff2") format("woff2"), url("../assets/fonts/VALVEOracle-Thin.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Oracle";
+  src: url("./assets/fonts/VALVEOracle-Medium.woff2") format("woff2"), url("../assets/fonts/VALVEOracle-Medium.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Oracle";
+  src: url("./assets/fonts/VALVEOracle-SemiBold.woff2") format("woff2"), url("../assets/fonts/VALVEOracle-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Pulp";
+  src: url("./assets/fonts/VALVEPulp-Bold.woff2") format("woff2"), url("../assets/fonts/VALVEPulp-Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* ==========================================================================
+   03. Общие правила
+   Сброс отступов, основной текст, ссылки, фокус клавиатуры и контейнер страницы.
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 30px;
+}
+
+body {
+  margin: 0;
+  color: var(--role-text);
+  background: var(--role-bg);
+  font: 15px / 1.55 Arial, sans-serif;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
+  color: inherit;
+  text-decoration: none;
+}
+
+h1 {
+  margin: 0;
+}
+
+h2 {
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+:focus-visible {
+  outline: rgb(121, 153, 191) solid 3px;
+  outline-offset: 5px;
+}
+
+.Container {
+  width: min(var(--role-width),calc(100% - var(--role-gutter) * 2));
+  margin-inline: auto;
+}
+
+[data-accent="ember"] {
+  --role-accent: var(--role-ember);
+}
+
+[data-accent="water"] {
+  --role-accent: var(--role-blue);
+}
+
+[data-accent="earth"] {
+  --role-accent: var(--role-earth);
+}
+
+[data-accent="air"] {
+  --role-accent: var(--role-teal);
+}
+
+[data-accent="forest"] {
+  --role-accent: var(--role-forest);
+}
+
+[data-accent="gold"] {
+  --role-accent: var(--role-amber);
+}
+
+[data-accent="violet"] {
+  --role-accent: var(--role-violet);
+}
+
+/* ==========================================================================
+   04. Общие кнопки и иконки
+   Button — текстовая кнопка; IconButton — круглая кнопка с иконкой.
+   ========================================================================== */
+.Icon {
+  display: inline-block;
+  flex-shrink: 0;
+  font-family: "Role Icons";
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.Icon::before {
+  content: var(--fa);
+}
+
+.IconButton {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--role-line);
+  border-radius: 50%;
+  color: var(--role-text);
+  background: var(--role-surface);
+  font-size: 13px;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.IconButton:hover:not(:disabled) {
+  background: var(--role-soft);
+}
+
+.IconButton:disabled {
+  opacity: 0.3;
+}
+
+.Button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  min-height: 47px;
+  padding: 0 23px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.Button:hover {
+  transform: translateY(-2px);
+}
+
+.Button--gold {
+  background: var(--role-violet);
+  color: var(--role-surface);
+  box-shadow: rgba(0, 0, 0, 0.133) 0 6px 22px;
+}
+
+.Button--ghost {
+  color: rgb(246, 244, 239);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: transparent;
+}
+
+.Button--primary {
+  color: white;
+  background: rgb(69, 105, 141);
+}
+
+/* ==========================================================================
+   05. Верхняя панель
+   Логотип, навигация и переключатель темы.
+   ========================================================================== */
+.SiteHeader {
+  background: var(--role-surface);
+  border-bottom: 1px solid var(--role-line);
+}
+
+.SiteHeader-inner {
+  height: 76px;
+  width: min(var(--role-width),calc(100% - var(--role-gutter) * 2));
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.Brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 20px;
+  letter-spacing: -0.7px;
+}
+
+.Brand-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  color: white;
+  background: rgb(69, 105, 141);
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.Brand-mark span {
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--role-violet);
+  border: 2px solid var(--role-surface);
+}
+
+.SiteNav {
+  display: flex;
+  gap: 27px;
+  font-size: 13px;
+  color: var(--role-muted);
+}
+
+.SiteNav a:hover {
+  color: var(--role-text);
+}
+
+.SiteActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 23px;
+}
+
+.ForumLink {
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--role-primary);
+}
+
+/* ==========================================================================
+   06. Вступительный баннер
+   Высота — Hero-inner; заголовок — Hero h1; наклонная подпись — Hero-genre.
+   ========================================================================== */
+.Hero {
+  color: rgb(255, 255, 255);
+  background-image:
+    linear-gradient(rgba(40, 5, 50, 0.58), rgba(19, 17, 31, 0.38)),
+    url("/role/assets/hero-background.jpg");
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  letter-spacing: 0px;
+}
+
+.Hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding-block: 46px;
+}
+
+.Hero-copy {
+  padding: 100px 0 0 0;
+  width: 100%;
+  min-width: 0;
+  max-width: 800px;
+  text-align: center;
+}
+
+.Hero-genre {
+  display: block;
+  width: fit-content;
+  margin: 0px 20px 0 auto;
+  border: 0;
+  letter-spacing: 0.3px;
+  color: var(--role-surface);
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  padding: 10px 18px;
+  transform: rotate(-1.5deg);
+  font-weight: 900;
+  font-size: 11px;
+}
+
+.Hero h1 {
+  margin: 0;
+  line-height: 1.05;
+  color: rgb(255, 244, 220);
+  font-family: "Jost", Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: clamp(48px, 7vw, 84px);
+}
+
+.Hero-description {
+  font-family: "Oracle", Arial, sans-serif;
+  font-weight: 600;
+  max-width: 560px;
+  margin: 45px auto 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgb(226, 237, 235);
+}
+
+.Hero-under {
+  font-family: "Jost", Arial, sans-serif;
+  font-weight: 400;
+  max-width: 560px;
+  margin: 5px auto 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgb(164, 164, 164);
+}
+
+.Hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px auto 0;
+}
+
+.Hero-genre::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--role-violet);
+  clip-path: polygon(0 9%, 98% 0, 100% 89%, 2% 100%);
+  border-radius: 100px;
+}
+
+.Hero-genre::after {
+  content: "";
+  position: absolute;
+  inset: 5px -5px -5px 5px;
+  z-index: -2;
+  background: rgba(0, 0, 0, 0.2);
+  clip-path: polygon(0 9%, 98% 0, 100% 89%, 2% 100%);
+  border-radius: 100px;
+}
+
+/* ========================================================================== 
+   07. Вкладки и оглавление
+   Tabs — единый компонент. --sticky: главная навигация; --icons: только символы.
+   Кнопки связываются с TabPanel через aria-controls, отдельные классы им не нужны.
+   ========================================================================== */
+.Guides {
+  padding-top: 28px;
+}
+
+.Tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 28px 0;
+}
+
+.Tabs > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  color: var(--role-text);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  background: color-mix(in srgb,var(--role-accent) 14%,var(--role-surface));
+  transition: border-color .2s,background .2s,color .2s;
+}
+
+.Tabs > button > .Icon {
+  font-size: 12px;
+  color: var(--role-accent);
+}
+
+.Tabs > button:hover {
+  border-color: var(--role-accent);
+}
+
+.Tabs > button[aria-selected="true"] {
+  background: var(--role-accent);
+  border-color: var(--role-accent);
+  color: var(--role-surface);
+  box-shadow: 0 3px 10px #00000008;
+}
+
+.Tabs > button[aria-selected="true"] > .Icon {
+  color: inherit;
+}
+
+.Tabs > button:focus-visible {
+  outline: 2px solid var(--role-accent);
+  outline-offset: 4px;
+}
+
+.Tabs--sticky {
+  position: sticky;
+  top: 12px;
+  z-index: 3;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 7px;
+  border-radius: 24px;
+  background: var(--role-bg);
+  box-shadow: 0 4px 14px #00000006;
+}
+
+.Tabs--icons {
+  gap: 12px;
+}
+
+.Tabs--icons > button {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--role-accent);
+}
+
+.Tabs--icons > button > .Icon {
+  font-size: 23px;
+}
+
+.TabPanel[hidden] {
+  display: none;
+}
+
+.TabPanel[data-document] {
+  margin-top: 28px;
+}
+
+.TabPanel[data-document="rules"] {
+  --role-accent: var(--role-violet);
+}
+
+.TabPanel[data-document="lore"] {
+  --role-accent: var(--role-teal);
+}
+
+.TabPanel[data-document="application"] {
+  --role-accent: var(--role-blue);
+}
+
+.TabPanel--reading {
+  margin-bottom: 44px;
+}
+
+.TabPanel--reading > :is(h2,h3,h4):first-child {
+  margin-top: 0;
+}
+
+.Contents {
+  font-family: "Jost",Arial,sans-serif;
+  scroll-margin-top: 120px;
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.Contents > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+}
+
+.Contents a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--role-text);
+  background: color-mix(in srgb,var(--role-accent) 15%,var(--role-surface));
+}
+
+.Contents a > .Icon {
+  font-size: 10px;
+  color: var(--role-accent);
+}
+
+.Contents a:hover, .Contents a[aria-current="location"] {
+  color: var(--role-accent);
+  border-color: var(--role-accent);
+}
+
+/* На широком экране оглавление занимает отдельную левую колонку.
+   Sticky удерживает его в пределах текущей вкладки; ширина текста — до 860 px.
+   На планшете и телефоне используется обычный ряд ссылок над документом. */
+@media (min-width: 1100px) {
+  .TabPanel[data-document]:not([hidden]) {
+    display: grid;
+    grid-template-columns: 180px minmax(0,var(--role-document-width));
+    justify-content: center;
+    align-items: start;
+    gap: 32px;
+  }
+
+  .TabPanel[data-document] > .Contents {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    min-width: 0;
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    padding: 4px;
+    margin: 0;
+    text-align: left;
+  }
+
+  .Contents > div {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .Contents a {
+    padding: 9px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+
+  .Contents a > .Icon {
+    flex: 0 0 14px;
+    text-align: center;
+  }
+
+  .TabPanel[data-document] > .Document {
+    min-width: 0;
+    width: 100%;
+    margin-inline: 0;
+  }
+}
+
+/* ========================================================================== 
+   08. Документ и секции
+   Весь основной текст остаётся в HTML. Заголовки и абзацы оформляются по тегам.
+   Section задаёт только общий отступ, без отдельных размеров для разных тем.
+   ========================================================================== */
+.Document {
+  overflow-wrap: anywhere;
+  max-width: var(--role-document-width);
+  margin-inline: auto;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.Document p {
+  margin: 12px 0;
+}
+
+.Document li {
+  padding-left: 4px;
+  margin-bottom: 5px;
+}
+
+.Document :is(h2,h3,h4) {
+  scroll-margin-top: 120px;
+}
+
+.Document h2 {
+  margin: 40px 0 20px;
+  padding-top: 26px;
+  border-top: 1px solid var(--role-line);
+  letter-spacing: -.6px;
+  font: 700 28px / 1.25 "Jost",Arial,sans-serif;
+}
+
+.Document h3 {
+  margin: 27px 0 14px;
+  font: 700 23px / 1.25 "Jost",Arial,sans-serif;
+}
+
+.Document h4 {
+  margin: 25px 0 13px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.Document :is(h2,h3,h4) > .Icon {
+  font-size: .72em;
+  margin-right: 11px;
+  vertical-align: middle;
+  color: var(--role-accent);
+}
+
+.Document :is(ul,ol) {
+  padding-left: 23px;
+  margin: 14px 0;
+}
+
+.Document a {
+  color: var(--role-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.Document strong {
+  font-weight: 700;
+}
+
+.Document blockquote {
+  margin: 15px 0;
+  padding: 13px 18px;
+  border: 0;
+  background: var(--role-soft);
+  border-radius: 12px;
+}
+
+.Document hr {
+  border: 0;
+  height: 1px;
+  background: var(--role-line);
+  margin: 26px 0;
+}
+
+.Document code {
+  font-family: Consolas,monospace;
+}
+
+.Section {
+  max-width: var(--role-document-width);
+  margin: 0 auto 68px;
+  scroll-margin-top: 120px;
+}
+
+.Section > h2:first-child {
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+}
+
+.Section > h2 > .Icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb,var(--role-accent) 17%,var(--role-surface));
+  font-size: 18px;
+}
+
+.Section > hr {
+  margin-block: 34px;
+}
+
+.Section--nested {
+  margin-block: 42px 64px;
+}
+
+.Section--nested > blockquote {
+  background: transparent;
+  padding: 0;
+}
+
+.Center {
+  text-align: center;
+}
+
+.Accent {
+  color: var(--role-accent);
+}
+
+.Example {
+  background: var(--role-soft);
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+
+/* ========================================================================== 
+   09. Step и Badge — шаг с дополнительной колонкой и значок заголовка
+   --reverse: картинка слева; --balanced: две текстовые колонки; --panel: раса.
+   Основной контент всегда первый в HTML. На телефоне он окажется сверху.
+   ========================================================================== */
+.Step {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,var(--role-media-width));
+  gap: 32px;
+  align-items: center;
+  margin-bottom: 28px;
+  scroll-margin-top: 120px;
+}
+
+.Step.Section {
+  margin-bottom: 68px;
+}
+
+.Step > :first-child {
+  min-width: 0;
+}
+
+.Step > :first-child > :is(h2,h3,h4) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  font-size: 27px;
+}
+
+.Step--reverse {
+  grid-template-columns: minmax(0,var(--role-media-width)) minmax(0,1.5fr);
+}
+
+.Step--reverse > :first-child {
+  order: 2;
+}
+
+/* Шаг без иллюстрации сохраняет пустую левую колонку. */
+.Step--reverse > :only-child {
+  grid-column: 2;
+}
+
+.Step--balanced {
+  grid-template-columns: minmax(0,1.15fr) minmax(0,1fr);
+}
+
+/* История и условия вступления: текст занимает три четверти ширины. */
+.Step--wide-copy {
+  grid-template-columns: minmax(0,3fr) minmax(0,1fr);
+}
+
+/* Шапка организации: описание и два факта слева, герб справа.
+   Цвет наследуется от вкладки города; номера относятся только к шагам ниже. */
+.Step--organization {
+  --role-media-width: 180px;
+  align-items: start;
+  padding-top: 28px;
+  margin-bottom: 38px;
+  border-top: 1px solid var(--role-line);
+}
+
+.Step--organization > :first-child > h3 {
+  color: var(--role-accent);
+  font-family: 'Jost',Arial,sans-serif;
+  font-size: 30px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+[data-organization] h4 {
+  font-family: 'Jost',Arial,sans-serif;
+}
+
+.Step--organization .Facts {
+  gap: 24px;
+  margin: 18px 0 0;
+}
+
+/* Длинные списки званий начинаются на одной высоте с описанием устройства. */
+[data-organization] > .Step--reverse {
+  align-items: start;
+}
+
+/* Широкая дополнительная колонка: навык занимает 1/3, его перки — 2/3.
+   Step--reverse меняет стороны. На телефоне остаётся общий порядок Step:
+   первый элемент (описание навыка), затем второй (перки). */
+@media (min-width: 761px) {
+  .Step--wide-aside {
+    grid-template-columns: minmax(0,1fr) minmax(0,2fr);
+  }
+
+  .Step--wide-aside.Step--reverse {
+    grid-template-columns: minmax(0,2fr) minmax(0,1fr);
+  }
+
+  /* Описание навыка начинается немного ниже верхнего края колонки перков. */
+  .Step--wide-aside > .Skill {
+    align-self: start;
+    margin-top: 20px;
+  }
+}
+
+
+.Step--race {
+  --race-portrait-size: 160px;
+  --role-media-width: var(--race-portrait-size);
+  position: relative;
+  isolation: isolate;
+  gap: 28px;
+  padding: 28px;
+}
+
+.Step--race::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb,var(--role-accent) 23%,var(--role-surface));
+  clip-path: polygon(1% 0,100% 3%,99% 100%,0 97%);
+}
+
+.Step--race > :first-child {
+  align-self: end;
+}
+
+.Step--race > :first-child > h4 {
+  font-family: 'Jost',Arial,sans-serif;
+  font-size: 28px;
+  letter-spacing: .3px;
+  color: var(--role-accent);
+}
+
+.Step--race > :first-child > em {
+  display: block;
+}
+
+/* Портрет приподнят на 5 px относительно цитаты. Отрицательный отступ
+   позволяет картинке выступать сверху, не увеличивая пустое место под ней. */
+.Step--race > .Figure--cutout {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  width: var(--race-portrait-size);
+  height: var(--race-portrait-size);
+  margin: calc(var(--race-portrait-size) / -3) 0 0;
+  translate: 0 -10px;
+  /* Обводка и плоская тень — как у панорам городов (.City-image). */
+  box-sizing: border-box;
+  padding: 0;
+  border: 4px solid color-mix(in srgb,var(--role-accent) 25%,var(--role-surface));
+  border-radius: 16px;
+  background: var(--role-accent);
+  box-shadow: 6px 7px 0 color-mix(in srgb,var(--role-accent) 12%,transparent);
+}
+
+.Step--race > .Figure--cutout > img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: inherit;
+}
+
+.Step--race > .Figure--cutout > .Icon {
+  width: 100%;
+  height: 100%;
+}
+
+.Step--race > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.Step--panel {
+  --role-media-width: auto;
+  position: relative;
+  isolation: isolate;
+  padding: 28px;
+}
+
+
+.Step--panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb,var(--role-accent) 23%,var(--role-surface));
+  clip-path: polygon(0 3%,99% 0,100% 97%,1% 100%);
+}
+
+.Step--panel > :first-child > h4 {
+  font-family: 'Jost',Arial,sans-serif;
+  font-size: 28px;
+  letter-spacing: .3px;
+  color: var(--role-accent);
+}
+
+.Skill > h4 {
+  font-family: 'Oracle',Arial,sans-serif;
+  font-size: 20px !important; 
+  letter-spacing: .3px;
+}
+
+.Skill > p {
+  font-family: 'Jost',Arial,sans-serif;
+  font-size: 16px;
+  letter-spacing: .3px;
+  
+}
+
+.Badge {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  /* Сбрасываем фон и тень одноимённого штатного Badge форума. */
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--role-surface);
+  font: 700 22px / 1 "Jost",Arial,sans-serif;
+  vertical-align: middle;
+}
+
+.Badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--role-accent);
+  mask: url("/role/assets/badge-circle.webp") center / contain no-repeat;
+  /* Поворачиваем только текстуру: число или иконка остаются ровными. */
+  rotate: var(--badge-rotation, 0deg);
+}
+
+.Badge > .Icon {
+  font-size: 18px;
+  margin: 0;
+}
+
+.Badge--small {
+  width: 30px;
+  height: 30px;
+  margin-right: 9px;
+  color: var(--role-accent);
+  background: color-mix(in srgb,var(--role-accent) 10%,transparent);
+  border-radius: 9px;
+}
+
+.Badge--small::before {
+  content: none;
+}
+
+.Badge--small > .Icon {
+  font-size: 13px;
+}
+
+/* ========================================================================== 
+   10. Note — заметка и её смысловые варианты
+   Фон наследует акцент раздела. Заголовок и иконка внутри необязательны.
+   ========================================================================== */
+.Note {
+  font-family: "Jost",Arial,sans-serif;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin: 20px 0 20px;
+  border-radius: 14px;
+  padding: 22px 25px;
+  background: color-mix(in srgb,var(--role-accent) 25%,var(--role-surface));
+  border: 0;
+}
+
+.Note > :is(h2,h3,h4):first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 11px;
+  padding: 0;
+  border: 0;
+  font-size: 20px;
+  color: var(--role-accent);
+}
+
+.Note :is(h2,h3,h4) .Icon {
+  color: var(--role-accent);
+}
+
+.Note--warning {
+  --role-accent: var(--role-amber);
+}
+
+.Note--success {
+  --role-accent: var(--role-forest);
+}
+
+/* Заметка на 3/4 раздела, по центру. На телефоне занимает всю ширину. */
+.Note--partial {
+  width: 75%;
+  margin-inline: auto;
+}
+
+/* Памятки: общий вид, наклон и тень. Medium увеличивает только текст и интервал.
+   rotate в HTML переопределяет стандартные 0.5°. */
+:is(.Note--compact,.Note--medium) {
+  min-width: 0;
+  margin-top: 5px;
+  padding: 15px;
+  font-size: 11px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  border-radius: 14px;
+  background: color-mix(in srgb,var(--role-accent) 25%,var(--role-surface));
+  rotate: 0.5deg;
+  box-shadow: 6px 7px 0 color-mix(in srgb,var(--role-accent) 14%,transparent);
+}
+
+.Note--medium {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Перечни должностей и ветвей подчиняются компактной памятке,
+   сохраняя обычное оформление Facts в остальных частях страницы. */
+[data-organization] :is(.Note--compact,.Note--medium) .Facts {
+  margin: 12px 0 0;
+  gap: 12px;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+[data-organization] :is(.Note--compact,.Note--medium) .Facts dt {
+  margin: 0;
+}
+
+[data-organization] :is(.Note--compact,.Note--medium) .Facts dd {
+  font-size: inherit;
+  color: inherit;
+}
+
+[data-organization] :is(.Note--compact,.Note--medium) .Facts dd p {
+  margin: 6px 0 0;
+}
+
+:is(.Note--compact,.Note--medium) > :is(h2,h3,h4):first-child {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+:is(.Note--compact,.Note--medium) > p {
+  margin: 0 0 8px;
+}
+
+:is(.Note--compact,.Note--medium) > .Example {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+:is(.Note--compact,.Note--medium) > ol {
+  margin: 0;
+  padding-left: 18px;
+}
+
+:is(.Note--compact,.Note--medium) > ol > li {
+  padding-left: 2px;
+  margin-bottom: 6px;
+}
+
+:is(.Note--compact,.Note--medium) > ol > li:last-child {
+  margin-bottom: 0;
+}
+
+.paper-highlight {
+  font: 400 14px / 1 "Pulp", sans-serif;
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  padding: 0.2em 0.3em;
+  margin-left: 4px;
+  margin-bottom: 3px;
+  color: var(--role-surface);
+  border-radius: 10px;
+}
+
+.Document .paper-highlight a {
+  color: #fff;
+}
+
+.paper-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0.08em 0 -0.04em;
+  z-index: -1;
+  background: var(--role-accent);
+  rotate: -0.5deg;
+}
+
+.Document .RulePoints {
+  font-size: 14px;
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  list-style: none;
+  gap: 0 5px;
+  padding: 0;
+}
+
+.Document .RulePoints > li {
+  position: relative;
+  margin: 0;
+  padding: 3px 0 3px 27px;
+  line-height: 1.75;
+}
+
+.RulePoints > li > .Icon {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  font-size: 12px;
+  color: var(--role-accent);
+}
+
+/* ========================================================================== 
+   11. Banner и Facts — заголовочная плашка и строка сведений
+   Facts — семантический dl: dt — название, dd — значение.
+   По умолчанию четыре колонки. --three: три; --cards: две на подложках.
+   ========================================================================== */
+.Banner {
+  position: relative;
+  overflow: visible;
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 14px;
+  padding: 16px 170px 16px 25px;
+  background: color-mix(in srgb,var(--role-accent) 35%,var(--role-surface));
+}
+
+.Banner-art {
+  position: absolute;
+  right: -10px;
+  bottom: -8px;
+  width: 128px;
+  height: 128px;
+  transform: rotate(7deg);
+  pointer-events: none;
+  filter: drop-shadow(0 5px 6px #00000014);
+}
+
+/* Баннер может содержать обычную иконку вместо отдельной иллюстрации. */
+.Banner-art > .Icon {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 80px;
+  color: var(--role-accent);
+}
+
+.Banner > :is(h2,h3) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.Banner > p {
+  margin: 0;
+  font-family: "Jost",Arial,sans-serif;
+  color: var(--role-muted);
+}
+
+/* Баннер-спойлер: open у details задаёт начальное состояние.
+   Весь summary кликабелен; язычок и шеврон нарисованы без отдельной кнопки. */
+.Banner--spoiler {
+  --banner-tab-direction: 1;
+  --banner-tab-duration: 160ms;
+  position: relative;
+  isolation: isolate;
+  margin-block: 32px;
+  min-width: 0;
+}
+
+.Banner--spoiler[open] {
+  --banner-tab-direction: -1;
+}
+
+.Banner--spoiler > summary.Banner {
+  margin: 0 0 30px;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.Banner--spoiler > summary::-webkit-details-marker {
+  display: none;
+}
+
+.Banner--spoiler > summary::marker {
+  content: "";
+}
+
+.Banner--spoiler > summary:focus-visible {
+  --banner-tab-offset: calc(var(--banner-tab-direction) * 4px);
+  outline: 2px solid var(--role-accent);
+  outline-offset: 5px;
+}
+
+/* Стрелка и бумажный язычок двигаются вместе, без изменения их формы. */
+.Banner--spoiler > summary::before,
+.Banner--spoiler > summary::after {
+  translate: 0 var(--banner-tab-offset,0px);
+  transition: translate var(--banner-tab-duration) ease;
+}
+
+@media (hover: hover) {
+  .Banner--spoiler > summary:hover {
+    --banner-tab-offset: calc(var(--banner-tab-direction) * 4px);
+  }
+}
+
+/* Сначала прячем язычок. Затем меняем сторону без видимого перемещения
+   сквозь баннер и убираем атрибут, чтобы выдвинуть его на новом месте. */
+.Banner--spoiler[data-tab-motion] > summary {
+  --banner-tab-offset: calc(var(--banner-tab-direction) * -34px);
+}
+
+.Banner--spoiler[data-tab-motion="switch"] > summary::before,
+.Banner--spoiler[data-tab-motion="switch"] > summary::after {
+  transition: none;
+}
+
+/* Бумажный язычок ниже закрытого баннера и выше открытого. */
+.Banner--spoiler > summary::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  right: 78px;
+  bottom: -24px;
+  width: 58px;
+  height: 30px;
+  border-radius: 2px;
+  background: color-mix(in srgb,var(--role-muted) 25%,var(--role-surface));
+  rotate: -3deg;
+  pointer-events: none;
+}
+
+.Banner--spoiler > summary::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: 100px;
+  bottom: -16px;
+  width: 13px;
+  height: 13px;
+  border-right: 5px solid var(--role-muted);
+  border-bottom: 5px solid var(--role-muted);
+  scale: 1.1 .8;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.Banner--spoiler[open] > summary::after {
+  top: -24px;
+  bottom: auto;
+}
+
+.Banner--spoiler[open] > summary::before {
+  top: -16px;
+  bottom: auto;
+  transform: rotate(225deg);
+}
+
+.Banner--spoiler > summary > .Banner-art {
+  z-index: 2;
+}
+
+.Facts {
+  --columns: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--columns),minmax(0,1fr));
+  gap: 20px;
+  margin: 24px 0 25px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.Facts dt {
+  margin: 10px 0 0;
+  font-family: "Oracle",Arial,sans-serif;
+  font-weight: 600;
+}
+
+.Facts dd {
+  margin: 0;
+  font-family: "Jost",Arial,sans-serif;
+  font-size: 14px;
+  color: var(--role-muted);
+}
+
+.Facts dd p {
+  margin: 12px 0;
+}
+
+.Facts dd ul {
+  margin: 12px 0;
+  padding-left: 18px;
+}
+
+.Facts--compact {
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.Facts--three {
+  --columns: 3;
+  gap: 24px;
+}
+
+.Facts--three dd {
+  line-height: 1.6;
+}
+
+/* Три пункта с более просторной центральной колонкой. */
+.Facts--wide-center {
+  grid-template-columns: minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);
+}
+
+.Facts--cards {
+  font-size: 16px;
+  --columns: 2;
+  gap: 13px;
+  margin: 10px auto;
+}
+
+.Facts--cards dt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+}
+
+.Facts--cards dt > h4 {
+  margin: 0;
+}
+
+.Facts--cards > div:only-child {
+  grid-column: 1 / -1;
+}
+
+.Facts--cards .paper-highlight {
+  margin: 3px 6px 3px 0;
+}
+
+.Facts--cards dd p {
+  margin: 9px 0 0;
+}
+
+.Facts--cards .Center {
+  text-align: left;
+}
+
+.Facts .Icon {
+  color: var(--role-accent);
+}
+
+/* Обычный Facts с расширенной третьей графой, как в сведениях о расах. */
+@media (min-width: 761px) {
+  .Facts--wide-third {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+
+.Facts--wide-third dt > .Icon {
+  margin-right: 9px;
+}
+
+/* ========================================================================== 
+   12. Figure и Grid — иллюстрации и повторяющиеся элементы
+   --placeholder: заглушка; --framed: рамка; --cutout: картинка без фона.
+   --stack: один столбец; --symbols: четыре символа; --fill-last: заполнить последний ряд.
+   ========================================================================== */
+.Figure {
+  max-width: 100%;
+  margin: 20px 0;
+}
+
+.Figure > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.Figure--placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 185px;
+  padding: 25px;
+  border: 1px dashed color-mix(in srgb,var(--role-accent) 35%,var(--role-line));
+  border-radius: 14px;
+  text-align: center;
+  background: color-mix(in srgb,var(--role-accent) 17%,var(--role-surface));
+  color: var(--role-accent);
+}
+
+.Figure--placeholder > .Icon {
+  font-size: 25px;
+  opacity: .55;
+}
+
+.Figure figcaption {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.Figure small {
+  font-size: 10px;
+}
+
+.Figure--framed {
+  width: 100%;
+  margin: 0;
+  min-height: 220px;
+  padding: 25px;
+  border: 5px solid color-mix(in srgb,var(--role-accent) 24%,var(--role-surface));
+  border-radius: 6px;
+  background: color-mix(in srgb,var(--role-accent) 78%,#18313b);
+  color: white;
+  transform: rotate(1deg);
+  box-shadow: 8px 9px 0 color-mix(in srgb,var(--role-accent) 12%,transparent);
+}
+
+:root[data-theme="dark"] .Figure--framed {
+  background: color-mix(in srgb,var(--role-accent) 46%,#10232b);
+}
+
+.Step--reverse > .Figure--framed {
+  transform: rotate(-1deg);
+}
+
+/* Первый шаг: снимок кнопок сохраняет компактный размер. */
+.Step--start > .Figure--screenshot {
+  width: min(100%,260px);
+  justify-self: end;
+}
+
+.Step--start > :first-child > p:last-child {
+  text-align: center;
+}
+
+.Step--start .Button--primary {
+  background: var(--role-blue);
+  color: var(--role-surface);
+}
+
+/* Снимки интерфейса: тема совпадает с путеводителем. */
+.Figure--framed.Figure--screenshot {
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.Figure--screenshot > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.Step--reverse > .Grid--stack > .Figure--screenshot {
+  transform: rotate(-1deg);
+}
+
+.Figure--screenshot > [data-screenshot-theme="dark"],
+:root[data-theme="dark"] .Figure--screenshot > [data-screenshot-theme="light"] {
+  display: none;
+}
+
+:root[data-theme="dark"] .Figure--screenshot > [data-screenshot-theme="dark"] {
+  display: block;
+}
+
+/* Кнопка частично выступает за нижний правый край иллюстрации.
+   Обводка и текст учитывают тему, поскольку находятся и за пределами картинки. */
+.Figure--action {
+  position: relative;
+}
+
+.Figure--action > .Button {
+  position: absolute;
+  right: -10px;
+  bottom: -28px;
+}
+
+.Figure--action > .Button--ghost {
+  color: var(--role-text);
+  border-color: color-mix(in srgb,var(--role-text) 55%,transparent);
+}
+
+.Figure--portrait {
+  width: min(100%,var(--role-media-width));
+  justify-self: center;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 12px;
+}
+
+.Figure--cutout {
+  width: 100%;
+  height: 240px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.Figure--cutout > .Icon {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 200px;
+  font-size: 42px;
+}
+
+/* Расовые портреты сохраняют исходные 150 × 150 px без увеличения. */
+.Figure--cutout:not(.Figure--placeholder) {
+  display: grid;
+  place-items: center;
+}
+
+.Figure--cutout > img {
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Герб организации показывается целиком. Пока изображения нет, оставляем
+   нейтральную заглушку того же размера, без выдуманной символики. */
+.Figure--crest {
+  width: min(100%,180px);
+  height: 240px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  justify-self: center;
+  border: 0;
+  background: transparent;
+}
+
+.Figure--crest > img {
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(4px 5px 0 rgb(0 0 0 / 15%));
+}
+
+.Figure--crest.Figure--placeholder {
+  border: 1px dashed color-mix(in srgb,var(--role-accent) 35%,var(--role-line));
+  border-radius: 14px;
+  background: color-mix(in srgb,var(--role-accent) 6%,var(--role-surface));
+}
+
+.Grid {
+  --columns: 2;
+  display: grid;
+  grid-template-columns: repeat(var(--columns),minmax(0,1fr));
+  gap: 16px;
+  margin: 26px 0;
+}
+
+.Grid > :is(.Note,.EntityExample) {
+  margin: 0;
+  max-width: none;
+}
+
+.Grid > .Note {
+  margin-bottom: 5px;
+}
+
+.Grid--fill-last > :last-child:nth-child(2n+1) {
+  grid-column: 1 / -1;
+}
+
+.Grid--stack {
+  --columns: 1;
+  gap: 14px;
+  align-content: center;
+  margin: 0;
+}
+
+/* Шахматный ряд заметок: первая слева, вторая справа, каждая на 3/4 ширины. */
+.Grid--staggered {
+  --columns: 1;
+  gap: 24px;
+}
+
+.Grid--staggered > .Note {
+  width: 75%;
+  justify-self: start;
+  rotate: 0.5deg;
+}
+
+.Grid--staggered > .Note:nth-child(even) {
+  justify-self: end;
+  rotate: -0.5deg;
+}
+
+.Grid--symbols {
+  width: min(100%,220px);
+  justify-self: center;
+  margin: 0;
+}
+
+.Grid--symbols > div {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 5px;
+  aspect-ratio: 1;
+  padding: 15px 8px;
+  color: var(--role-accent);
+}
+
+.Grid--symbols .Icon {
+  font-size: 72px;
+}
+
+.Grid--symbols span {
+  font: 600 16px / 1.2 "Jost",Arial,sans-serif;
+  color: var(--role-text);
+}
+
+/* ========================================================================== 
+   City — город: заголовок и герб, панорама, Facts и основной текст.
+   Герб чередует стороны автоматически; настоящие изображения заменят заглушки.
+   ========================================================================== */
+.City {
+  --city-header-overlap: 34px;
+  margin-block: 64px 76px;
+  min-width: 0;
+}
+
+.City-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  padding-inline: 30px;
+  margin-bottom: calc(-1 * var(--city-header-overlap));
+}
+
+.City-header > h3 {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 18px;
+  border: 2px solid var(--role-accent);
+  border-radius: 14px;
+  background: var(--role-surface);
+  font-size: clamp(26px,3.2vw,36px);
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--role-accent);
+  rotate: -1deg;
+}
+
+.City-header > h3 > span:last-child {
+  min-width: 0;
+}
+
+.City-crest {
+  display: grid;
+  flex: 0 0 180px;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 200px;
+  margin: 0;
+  color: var(--role-accent);
+  /* Середина герба совпадает с верхним краем панорамы. */
+  translate: 0 calc(50% - var(--city-header-overlap));
+  rotate: 1deg;
+}
+
+.City-crest > .Icon {
+  font-size: 64px;
+  opacity: .6;
+}
+
+.City-crest > img {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+}
+
+.City-crest > figcaption {
+  font-size: 10px;
+  color: var(--role-muted);
+}
+
+.City:nth-of-type(odd) .City-crest {
+  order: -1;
+  rotate: -1deg;
+}
+
+.City:nth-of-type(odd) .City-header > h3 {
+  justify-content: flex-end;
+}
+
+.City-image {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  min-height: 260px;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 4px solid color-mix(in srgb,var(--role-accent) 25%,var(--role-surface));
+  border-radius: 12px;
+  box-shadow: 6px 7px 0 color-mix(in srgb,var(--role-accent) 12%,transparent);
+}
+
+.City-image > img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.City > .Facts {
+  gap: 20px;
+  margin-block: 22px 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--role-line);
+}
+
+.City > .Facts dt {
+  margin-top: 0;
+}
+
+.City > .Facts dt > .Icon {
+  margin-right: 4px;
+}
+
+.City > .Facts small {
+  font-size: 12px;
+}
+
+.City-copy > p:first-child {
+  margin-top: 0;
+}
+
+/* ========================================================================== 
+   13. Table и Timeline — таблицы и шкала развития
+   Table — только рамка и прокрутка. Заголовки и ячейки задаются обычными тегами.
+   ========================================================================== */
+.Table {
+  font-family: "Jost",Arial,sans-serif;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 18px 0;
+  border: 1px solid var(--role-line);
+  border-radius: 13px;
+}
+
+.Document table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.Document :is(th,td) {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--role-line);
+}
+
+.Document th {
+  font-weight: 700;
+  background: color-mix(in srgb,var(--role-accent) 13%,var(--role-surface));
+}
+
+.Document tr:last-child td {
+  border-bottom: 0;
+}
+
+.Document td:first-child {
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.Document td p {
+  margin: 4px 0;
+}
+
+/* У названий степеней достаточно места, примеры начинаются отдельным абзацем. */
+.Document .Table--damage td:first-child {
+  width: 145px;
+  min-width: 145px;
+}
+
+.Document .Table--damage td p + p {
+  margin-top: 1em;
+}
+
+/* Нумерованный список с уже существующими кружками Badge. */
+.Document ol:has(> li > .Badge) {
+  list-style: none;
+  padding: 0;
+}
+
+.Document ol > li:has(> .Badge) {
+  display: grid;
+  grid-template-columns: 28px minmax(0,1fr);
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.Document ol > li > .Badge {
+  width: 28px;
+  height: 28px;
+  font-size: 15px;
+}
+
+.Document .Timeline {
+  font-family: "Jost",Arial,sans-serif;
+  list-style: none;
+  margin: 19px 0;
+  padding: 0;
+  scroll-margin-top: 120px;
+}
+
+.Timeline > li {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 17px;
+  padding: 9px 0;
+  margin: 0;
+}
+
+.Timeline > li::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 44px;
+  bottom: -9px;
+  width: 1px;
+  background: var(--role-line);
+}
+
+.Timeline > li:last-child::before {
+  display: none;
+}
+
+.Timeline > li > span {
+  flex: 0 0 35px;
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--role-accent);
+  color: var(--role-surface);
+}
+
+.Timeline > li > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 7px 13px;
+  border-radius: 10px;
+  flex: 1 1 0%;
+  font-size: 16px;
+  line-height: 1.65;
+  background: color-mix(in srgb,var(--role-accent) 12%,var(--role-surface));
+}
+
+.Timeline > li > div > .Icon {
+  margin-top: 5px;
+  color: var(--role-accent);
+}
+
+.Timeline p {
+  margin: 0;
+}
+
+/* ========================================================================== 
+   14. Исключения: примеры сущностей и схема анкеты
+   EntityExample заменится общими карточками форума; это временная разметка.
+   Diagram — отдельная схема, не вариант двухколоночного шага.
+   ========================================================================== */
+.Document .EntityExample {
+  position: relative;
+  border: 0;
+  padding: 17px 20px;
+  border-radius: 13px;
+  background: var(--role-surface);
+}
+
+.EntityExample > strong {
+  font-size: 13px;
+}
+
+.EntityExample p {
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 9px 0 0;
+}
+
+.EntityExample > small {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--role-muted);
+  margin: 0 10px 8px 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--role-soft);
+}
+
+.Section--nested .EntityExample {
+  background: color-mix(in srgb,var(--role-accent) 10%,var(--role-surface));
+}
+
+.Document .EntityExample--placeholder {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 112px;
+  padding: 16px;
+  border-radius: 16px;
+  background: color-mix(in srgb,var(--role-accent) 20%,var(--role-surface));
+}
+
+.EntityExample--placeholder > .Badge {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  color: var(--role-accent);
+  background: var(--role-bg);
+  border-radius: 50%;
+}
+
+.EntityExample--placeholder > .Badge::before {
+  content: none;
+}
+
+.EntityExample--placeholder > .Badge > .Icon {
+  font-size: 22px;
+}
+
+.EntityExample--placeholder > div {
+  display: grid;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.EntityExample--placeholder strong {
+  font: 700 17px / 1.3 "Jost",Arial,sans-serif;
+}
+
+.EntityExample--placeholder > div > span {
+  height: 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb,var(--role-accent) 18%,transparent);
+}
+
+.EntityExample--placeholder > div > span:last-child {
+  width: 68%;
+}
+
+.Diagram {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr 1fr;
+  gap: 20px;
+  align-items: center;
+  margin: 38px 0 0;
+  padding: 28px 0;
+}
+
+.Diagram > figure {
+  grid-area: 1 / 2 / 3 / 3;
+  min-height: 260px;
+  margin: 0;
+  border-radius: 18px;
+  box-shadow: 0 12px 40px #00000007;
+  background: color-mix(in srgb,var(--role-accent) 10%,var(--role-surface));
+  border: 1px solid color-mix(in srgb,var(--role-accent) 32%,var(--role-line));
+}
+
+.Diagram-label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 18px 15px;
+  font-size: 12px;
+  line-height: 1.5;
+  position: relative;
+  isolation: isolate;
+}
+
+.Diagram-label > .Icon {
+  font-size: 18px;
+  color: var(--role-accent);
+}
+
+.Diagram-label::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  width: 20px;
+  border-top: 1px dashed var(--role-muted);
+}
+
+.Diagram-label::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb,var(--role-accent) 13%,var(--role-surface));
+  clip-path: polygon(0 3%,99% 0,100% 97%,1% 100%);
+}
+
+.Diagram > div:nth-of-type(1) {
+  grid-area: 1 / 1;
+}
+
+.Diagram > div:nth-of-type(2) {
+  grid-area: 2 / 1;
+}
+
+.Diagram > div:nth-of-type(3) {
+  grid-area: 1 / 3;
+}
+
+.Diagram > div:nth-of-type(4) {
+  grid-area: 2 / 3;
+}
+
+.Diagram > div:nth-of-type(n+3)::after {
+  right: auto;
+  left: -20px;
+}
+
+/* ==========================================================================
+   15. Галерея персонажей
+   CharacterRail — прокрутка; Character — отдельная карточка.
+   ========================================================================== */
+.SectionHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 23px;
+}
+
+.SectionKicker {
+  display: block;
+  color: var(--role-muted);
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.SectionHeading h2 {
+  font-size: 30px;
+  letter-spacing: -1px;
+  margin-top: 9px;
+  font-family: "Jost", Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.SectionHeading > p {
+  font-size: 12px;
+  color: var(--role-muted);
+  padding-bottom: 3px;
+}
+
+.Characters {
+  padding-top: 57px;
+  padding-bottom: 44px;
+}
+
+.SliderActions {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.SliderCounter {
+  font-size: 11px;
+  color: var(--role-muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 9px;
+}
+
+.CharacterRail {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: 3px;
+  overscroll-behavior-x: contain;
+}
+
+.CharacterRail::-webkit-scrollbar {
+  display: none;
+}
+
+.Character {
+  flex: 0 0 calc(33.3333% - 13.3333px);
+  min-width: 0;
+  border-radius: var(--role-radius);
+  background: var(--role-surface);
+  border: 1px solid var(--role-line);
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.Character-portrait {
+  height: 270px;
+  position: relative;
+  background-image: url("/role/assets/character-portraits.png");
+  background-size: 400%;
+  background-position: var(--portrait-position) 25%;
+  background-repeat: no-repeat;
+  background-color: rgb(38, 48, 56);
+}
+
+.Character-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(17, 24, 32, 0.475), transparent 55%);
+}
+
+.Character-tag {
+  position: absolute;
+  left: 19px;
+  bottom: 15px;
+  z-index: 1;
+  padding: 5px 9px;
+  background: rgba(17, 28, 37, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.19);
+  backdrop-filter: blur(5px);
+  border-radius: 5px;
+  font-size: 10px;
+  color: rgb(244, 241, 234);
+}
+
+.Character-body {
+  padding: 22px 23px 20px;
+}
+
+.Character-race {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  font-weight: 700;
+  color: var(--role-muted);
+}
+
+.Character h3 {
+  font-size: 21px;
+  letter-spacing: -0.5px;
+  margin-top: 5px;
+  font-family: "Jost", Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.Character p {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--role-muted);
+  min-height: 62px;
+}
+
+.Character-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-top: 18px;
+  color: var(--role-primary);
+  font: 700 11px Arial, sans-serif;
+}
+
+.Character-link:hover {
+  text-decoration: underline;
+}
+
+.Character-link .Icon {
+  font-size: 10px;
+}
+
+.Characters-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 18px;
+  font-size: 11px;
+  color: var(--role-muted);
+}
+
+.DemoLabel {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   16. Окошко и подвал
+   Dialog — демонстрационное окно; PreviewFooter — подписи внизу.
+   ========================================================================== */
+.PreviewFooter {
+  border-top: 1px solid var(--role-line);
+  width: min(var(--role-width),calc(100% - var(--role-gutter) * 2));
+  margin: auto;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  min-height: 69px;
+  font-size: 10px;
+  color: var(--role-muted);
+}
+
+.PreviewFooter > span:first-child {
+  font-weight: bold;
+  color: var(--role-text);
+}
+
+.PreviewFooter a {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Dialog {
+  width: min(480px, 100% - 36px);
+  padding: 34px;
+  border: 1px solid var(--role-line);
+  border-radius: 18px;
+  color: var(--role-text);
+  background: var(--role-surface);
+  box-shadow: rgba(0, 0, 0, 0.267) 0 24px 90px;
+}
+
+.Dialog::backdrop {
+  background: rgba(16, 25, 35, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.Dialog-close {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  border: 0;
+  background: transparent;
+  width: 29px;
+  height: 29px;
+}
+
+.Dialog h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 13px 0 17px;
+  letter-spacing: -0.7px;
+}
+
+.Dialog p {
+  font-size: 13px;
+  color: var(--role-muted);
+  line-height: 1.8;
+}
+
+.Dialog-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.Dialog-actions:empty {
+  display: none;
+}
+
+/* ========================================================================== 
+   17. Адаптация компонентов
+   Размеры основных сущностей меняются здесь, без отдельных правил для тем страницы.
+   ========================================================================== */
+@media (max-width: 1000px) {
+  :root {
+    --role-gutter: 24px;
+  }
+
+  .SiteHeader-inner {
+    gap: 30px;
+  }
+
+  .Step {
+    gap: 28px;
+  }
+
+  .Step--panel {
+    gap: 24px;
+    padding: 26px;
+  }
+
+  .Character-portrait {
+    height: 245px;
+  }
+
+  .Character p {
+    min-height: 82px;
+  }
+
+}
+
+@media (max-width: 760px) {
+  :root {
+    --role-gutter: 20px;
+  }
+
+  .SiteHeader-inner {
+    height: 64px;
+  }
+
+  .SiteNav {
+    display: none;
+  }
+
+  .Brand {
+    font-size: 18px;
+  }
+
+  .SiteActions {
+    gap: 15px;
+  }
+
+  .ForumLink {
+    font-size: 11px;
+  }
+
+  .Hero-inner {
+    min-height: 340px;
+    padding-block: 38px;
+  }
+
+  .Hero h1 {
+    letter-spacing: 1px;
+    font-size: 48px;
+  }
+
+  .Hero-copy > p {
+    font-size: 14px;
+  }
+
+  .Hero-genre {
+    font-size: 8px;
+  }
+
+  .Guides {
+    padding-top: 22px;
+  }
+
+  .Contents {
+    margin-bottom: 32px;
+  }
+
+  .Contents a {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .Document {
+    font-size: 14px;
+  }
+
+  .Document h2 {
+    font-size: 27px;
+  }
+
+  .Document h3 {
+    font-size: 21px;
+  }
+
+  .Section, .Step.Section {
+    margin-bottom: 46px;
+  }
+
+  .Step, .Step--reverse, .Step--balanced {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .Step--reverse > :first-child {
+    order: 0;
+    grid-column: auto;
+  }
+
+  .Step--organization > :first-child {
+    grid-row: 2;
+  }
+
+  .Step--organization > .Figure--crest {
+    grid-row: 1;
+    justify-self: start;
+    width: 110px;
+    height: 147px;
+  }
+
+  .Note--partial {
+    width: 100%;
+  }
+
+  .Step > :first-child > h2 {
+    font-size: 25px;
+  }
+
+  .Step--race {
+    --race-portrait-size: clamp(120px,36vw,144px);
+  }
+
+  .Step--race > :first-child > h4 {
+    min-height: 100px;
+    padding-right: var(--race-portrait-size);
+  }
+
+  /* На узком экране портрет остаётся над цитатой и не закрывает её текст. */
+  .Step--race > .Figure--cutout {
+    position: absolute;
+    top: 0;
+    right: 28px;
+    grid-column: auto;
+    grid-row: auto;
+    margin: 0;
+    translate: 0 calc(-33.333333% - 5px);
+  }
+
+  .Step--panel {
+    gap: 10px;
+    padding: 26px;
+  }
+
+  .Step--panel > :first-child > h4 {
+    font-size: 26px;
+  }
+
+  .Figure--placeholder {
+    min-height: 150px;
+  }
+
+  .Figure--framed {
+    min-height: 210px;
+    box-shadow: 4px 5px 0 color-mix(in srgb,var(--role-accent) 12%,transparent);
+    transform: none;
+  }
+
+  .Step--reverse > .Figure--framed {
+    transform: none;
+  }
+
+  .Figure--cutout {
+    height: 210px;
+    min-height: 0;
+  }
+
+  .Figure--cutout > .Icon {
+    height: 130px;
+    width: 110px;
+  }
+
+  .Banner {
+    min-height: 108px;
+    padding-right: 115px;
+  }
+
+  .Banner-art {
+    width: 92px;
+    height: 92px;
+    right: -4px;
+  }
+
+  .Facts {
+    --columns: 2;
+    gap: 16px;
+  }
+
+  .Facts--three, .Facts--cards {
+    --columns: 1;
+  }
+
+  .Facts--wide-center {
+    grid-template-columns: 1fr;
+  }
+
+  .City {
+    --city-header-overlap: 24px;
+    margin-block: 42px 52px;
+  }
+
+  .City-header {
+    gap: 12px;
+    padding-inline: 12px;
+  }
+
+  .City-header > h3 {
+    gap: 9px;
+    padding: 8px 12px;
+    font-size: 22px;
+  }
+
+  .City-header .Badge {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .City-crest {
+    flex-basis: 96px;
+    min-height: 128px;
+  }
+
+  .City-crest > .Icon {
+    font-size: 46px;
+  }
+
+  .City-crest > img {
+    width: 96px;
+    height: auto;
+  }
+
+  .City-image {
+    min-height: 180px;
+  }
+
+  .City > .Facts {
+    gap: 18px 14px;
+  }
+
+  .Grid {
+    --columns: 1;
+  }
+
+  .Grid--staggered > .Note {
+    width: 100%;
+  }
+
+  .Grid--symbols {
+    --columns: 2;
+    width: min(100%,300px);
+  }
+
+  .Document .EntityExample--placeholder {
+    min-height: 100px;
+  }
+
+  .Document :is(th,td) {
+    padding: 10px;
+    font-size: 11px;
+  }
+
+  /* Компактность на компьютере не должна уменьшать читаемость на телефоне. */
+  .Note--compact {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .Note--medium {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .Note--compact :is(th,td) {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .Timeline > li {
+    gap: 11px;
+  }
+
+  .Timeline > li > div {
+    font-size: 12px;
+  }
+
+  .Document .RulePoints {
+    grid-template-columns: 1fr;
+  }
+
+  .Diagram {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .Diagram > figure {
+    grid-area: 1 / 1 / 2 / 3;
+    min-height: 210px;
+  }
+
+  .Diagram > .Diagram-label {
+    grid-area: auto;
+    padding: 13px;
+    font-size: 11px;
+  }
+
+  .Diagram-label::after {
+    display: none;
+  }
+
+  .SectionHeading {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .SectionHeading > p {
+    display: none;
+  }
+
+  .SectionHeading h2 {
+    font-size: 27px;
+  }
+
+  .Characters {
+    padding-top: 35px;
+    padding-bottom: 28px;
+  }
+
+  .Character {
+    flex-basis: calc(50% - 9px);
+  }
+
+  .CharacterRail {
+    gap: 18px;
+  }
+
+  .Character-portrait {
+    height: 228px;
+  }
+
+  .Character p {
+    min-height: 82px;
+  }
+
+  .Characters-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .PreviewFooter {
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-block: 18px;
+  }
+
+  .PreviewFooter > span:nth-child(2) {
+    display: none;
+  }
+
+}
+
+@media (max-width: 480px) {
+  :root {
+    --role-gutter: 18px;
+  }
+
+  .Button {
+    min-height: 45px;
+    font-size: 12px;
+  }
+
+  .SiteHeader-inner {
+    gap: 12px;
+  }
+
+  .Brand {
+    font-size: 17px;
+    gap: 9px;
+  }
+
+  .Brand-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 22px;
+  }
+
+  .ForumLink {
+    gap: 7px;
+  }
+
+  .SiteActions {
+    gap: 12px;
+  }
+
+  .SiteActions .IconButton {
+    height: 32px;
+    width: 32px;
+  }
+
+  .Hero h1 {
+    font-size: 44px;
+  }
+
+  .Hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 300px;
+    gap: 10px;
+    margin-inline: auto;
+  }
+
+  .Tabs--sticky > button {
+    padding-inline: 14px;
+    font-size: 12px;
+  }
+
+  .Step--panel {
+    padding: 23px;
+  }
+
+  .SectionKicker {
+    font-size: 8px;
+    letter-spacing: 1.1px;
+  }
+
+  .SectionHeading h2 {
+    font-size: 25px;
+  }
+
+  .SliderCounter {
+    display: none;
+  }
+
+  .SliderActions {
+    gap: 6px;
+    align-self: flex-end;
+  }
+
+  .SliderActions .IconButton {
+    height: 32px;
+    width: 32px;
+    font-size: 11px;
+  }
+
+  .Character {
+    flex-basis: 86%;
+  }
+
+  .Character-portrait {
+    height: 245px;
+  }
+
+  .Character p {
+    min-height: 62px;
+  }
+
+  .Character-body {
+    padding: 20px;
+  }
+
+  .Dialog {
+    padding: 29px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .Banner--spoiler > summary:is(:hover,:focus-visible) {
+    --banner-tab-offset: 0px;
+  }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+
+}
+

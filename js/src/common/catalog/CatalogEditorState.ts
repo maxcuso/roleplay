@@ -1,5 +1,6 @@
 import type {CatalogDataSource, Fields} from './types';
 import {requestMessage} from '../requestError';
+import {clearInputFeedback} from '../messageKind';
 
 /** Черновик формы не связан с объектом строки. Ошибка сохраняет введённые значения. */
 export default class CatalogEditorState {
@@ -17,7 +18,7 @@ export default class CatalogEditorState {
   number(key: string): number { return Number(this.values[key] ?? 0); }
   flag(key: string): boolean { return Boolean(this.values[key]); }
   get imageEndpoint(): string { return this.api.imageEndpoint ?? '/roleplay/admin/perk-image'; }
-  set(key: string, value: unknown): void { this.values[key] = value; }
+  set(key: string, value: unknown): void { this.values[key] = value; clearInputFeedback(this); }
 
   async save(): Promise<boolean> {
     if (this.saving || this.uploading) return false;
@@ -28,7 +29,7 @@ export default class CatalogEditorState {
       await this.api.save(this.id, this.revision, this.values);
       return true;
     } catch (error) {
-      this.error = requestMessage(error, 'Не удалось сохранить. Проверь соединение и попробуй ещё раз.');
+      this.error = requestMessage(error, 'Не удалось сохранить изменения. Попробуйте обновить страницу');
       return false;
     } finally {
       this.saving = false;

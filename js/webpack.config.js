@@ -1,4 +1,5 @@
 const syncExtensionIcon = require('./scripts/sync-extension-icon.cjs');
+const buildGuide = require('./scripts/build-guide.cjs');
 const webpack = require('webpack');
 const fs = require('node:fs');
 const {localIconsPath, loadLocalIcons} = require('./scripts/local-icons.cjs');
@@ -26,8 +27,13 @@ config.plugins.push({
   apply(compiler) {
     // Значок пакета обновляется и при обычной сборке, и при работе наблюдателя.
     compiler.hooks.beforeRun.tap('RoleplayIconMetadata', syncExtensionIcon);
+    compiler.hooks.beforeRun.tap('RoleplayGuide', buildGuide);
     compiler.hooks.watchRun.tap('RoleplayIconMetadata', syncExtensionIcon);
+    compiler.hooks.watchRun.tap('RoleplayGuide', buildGuide);
     compiler.hooks.compilation.tap('RoleplayChunkIds', (compilation) => {
+      for (const name of ['index.html', 'style.css']) {
+        compilation.fileDependencies.add(require('node:path').resolve(__dirname, '../preview/role', name));
+      }
       // Следим и за появлением файла, если наблюдатель запущен без локальных замен.
       if (!fs.existsSync(localIconsPath)) compilation.missingDependencies.add(localIconsPath);
       compilation.hooks.chunkIds.tap('RoleplayChunkIds', (chunks) => {

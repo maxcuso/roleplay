@@ -29,11 +29,11 @@ final class CharacterMechanics
             $character = $this->character($id, $actor);
             $event = $this->db->table('roleplay_character_events')->where('character_id', $id)
                 ->whereIn('type', ['character_created', 'mechanics_updated'])->orderByDesc('id')->first();
-            if (!$event) throw new ApiProblem('creation_choices_missing', 'Не найден сохранённый стартовый выбор.', 409);
+            if (!$event) throw new ApiProblem('creation_choices_missing', 'Не удалось найти сохранённые стартовые выборы. Обратитесь к администратору', 409);
             $payload = json_decode($event->payload, true, flags: JSON_THROW_ON_ERROR)['choices'];
             // Старое исправление имени/возраста не меняло событие стартового выбора.
-            foreach (['first_name', 'last_name', 'age'] as $key) $payload[$key] = $character[$key] ?? ($key === 'age' ? null : '');
-            return $this->view($character, $catalog, (new CreationPayload())->normalize($payload), 'basics', 0);
+            foreach (['first_name', 'last_name', 'age', 'avatar'] as $key) $payload[$key] = $character[$key] ?? ($key === 'age' ? null : '');
+            return $this->view($character, $catalog, (new CreationPayload())->normalize($payload, (int) $actor->id), 'basics', 0);
         });
     }
 
@@ -45,15 +45,15 @@ final class CharacterMechanics
         $characterRevision = OperationRequest::revision($body['character_revision'] ?? null);
         $step = $body['step'] ?? null;
         if (!in_array($step, ['basics', 'attributes', 'training', 'perks', 'spells', 'loadout', 'review'], true)) {
-            throw new ApiProblem('invalid_request', 'Неизвестный шаг редактора.', 400);
+            throw new ApiProblem('invalid_request', 'Не удалось определить шаг редактора. Попробуйте обновить страницу', 400);
         }
-        $payload = (new CreationPayload())->normalize($body['payload'] ?? null);
+        $payload = (new CreationPayload())->normalize($body['payload'] ?? null, (int) $actor->id);
         return (new CreationCatalog($this->db))->read(function (array $catalog) use ($id, $actor, $body, $revision, $characterRevision, $step, $payload): array {
             $character = $this->character($id, $actor);
             CreationRequest::current($catalog, OperationRequest::revision($body['catalog_revision'] ?? null),
                 CreationRequest::rulesHash($body['rules_hash'] ?? null));
             if ((int) $character['revision'] !== $characterRevision) {
-                throw new ApiProblem('character_revision_conflict', 'Анкета изменена в другом окне. Открой редактор заново.', 409);
+                throw new ApiProblem('character_revision_conflict', 'Анкета изменена в другом окне. Попробуйте обновить страницу', 409);
             }
             return $this->view($character, $catalog, $payload, $step, $revision + 1);
         });
@@ -62,27 +62,27 @@ final class CharacterMechanics
     public function save(int $id, User $actor, mixed $input): array
     {
         $body = OperationRequest::body($input, ['operation_key', 'revision', 'catalog_revision', 'rules_hash', 'payload']);
-        $payload = (new CreationPayload())->normalize($body['payload'] ?? null);
+        $payload = (new CreationPayload())->normalize($body['payload'] ?? null, (int) $actor->id);
         $hash = CreationRequest::rulesHash($body['rules_hash'] ?? null);
         return (new CharacterOperation($this->db))->run($id, $actor, 'mechanics_edit', $body,
             function (array $character) use ($actor): void {
                 // Проверяем владельца и на повторе; проверку состояния — только у новой команды.
-                if (!ReviewPermissions::owner($character, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+                if (!ReviewPermissions::owner($character, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             },
             function (array $character) use ($id, $actor, $body, $hash, $payload): array {
                 $this->assertEditable($character, $actor);
                 return (new CreationCatalog($this->db))->read(function (array $catalog) use ($id, $body, $hash, $payload, $character): array {
                     CreationRequest::current($catalog, OperationRequest::revision($body['catalog_revision']), $hash);
-                    $plan = (new CreationPlanBuilder())->build($payload, $catalog['definitions'], $catalog['configuration']);
-                    if (!$plan['valid']) throw new ApiProblem('creation_incomplete', 'Заверши все обязательные шаги редактора.');
+                    $plan = (new CreationPlanBuilder($catalog['development']))->build($payload, $catalog['definitions'], $catalog['configuration']);
+                    if (!$plan['valid']) throw new ApiProblem('creation_incomplete', 'Завершите все обязательные шаги редактора');
                     (new StartingGrants($this->db))->replace($id, $plan);
-                    $fields = array_intersect_key($payload, array_flip(['first_name', 'last_name', 'age', 'race_id']));
+                    $fields = array_intersect_key($payload, array_flip(['first_name', 'last_name', 'age', 'race_id', 'avatar']));
                     $fields['mechanics_status'] = 'review';
                     $fields['creation_catalog_revision'] = $catalog['revision'];
                     $this->db->table('roleplay_characters')->where('id', $id)->update($fields);
                     // До фиксации строим настоящий снимок: ошибка расчёта откатывает замену.
-                    $snapshot = (new CharacterSnapshotBuilder(new CharacterStateReader($this->db), DevelopmentRules::defaults()))->build($id);
-                    CharacterCalculationBuilder::defaults()->calculate($snapshot);
+                    $snapshot = (new CharacterSnapshotBuilder(new CharacterStateReader($this->db), $catalog['development']->learning()))->build($id);
+                    CharacterCalculationBuilder::defaults($catalog['development'])->calculate($snapshot);
                     return ['fields' => $fields, 'event' => 'mechanics_updated',
                         'payload' => ['choices' => $payload, 'plan' => $plan, 'before' => $character['mechanics_status'], 'after' => 'review']];
                 });
@@ -92,7 +92,7 @@ final class CharacterMechanics
     private function character(int $id, User $actor): array
     {
         $row = $this->db->table('roleplay_characters')->where('id', $id)->sharedLock()->first();
-        if (!$row || !ReviewPermissions::owner((array) $row, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+        if (!$row || !ReviewPermissions::owner((array) $row, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
         $this->assertEditable((array) $row, $actor);
         return (array) $row;
     }
@@ -100,14 +100,14 @@ final class CharacterMechanics
     private function assertEditable(array $character, User $actor): void
     {
         if (!ReviewPermissions::canEditMechanics($character, $actor)) {
-            throw new ApiProblem('mechanics_edit_closed', 'Техническая часть уже одобрена или персонаж закрыт.', 403);
+            throw new ApiProblem('mechanics_edit_closed', 'Техническая часть уже одобрена или персонаж закрыт. Исправление недоступно', 403);
         }
     }
 
     private function view(array $character, array $catalog, array $payload, string $step, int $revision): array
     {
-        $plan = (new CreationPlanBuilder())->build($payload, $catalog['definitions'], $catalog['configuration']);
-        $plan += (new CreationOptions())->build($payload, $catalog['definitions'], $plan);
+        $plan = (new CreationPlanBuilder($catalog['development']))->build($payload, $catalog['definitions'], $catalog['configuration']);
+        $plan += (new CreationOptions($catalog['development']))->build($payload, $catalog['definitions'], $plan);
         // Итог включает дополнительные награды и реальные балансы, но они не становятся стартовым выбором.
         $reviewPlan = $plan;
         $id = (int) $character['id'];
@@ -129,7 +129,7 @@ final class CharacterMechanics
         }
         $reviewPlan['balances'] = $this->db->table('roleplay_character_balances')->where('character_id', $id)->pluck('amount', 'resource_key')
             ->map(fn ($amount) => (int) $amount)->all();
-        $plan['review'] = (new CreationReview())->build($payload, $catalog['definitions'], $reviewPlan, $catalog['revision']);
+        $plan['review'] = (new CreationReview($catalog['development']))->build($payload, $catalog['definitions'], $reviewPlan, $catalog['revision']);
         $visible = CreationCatalog::visible($catalog);
         $visible['configuration']['enabled'] = true; // закрытие нового создания не закрывает правку существующей анкеты
         return ['catalog' => $visible, 'preview' => $plan, 'existing_character_id' => null,

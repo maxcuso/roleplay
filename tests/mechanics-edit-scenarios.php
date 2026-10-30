@@ -10,7 +10,7 @@ $db->table('roleplay_characters')->where('id', $editId)->update([
     'literature_status' => 'approved', 'literature_approved' => true,
 ]);
 $mechanics = new CharacterMechanics($db);
-$editController = new CharacterMechanicsController($db);
+$editController = new CharacterMechanicsController($mechanics);
 $editApi = function (string $method, array $body = [], int $status = 200) use ($editController, $editId, $owner): array {
     $request = \Flarum\Http\RequestUtil::withActor((new \Laminas\Diactoros\ServerRequest())
         ->withMethod($method)->withQueryParams(['id' => $editId])->withParsedBody($body), $owner);
@@ -70,6 +70,7 @@ $startingStack = $db->table('roleplay_character_items')->where('character_id', $
 $editView = $editApi('GET');
 $changed = $editView['draft']['payload'];
 $changed['first_name'] = 'Правка';
+$changed['avatar'] = 'avatar-'.$owner->id.'-'.str_repeat('b', 32).'.webp';
 $changed['race_id'] = $freeRace;
 $changed['skills'] = [$startSkill];
 $changed['racial_spell_ids'] = [];
@@ -86,6 +87,10 @@ $editBody = $editCommand($checked, $changed, $editKey);
 $topicCount = $db->table('roleplay_test_topics')->count();
 $editResult = $editApi('PUT', $editBody);
 $edited = $db->table('roleplay_characters')->find($editId);
+check($edited->avatar === $changed['avatar']
+    && $mechanics->read($editId, $owner)['draft']['payload']['avatar'] === $changed['avatar']
+    && $profile->read($editId, $owner)['snapshot']['character']['avatar'] === $changed['avatar'],
+    'Mechanics edit persists avatar, restores it on reopening and exposes it in profile');
 check($editResult['character_id'] === $editId && $edited->first_name === 'Правка' && (int) $edited->race_id === $freeRace,
     'Save edits the existing character, never creates a replacement');
 check($edited->mechanics_status === 'review' && $edited->literature_approved

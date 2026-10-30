@@ -34,6 +34,15 @@ final class CatalogUsage
             if ($this->db->table('roleplay_'.$table)->where($column, $id)->exists()) $this->used();
         }
 
+        if ($catalog === 'spells') {
+            // Сохраняем ссылки и у отключённой литературы, как у расовых выдач.
+            foreach ($this->db->table('roleplay_items')->pluck('literature_contents') as $json) {
+                foreach (json_decode($json ?? '[]', true, flags: JSON_THROW_ON_ERROR) as $entry) {
+                    if ($entry['type'] === 'spell' && $entry['knowledge_id'] === $id) $this->used();
+                }
+            }
+        }
+
         // Вложенные эффекты больше не имеют внешних ключей SQL. Защищаем их цели здесь.
         if (in_array($catalog, ['attributes', 'skills'], true)) {
             $column = $catalog === 'attributes' ? 'attribute_id' : 'skill_id';
@@ -85,6 +94,6 @@ final class CatalogUsage
 
     private function used(): never
     {
-        throw new ApiProblem('catalog_entry_in_use', 'Запись используется. Её можно выключить, но нельзя удалить.', 409);
+        throw new ApiProblem('catalog_entry_in_use', 'Эта запись используется, поэтому удалить её нельзя. Вы можете отключить её', 409);
     }
 }

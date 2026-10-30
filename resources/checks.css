@@ -1,0 +1,76 @@
+/* Плашки повторяют размеры success. Цвета взяты из согласованных образцов. */
+.Post-body .RpCheck { --check-bg: #9a97d8; --check-inset: #ffffff24; --check-icon-bg: rgba(0, 0, 0, 0.05); display: block; margin: 12px 0; padding: 12px 14px; border: 1px solid var(--check-bg); border-radius: 10px; background: var(--check-bg); color: #1e2019; font: inherit; font-size: 14px; line-height: 1.45; }
+.Post-body .RpCheck--success { --check-bg: #9bb69c; }
+.Post-body .RpCheck--failure { --check-bg: #cc7772; }
+.RpCheck-heading { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 6px; margin-bottom: 6px; }
+.RpCheck-heading > strong { min-width: 0; font-size: 15px; font-weight: 700; text-transform: uppercase; overflow-wrap: anywhere; }
+.RpCheck-mark { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%; background: var(--check-icon-bg); color: inherit; }
+/* У bb-alert смена фона кружка привязана именно к .dark, не к data-theme. */
+.dark .Post-body .RpCheck { --check-icon-bg: rgba(255, 255, 255, 0.08); }
+/* Те же символы и метрики псевдоэлемента, что у bb-alert error / success. */
+.RpCheck-mark::before { font-size: 14px; line-height: 1; }
+.RpCheck--success .RpCheck-mark::before { content: "✔︎"; }
+.RpCheck--failure .RpCheck-mark::before { content: "✖︎"; }
+.RpCheck-mark .icon { color: inherit; font-size: 14px; }
+.RpCheck-difficulty { justify-self: end; padding: 4px 11px; border-radius: 999px; background: #1e20191a; text-align: right; white-space: nowrap; font-weight: 400; font-size: 13px; }
+.RpCheck-requestBody { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.RpCheck-description { min-width: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.Post-body .RpCheck-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; align-self: flex-end; margin: 0; padding: 7px 11px; border: 0; border-radius: 8px; background: #46467a; color: #fff; font-size: 14px; font-weight: 700; }
+.Post-body .RpCheck-button:hover, .Post-body .RpCheck-button:focus-visible, .Post-body .RpCheck-button:active { background: #38396a; color: #fff; }
+.Post-body .RpCheck-button:focus-visible { outline: 2px solid #1e2019; outline-offset: 2px; }
+.Post-body .RpCheck-button .icon { margin: 0; color: inherit; }
+.RpCheck-result { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; width: fit-content; max-width: 100%; min-height: 28px; margin: 0 auto; padding: 10px 12px; border-radius: 10px; background: var(--check-inset); font-family: "Roleplay Jost", sans-serif; font-size: 22px; font-weight: 500; line-height: 1.2; text-align: center; font-variant-numeric: tabular-nums; }
+.RpCheck-dice { display: inline-flex; align-items: center; gap: 7px; }
+/* Размер MagicDice следует шрифту обычного поста, а не крупному шрифту расчёта. */
+.RpCheck-dice .roll-a-die { font-size: calc(var(--post-font-size, 15px) * 1.4); }
+/* Вложенная область следует теме форума, сохраняя цвет основной плашки. */
+:root[data-theme="dark"] .Post-body .RpCheck { --check-inset: #1e20191a; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .Post-body .RpCheck { --check-inset: #1e20191a; }
+}
+.RpCheckModal { width: 590px; max-width: calc(100vw - 32px); margin: 32px auto; }
+.RpCheckModal .Modal-content { max-height: calc(100dvh - 64px); display: flex; flex-direction: column; }
+.RpCheckModal-form { display: flex; flex-direction: column; min-height: 0; }
+.RpCheckModal-body { display: grid; gap: 16px; min-height: 0; overflow-y: auto; padding: 0 24px 24px; }
+.RpCheckModal-body > label, .RpCheckModal-fields > label, .RpCheckModal-modifier > label { display: flex; flex-direction: column; gap: 7px; min-width: 0; font-size: 13px; font-weight: 700; }
+.RpCheckModal-label { display: inline-flex; align-items: center; gap: 6px; }
+.RpCheckModal-label .icon { color: var(--muted-color); font-size: 14px; }
+.RpCheckModal-body fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.RpCheckModal-body legend { margin: 0 0 8px; padding: 0; font-size: 13px; font-weight: 700; color: var(--text-color); }
+.RpCheckModal-kind { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.RpCheckModal-kind legend { float: left; width: 100%; }
+.RpCheckModal-kind label, .RpCheckModal-targetModes label, .RpCheckModal-results label { display: flex; align-items: center; gap: 7px; font-weight: 400; }
+.RpCheckModal-body input[type="checkbox"], .RpCheckModal-body input[type="radio"] { width: 16px; height: 16px; margin: 0; accent-color: var(--primary-color); }
+.RpCheckModal-fields { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; }
+.RpCheckModal-body .FormControl { width: 100%; font-size: 14px; font-weight: 400; }
+.RpCheckModal-body textarea { resize: vertical; min-height: 84px; }
+.RpCheckModal-targetModes { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.RpCheckModal-targetPicker { padding: 8px; margin-top: 10px; border-radius: 10px; background: var(--control-bg); }
+.RpCheckModal-results { display: grid; gap: 4px; max-height: 190px; overflow-y: auto; margin-top: 8px; }
+.RpCheckModal-results label { padding: 6px; }
+.RpCheckModal-selected { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.RpCheckModal-selected .Button { padding: 4px; font-size: 12px; }
+.RpCheckModal-pages { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 6px; }
+.RpCheckModal-calculation { padding: 11px 12px; border-radius: 10px; background: var(--control-bg); }
+.RpCheckModal-calculation > div { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; }
+.RpCheckModal-calculation strong { font-size: 30px; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.RpCheckModal-calculation p { margin: 5px 0 0; color: var(--muted-color); font-size: 12px; }
+.RpCheckModal-modifier { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(100px, 1fr); gap: 16px; align-items: end; }
+.RpCheckModal-modifier input { max-width: 110px; }
+.RpCheckModal-modifier > div { display: flex; flex-direction: column; gap: 6px; padding-bottom: 9px; text-align: right; }
+.RpCheckModal-modifier > div > span { font-size: 12px; color: var(--muted-color); }
+.RpCheckModal-footer { flex-shrink: 0; margin-top: auto; border-top: 1px solid var(--control-bg); padding: 16px 24px; }
+.RpCheckModal-footer .helpText { margin: 0 0 12px; font-size: 12px; text-align: left; }
+.RpCheckModal-footer > div { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+@media(max-width: 767px) {
+  .RpCheckModal { position: fixed; inset: 0; width: 100vw; max-width: 100vw; margin: 0; }
+  /* Сохраняем штатный мобильный уход Modal: без него ModalManager не получает transitionend.
+   * transform ядро отключает на телефоне, поэтому возвращаем top поверх inset: 0. */
+  .RpCheckModal:not(.in) { top: 100dvh; }
+  .RpCheckModal .Modal-content { min-height: 100dvh; max-height: 100dvh; border-radius: 0; }
+  .RpCheckModal-form { flex: 1; }
+  .RpCheckModal-body { padding: 0 16px 20px; }
+  .RpCheckModal-footer { padding: 14px 16px max(14px, env(safe-area-inset-bottom)); }
+}
+@media(max-width: 440px) { .RpCheckModal-fields { grid-template-columns: minmax(0, 1fr); } .RpCheckModal-targetModes { flex-direction: column; } .RpCheckModal-modifier { grid-template-columns: minmax(0, 1.6fr) minmax(85px, 1fr); gap: 10px; } }
+@media(pointer: coarse) { .RpCheckModal-body .FormControl { font-size: 16px; } .RpCheckModal-kind label, .RpCheckModal-targetModes label, .RpCheckModal-results label { min-height: 44px; } }

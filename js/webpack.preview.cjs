@@ -26,6 +26,9 @@ module.exports = {
     alias: {
       'mithril$': path.join(runtime, 'index.js'),
       'flarum/common/Component$': path.resolve(__dirname, 'preview/Component.ts'),
+      'flarum/common/app$': path.resolve(__dirname, 'preview/App.ts'),
+      'flarum/forum/app$': path.resolve(__dirname, 'preview/App.ts'),
+      'flarum/common/components/Alert$': path.resolve(__dirname, 'preview/Alert.ts'),
       'flarum/common/components/Icon$': path.resolve(__dirname, 'preview/Icon.ts'),
       'flarum/common/components/Button$': path.resolve(__dirname, 'preview/Button.ts'),
       'flarum/common/components/LinkButton$': path.resolve(__dirname, 'preview/LinkButton.ts'),

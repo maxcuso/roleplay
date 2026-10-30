@@ -1,0 +1,57 @@
+/* Настройки развития: геометрия согласованного макета; цвета наследуются от форума. */
+.RpDevelopment.RpSettings-panel { max-width: 680px; }
+.RpDevelopment .RpSettings-header h2 { font-size: 20px; font-weight: 400; }
+.RpDevelopment-general { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--control-bg); }
+.RpDevelopment-general summary { color: var(--primary-color); font-size: 13px; cursor: pointer; list-style: none; }
+.RpDevelopment-general summary::-webkit-details-marker { display: none; }
+.RpDevelopment-general summary .icon { margin-right: 6px; }
+.RpDevelopment-general[open] summary .icon { transform: rotate(180deg); }
+.RpDevelopment-general h3 { font-size: 12px; margin: 16px 0 10px; }
+.RpDevelopment-numbers, .RpDevelopment-growth, .RpDevelopment-growthFields { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.RpDevelopment-numbers { margin-top: 16px; }
+.RpDevelopment-number { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 400; color: var(--muted-color); }
+.RpDevelopment-number .FormControl { width: 80px; padding: 8px 10px; }
+.RpDevelopment-attributes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; background: var(--control-bg); border-radius: 10px; }
+.RpDevelopment-attributes .Button { display: flex; align-items: center; justify-content: center; gap: 7px; min-width: 0; padding: 9px 4px; background: transparent; border-radius: 7px; font-size: 13px; }
+.RpDevelopment-attributes .Button.is-selected { background: var(--body-bg); color: var(--primary-color); }
+.RpDevelopment-attributes .Button .icon { margin: 0; }
+.RpDevelopment-summary { margin: 12px 0 18px; color: var(--muted-color); font-size: 12px; }
+.RpDevelopment-growth { margin-bottom: 22px; }
+.RpDevelopment-growth > div > strong { display: block; font-size: 13px; margin-bottom: 8px; }
+.RpDevelopment-growthFields { gap: 10px; }
+.RpDevelopment-tableHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 13px; }
+.RpDevelopment-tableHeading .Button { padding: 6px 9px; border-radius: 7px; font-size: 12px; }
+.RpDevelopment-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+.RpDevelopment-table th { padding: 7px 8px; color: var(--muted-color); font-size: 11px; text-align: left; font-weight: 400; border-bottom: 1px solid var(--control-bg); }
+.RpDevelopment-table th:first-child { width: 66px; }
+.RpDevelopment-table th:last-child { width: 68px; }
+.RpDevelopment-table td { padding: 7px 8px; font-size: 13px; border-bottom: 1px solid var(--control-bg); }
+.RpDevelopment-level { display: flex; align-items: center; justify-content: center; gap: 3px; color: var(--primary-color); font-weight: 700; font-variant-numeric: tabular-nums; }
+.RpDevelopment-level > span { min-width: 20px; text-align: center; }
+.RpDevelopment-levelArrows { display: flex; flex-direction: column; }
+.RpDevelopment-levelArrows .Button { display: flex; align-items: center; justify-content: center; width: 18px; height: 14px; min-width: 0; padding: 0; border-radius: 3px; font-size: 10px; line-height: 1; background: transparent; color: var(--muted-color); }
+.RpDevelopment-levelArrows .Button:disabled { opacity: .25; }
+.RpDevelopment-levelArrows .Button .icon, .RpDevelopment-ruleActions .Button .icon { margin: 0; }
+.RpDevelopment-rule { display: flex; align-items: center; gap: 8px; }
+.RpDevelopment-rule > .icon { flex: 0 0 16px; text-align: center; color: var(--muted-color); }
+.RpDevelopment-rule > span { min-width: 0; overflow-wrap: anywhere; }
+.RpDevelopment-ruleActions { display: flex; justify-content: flex-end; gap: 2px; }
+.RpDevelopment-ruleActions .Button { width: 26px; min-width: 0; height: 26px; padding: 3px; border-radius: 6px; background: transparent; color: var(--muted-color); font-size: 12px; }
+.RpDevelopment-reserved { display: flex; align-items: center; gap: 8px; padding: 12px 8px; color: var(--muted-color); font-size: 12px; }
+.RpDevelopment-reserved > b { min-width: 34px; text-align: center; color: var(--primary-color); }
+.RpDevelopment-status { font-size: 12px; color: var(--muted-color); }
+.RpDevelopment-editorGrid { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 16px; }
+.RpDevelopment-editorGrid label, .RpDevelopment-editorValue { display: flex; flex-direction: column; gap: 6px; }
+.RpDevelopment-editorValue { margin-top: 16px; }
+.RpDevelopment-editorValue > input { width: 80px; }
+@media (max-width: 540px) {
+  .RpDevelopment-attributes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .RpDevelopment-table th, .RpDevelopment-table td { padding-left: 4px; padding-right: 4px; }
+  .RpDevelopment-rule { gap: 5px; }
+}
+@media (pointer: coarse) {
+  .RpDevelopment-levelArrows .Button { width: 30px; height: 44px; }
+  .RpDevelopment-table th:first-child { width: 70px; }
+  .RpDevelopment-table th:last-child { width: 76px; }
+  .RpDevelopment-ruleActions .Button { width: 32px; height: 44px; }
+}

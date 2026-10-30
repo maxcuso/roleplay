@@ -22,14 +22,14 @@ final class PerkSourceCatalog extends AbstractCatalog
         $common = FieldValues::common($input);
         // Процесс создания не является происхождением способности.
         if (in_array(mb_strtolower($common['name']), ['создание персонажа', 'starting'], true)) {
-            FieldValues::invalid('Создание персонажа не является источником перка.');
+            FieldValues::invalid('Создание персонажа нельзя использовать как источник перка. Выберите другой источник');
         }
         $nameSource = $this->dependency($input['name_source'] ?? null);
         $iconSource = $this->dependency($input['icon_source'] ?? null);
         $icons = $input['attribute_icons'] ?? [];
-        if (!is_array($icons)) FieldValues::invalid('Иконки характеристик: требуется список настроек.');
+        if (!is_array($icons)) FieldValues::invalid('Укажите настройки иконок характеристик списком');
         $allowed = array_column($this->store->references('attributes'), 'slug');
-        if (array_diff(array_keys($icons), $allowed)) FieldValues::invalid('Неизвестная характеристика в иконках.');
+        if (array_diff(array_keys($icons), $allowed)) FieldValues::invalid('В настройках иконок указана неизвестная характеристика');
         foreach ($icons as $slug => $icon) {
             $value = FieldValues::icon($icon);
             if ($value === null) unset($icons[$slug]);
@@ -48,7 +48,7 @@ final class PerkSourceCatalog extends AbstractCatalog
     {
         if ($value === null || $value === '') return null;
         if (!is_string($value) || !in_array($value, self::KINDS, true)) {
-            FieldValues::invalid('Неизвестная зависимость источника.');
+            FieldValues::invalid('Не удалось определить зависимость источника');
         }
         return $value;
     }

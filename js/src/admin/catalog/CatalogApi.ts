@@ -33,5 +33,5 @@ export default class CatalogApi implements CatalogDataSource {
 
 /** Ошибка отображается рядом с действием; подробности неожиданного сбоя остаются на сервере. */
 export function requestMessage(error: unknown): string {
-  return message(error, 'Не удалось выполнить запрос. Проверь соединение и попробуй ещё раз.');
+  return message(error, 'Не удалось выполнить запрос. Попробуйте обновить страницу');
 }

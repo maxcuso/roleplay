@@ -52,6 +52,7 @@ export function time(value: number, unit: string): string {
   return value > 0 && units[unit] ? value + ' ' + units[unit] : '';
 }
 export function safeImage(value: string): string | undefined {
+  if (/^\/role\/media\/races\/[a-zA-Z0-9_-]+\.(?:png|jpe?g|webp|svg)\/file$/.test(value)) return value;
   if (/^\/assets\/[^\s\\]*$/.test(value) && !value.includes('..')) return value;
   try {
     const url = new URL(value);

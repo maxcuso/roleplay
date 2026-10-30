@@ -1,0 +1,83 @@
+const assert = require('node:assert/strict');
+const {loadClient} = require('./client-runtime.cjs');
+const catalog = require('../resources/presentation/messages.json');
+
+for (const client of ['forum', 'admin']) {
+  const {modules, m, app, expand} = loadClient(client);
+  const feedbackModule = modules.get('common/components/Feedback');
+  const Feedback = feedbackModule.default || feedbackModule;
+  const {messageKind, clearInputFeedback} = modules.get('common/messageKind');
+  for (const row of catalog) {
+    const text = row.text.replace(/\{[^}]+\}/g, '7');
+    assert.equal(messageKind(text), row.kind, row.id);
+    assert.ok(!/\.$/.test(row.text), row.id + ': no terminal period');
+  }
+  assert.equal(messageKind('Внимательность: Для получения этого уровня навыка повысьте характеристику до уровня 7'), 'condition');
+  assert.equal(messageKind('Неизвестный серверный отказ'), 'operation');
+  const open = (attrs, children) => {
+    const node = m(Feedback, attrs, children), instance = new Feedback();
+    instance.oninit(node);
+    const result = instance.view(node);
+    instance.oncreate();
+    return {instance, result};
+  };
+  const error = catalog.find(row => row.id === 'E003').text;
+  let retried = false;
+  const retry = m('button', {onclick: () => {retried = true;}}, 'Повторить');
+  const first = open({message: error}, retry);
+  assert.equal(first.result.tag, 'span');
+  assert.equal(app.alerts.entries.size, 1);
+  assert.equal(app.alerts.calls[0].attrs.type, 'error');
+  app.alerts.calls[0].attrs.controls[0].attrs.onclick();
+  assert.equal(retried, true, 'Retry callback remains intact');
+  for (let index = 0; index < 4; index++) first.instance.onupdate();
+  assert.equal(app.alerts.calls.length, 1, 'Redraw must not repeat notifications');
+  const second = open({message: error});
+  assert.equal(app.alerts.entries.size, 1, 'Profile and stacked modal share one notification');
+  first.instance.onremove();
+  assert.equal(app.alerts.entries.size, 1);
+  second.instance.onremove();
+  assert.equal(app.alerts.entries.size, 0);
+
+  const warning = catalog.find(row => row.id === 'E032').text;
+  const beforeWarnings = app.alerts.calls.length;
+  const input = open({message: warning});
+  const rendered = expand(input.result);
+  assert.ok(rendered.some(node => node.attrs?.className === 'Alert Alert--warning'));
+  assert.equal(app.alerts.calls.length, beforeWarnings, 'Input error belongs in the form');
+  input.instance.onremove();
+  const condition = catalog.find(row => row.id === 'E118').text;
+  const hint = open({message: condition, hint: true});
+  assert.equal(hint.result.attrs.className, 'helpText');
+  assert.equal(app.alerts.entries.size, 0);
+  hint.instance.onremove();
+  const rejected = open({message: condition});
+  assert.equal(app.alerts.entries.size, 1, 'Server rejection is an error after attempting an action');
+  rejected.instance.onremove();
+  const inline = open({message: error, inline: true});
+  assert.ok(expand(inline.result).some(node => node.attrs?.className === 'Alert Alert--error'));
+  assert.equal(app.alerts.entries.size, 0, 'Persistent page state must not trigger popups');
+  inline.instance.onremove();
+  const again = open({message: error});
+  assert.equal(app.alerts.entries.size, 1, 'A new failed attempt can notify again');
+  again.instance.onremove();
+  const mixed = open({message: [error, warning, warning]});
+  assert.equal(app.alerts.entries.size, 1);
+  assert.ok(expand(mixed.result).some(node => node.attrs?.className === 'Alert Alert--warning'));
+  mixed.instance.onremove();
+  let refreshed = 0;
+  const refresh = open({message: error, refresh: {label: 'Загрузить сохранённый черновик', run: () => refreshed++, disabled: true}});
+  const notification = [...app.alerts.entries.values()][0];
+  const control = notification.attrs.controls[0];
+  assert.ok(control.attrs.className.includes('RpFeedback-refresh'));
+  assert.equal(control.attrs.icon, 'fas fa-sync');
+  assert.equal(control.attrs['aria-label'], 'Загрузить сохранённый черновик');
+  assert.equal(control.attrs.title, control.attrs['aria-label']);
+  assert.equal(control.attrs.disabled, true);
+  assert.equal(control.children.length, 0, 'Refresh control is icon-only');
+  control.attrs.onclick(); assert.equal(refreshed, 1, 'Refresh preserves its supplied operation');
+  refresh.instance.onremove();
+  const state = {error: warning}; clearInputFeedback(state); assert.equal(state.error, '');
+  state.error = error; clearInputFeedback(state); assert.equal(state.error, error, 'Editing cannot hide an operation conflict');
+}
+console.log('Feedback: both clients, message kinds, inline warnings, hints, deduplication, retry, cleanup passed');

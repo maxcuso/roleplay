@@ -11,6 +11,7 @@ use Maxcuso\Roleplay\Rules\EffectRules;
 use Maxcuso\Roleplay\Rules\CharacterCalculator;
 use Maxcuso\Roleplay\Rules\StatModifier;
 use Maxcuso\Roleplay\Rules\StatRules;
+use Maxcuso\Roleplay\Rules\DevelopmentConfiguration;
 
 /** Подготовка отделена от SQL и развития. Приобретённое состояние остаётся неизменным. */
 final class CharacterCalculationBuilder
@@ -22,9 +23,9 @@ final class CharacterCalculationBuilder
         private readonly CharacterAttackBuilder $attackBuilder,
     ) {}
 
-    public static function defaults(): self
+    public static function defaults(?DevelopmentConfiguration $configuration = null): self
     {
-        $rules = StatRules::defaults();
+        $rules = StatRules::defaults($configuration);
         return new self(new CharacterCalculator($rules), $rules, new CharacterEffectResolver(), new CharacterAttackBuilder());
     }
 
@@ -172,13 +173,13 @@ final class CharacterCalculationBuilder
         foreach ($effects as $effect) {
             $mechanic = $effect['definition']['mechanic'];
             if ($effect['condition'] === 'always'
-                && in_array($mechanic, ['shop_discount', 'extra_dodges', 'mana_recovery', 'stamina_recovery'], true)) {
+                && in_array($mechanic, ['shop_discount', 'extra_dodges', 'mana_recovery', 'stamina_recovery', 'quest_experience'], true)) {
                 $parts[$mechanic][] = ['value' => $effect['value'], 'source' => $effect['source']];
             }
         }
         $result = [];
         foreach ($parts as $mechanic => $values) {
-            $result[$mechanic] = CalculatedValue::sum($values, $mechanic === 'shop_discount', minimum: null);
+            $result[$mechanic] = CalculatedValue::sum($values, in_array($mechanic, ['shop_discount', 'quest_experience'], true), minimum: null);
         }
         return $result;
     }
@@ -199,7 +200,7 @@ final class CharacterCalculationBuilder
             $effect['application'] = match (true) {
                 $effect['condition'] === 'manual' => 'conditional',
                 $mechanic === 'text' => 'descriptive',
-                in_array($mechanic, ['shop_discount', 'extra_dodges', 'mana_recovery', 'stamina_recovery', 'incoming_damage'], true) => 'action',
+                in_array($mechanic, ['shop_discount', 'extra_dodges', 'mana_recovery', 'stamina_recovery', 'incoming_damage', 'quest_experience'], true) => 'action',
                 $attackEffect && !$matchingAttacks => 'pending_attack',
                 $effect['condition'] === 'unarmed' => 'attack_condition',
                 default => 'calculated',

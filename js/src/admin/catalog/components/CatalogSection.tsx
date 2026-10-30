@@ -1,3 +1,4 @@
+import Feedback from '../../../common/components/Feedback';
 import showModal from './showModal';
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
@@ -58,7 +59,7 @@ export default class CatalogSection extends Component<Attrs> {
       <CatalogToolbar definition={definition} list={list} create={() => this.edit(null)} template={() => this.template()}
         transfer={(kind: 'import' | 'export') => showModal(CatalogTransferModal, {kind, definition, list})}/>
       <p className="RpCatalog-count">{definition.title} · {list.data.total}</p>
-      {list.error && <div className="RpCatalog-error" role="alert">{list.error}</div>}
+      {list.error && <Feedback message={list.error}/>}
       <div aria-busy={String(list.loading)}>
         <CatalogTable definition={{...definition, columns}} rows={list.data.rows} lookups={list.data.lookups}
           disabled={disabled} edit={(row: CatalogRow) => this.edit(row)} remove={(row: CatalogRow) => {

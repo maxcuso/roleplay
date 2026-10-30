@@ -21,7 +21,7 @@ final class StatModifier
         if (trim($target) === '' || ($attackId !== null && trim($attackId) === '')
             || !in_array($condition, ['always', 'unarmed'], true)
             || !in_array($operation, ['add', 'percent', 'base_percent', 'tiers'], true)) {
-            throw new \DomainException('Некорректная цель, операция или условие бонуса.');
+            throw new \DomainException('Проверьте цель, операцию и условие применения бонуса');
         }
     }
 

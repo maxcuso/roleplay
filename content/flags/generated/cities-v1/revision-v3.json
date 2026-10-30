@@ -1,0 +1,103 @@
+{
+  "source": "questpost.png",
+  "cities": [
+    {
+      "file": "verkhovye-v3.png",
+      "source": "verkhovye-v2.png",
+      "newCrown": {
+        "width": 448,
+        "x": 376,
+        "y": 103,
+        "height": 277
+      },
+      "oldCrownBounds": [
+        330,
+        221,
+        870,
+        379
+      ],
+      "changedOutsideCrown": 0,
+      "key": "verkhovye"
+    },
+    {
+      "file": "zelenolesye-v3.png",
+      "source": "zelenolesye.png",
+      "newCrown": {
+        "width": 448,
+        "x": 376,
+        "y": 80,
+        "height": 277
+      },
+      "oldCrownBounds": [
+        382,
+        131,
+        817,
+        356
+      ],
+      "changedOutsideCrown": 0,
+      "key": "zelenolesye"
+    },
+    {
+      "file": "arah-v3.png",
+      "source": "arah-v2.png",
+      "newCrown": {
+        "width": 448,
+        "x": 376,
+        "y": 102,
+        "height": 277
+      },
+      "oldCrownBounds": [
+        348,
+        220,
+        852,
+        378
+      ],
+      "changedOutsideCrown": 0,
+      "key": "arah"
+    },
+    {
+      "file": "hillsgaard-v3.png",
+      "source": "hillsgaard.png",
+      "newCrown": {
+        "width": 448,
+        "x": 376,
+        "y": 124,
+        "height": 277
+      },
+      "oldCrownBounds": [
+        391,
+        187,
+        810,
+        400
+      ],
+      "changedOutsideCrown": 0,
+      "key": "hillsgaard"
+    },
+    {
+      "file": "grim-v3.png",
+      "source": "grim.png",
+      "newCrown": {
+        "width": 448,
+        "x": 376,
+        "y": 86,
+        "height": 277
+      },
+      "oldCrownBounds": [
+        403,
+        146,
+        796,
+        362
+      ],
+      "changedOutsideCrown": 0,
+      "key": "grim"
+    }
+  ],
+  "crownHeight": 277,
+  "crownWidth": 448,
+  "sourceBounds": [
+    376,
+    170,
+    823,
+    446
+  ]
+}

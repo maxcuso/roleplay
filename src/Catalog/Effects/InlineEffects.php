@@ -14,22 +14,22 @@ final class InlineEffects
     public function normalize(mixed $input, string $owner): array
     {
         if (!is_array($input) || !array_is_list($input) || count($input) > 100) {
-            FieldValues::invalid('Эффекты: нужен список, не более 100 записей.');
+            FieldValues::invalid('Укажите эффекты списком не более чем из 100 записей');
         }
         return array_map(fn ($row) => $this->effect($row, $owner), $input);
     }
 
     private function effect(mixed $input, string $owner): array
     {
-        if (!is_array($input)) FieldValues::invalid('Некорректный эффект.');
+        if (!is_array($input)) FieldValues::invalid('Проверьте параметры эффекта');
         FieldValues::allowed($input, ['name', 'description', 'icon', 'mechanic', 'operation',
             'attribute_id', 'skill_id', 'stat', 'value', 'condition', 'condition_text', 'scope', 'stack_group']);
         $configuration = EffectRules::configuration();
         $mechanic = $input['mechanic'] ?? 'text';
-        if (!is_string($mechanic) || !isset($configuration['mechanics'][$mechanic])) FieldValues::invalid('Выбери механику эффекта.');
+        if (!is_string($mechanic) || !isset($configuration['mechanics'][$mechanic])) FieldValues::invalid('Выберите механику эффекта');
         $rule = $configuration['mechanics'][$mechanic];
         $operation = $input['operation'] ?? 'add';
-        if (!in_array($operation, $rule['operations'], true)) FieldValues::invalid('Операция недоступна для этой механики.');
+        if (!in_array($operation, $rule['operations'], true)) FieldValues::invalid('Выберите операцию, доступную для этой механики эффекта');
         $row = [
             // Числовая подпись собирается из цели и величины. Название нужно только текстовому эффекту.
             'name' => FieldValues::text($input['name'] ?? null, 'Название эффекта', 100, $mechanic === 'text'),
@@ -47,17 +47,17 @@ final class InlineEffects
             if ($rule['target'] === $target) {
                 $row[$column] = FieldValues::integer($input[$column] ?? null, 'Цель эффекта', 1, PHP_INT_MAX);
                 $this->store->requireIds($table, [$row[$column]]);
-            } elseif (($input[$column] ?? null) !== null) FieldValues::invalid('Лишняя цель эффекта.');
+            } elseif (($input[$column] ?? null) !== null) FieldValues::invalid('Для этого эффекта не нужна цель. Уберите её');
         }
         if ($rule['target'] === 'stat') {
             $stat = $input['stat'] ?? null;
-            if (!is_string($stat) || !isset($configuration['stats'][$stat])) FieldValues::invalid('Выбери параметр эффекта.');
-            if ($operation === 'tiers' && !EffectRules::damageTarget($stat)) FieldValues::invalid('Ступени применяются только к урону/защите.');
+            if (!is_string($stat) || !isset($configuration['stats'][$stat])) FieldValues::invalid('Выберите параметр эффекта');
+            if ($operation === 'tiers' && !EffectRules::damageTarget($stat)) FieldValues::invalid('Ступени доступны только для урона и защиты. Измените параметр или способ расчёта эффекта');
             $row['stat'] = $stat;
-        } elseif (($input['stat'] ?? null) !== null) FieldValues::invalid('Лишний параметр эффекта.');
+        } elseif (($input['stat'] ?? null) !== null) FieldValues::invalid('Для этого эффекта не нужен параметр. Уберите его');
         foreach (['condition' => 'conditions', 'scope' => 'scopes'] as $field => $options) {
             if (!is_string($row[$field]) || !isset($configuration[$options][$row[$field]])) {
-                FieldValues::invalid('Неизвестное условие или область эффекта.');
+                FieldValues::invalid('Выберите доступное условие и область применения эффекта');
             }
         }
         try { EffectRules::validateLink($row, $row, $owner); }

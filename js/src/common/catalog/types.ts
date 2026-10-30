@@ -12,6 +12,7 @@ export interface CatalogResult {
   per_page: number;
   revision: number;
   lookups: Lookups;
+  capabilities?: {view: boolean; create: boolean; edit: boolean; delete: boolean};
 }
 export interface CatalogColumn {
   key: string;

@@ -14,8 +14,9 @@ final class StatRules
         $this->validateConfiguration();
     }
 
-    public static function defaults(): self
+    public static function defaults(?DevelopmentConfiguration $configuration = null): self
     {
+        if ($configuration !== null) return $configuration->statistics();
         return new self(require __DIR__.'/../../resources/rules/stats.php', DevelopmentRules::defaults());
     }
 
@@ -76,7 +77,13 @@ final class StatRules
     {
         $this->validateAttributes($attributes);
         $rule = $this->configuration['magic_circle'];
-        return $this->thresholdValue($rule['steps'], $attributes[$rule['attribute']]['level']);
+        return $this->magicCircleAt($attributes[$rule['attribute']]['level']);
+    }
+
+    /** Предварительный выбор заклинаний нужен даже при ещё незаполненных остальных характеристиках. */
+    public function magicCircleAt(int $level): int
+    {
+        return $this->thresholdValue($this->configuration['magic_circle']['steps'], $level);
     }
 
     public function skillCheckBonus(int $level): int
@@ -157,11 +164,11 @@ final class StatRules
             }
             if (($definition['type'] ?? null) === 'linear') {
                 foreach (['offset', 'factor'] as $field) {
-                    CalculatedValue::number($definition[$field] ?? null);
+                    CalculatedValue::number($definition[$field] ?? null, $definition['fractional'] ?? false);
                 }
                 // Линейная база должна оставаться неотрицательной на всём разрешённом диапазоне.
                 foreach ([1, $this->development->maximumAttributeLevel()] as $level) {
-                    $base = CalculatedValue::number($definition['offset'] + $definition['factor'] * $level);
+                    $base = CalculatedValue::number($definition['offset'] + $definition['factor'] * $level, $definition['fractional'] ?? false);
                     if ($base < 0) {
                         throw new \DomainException('Базовое значение параметра не может быть отрицательным.');
                     }

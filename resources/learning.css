@@ -1,0 +1,59 @@
+/* Общая вкладка знаний. Оформление карточек остаётся в cards.css. */
+.RpLearning { font-family: "Roleplay Jost", sans-serif; }
+.RpLearning-intro { position: relative; isolation: isolate; overflow: hidden; padding: 23px 24px; border-radius: 14px; background: color-mix(in srgb, #b68bea 7%, var(--control-bg)); }
+.RpLearning-intro h2 { display: flex; gap: 12px; align-items: center; margin: 0; font-size: 25px; }
+.RpLearning-intro p { color: var(--muted-color); margin: 11px 0 0; }
+.RpLearning-icon { display: grid; place-items: center; width: 43px; height: 43px; flex-shrink: 0; border-radius: 50%; background: color-mix(in srgb, #b68bea 15%, var(--body-bg)); color: #b68bea; font-size: 22px; }
+.RpLearning-pattern { position: absolute; z-index: -1; pointer-events: none; width: 148px; height: 148px; right: 18px; top: -7px; border: 1px solid #b68bea; border-radius: 50%; opacity: .18; }
+.RpLearning-pattern span { position: absolute; inset: 16px; border: 1px solid #b68bea; border-radius: 50%; }
+.RpLearning-pattern span:nth-child(2) { inset: 36px; border-radius: 0; transform: rotate(45deg); }
+.RpLearning-pattern span:nth-child(3) { inset: 36px; border-radius: 0; transform: rotate(0deg); }
+.RpLearning-categories { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.RpLearning-categories > .Button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; min-height: 75px; border: 1px solid transparent; border-radius: 11px; padding: 12px 7px; }
+.RpLearning-categories > .Button > .icon { margin: 0; font-size: 22px; }
+.RpLearning-categories > .Button[aria-pressed="true"] { color: #b68bea; border-color: color-mix(in srgb, #b68bea 48%, transparent); background: color-mix(in srgb, #b68bea 10%, var(--control-bg)); }
+.RpLearning-filters { display: grid; grid-template-columns: minmax(140px, 1.45fr) minmax(110px, 1fr) minmax(95px, .8fr) auto; align-items: center; gap: 10px; margin: 22px 0 17px; }
+.RpLearning-filters--general { grid-template-columns: minmax(140px, 1fr) auto; }
+.RpLearning-filters .FormControl { width: 100%; min-width: 0; }
+.RpLearning-experience { white-space: nowrap; color: var(--text-color); padding-inline: 5px; }
+.RpLearning-experience .icon, .RpLearning-cost .icon { color: #b68bea; }
+.RpLearning-count { color: var(--muted-color); font-size: 12px; margin-bottom: 12px; }
+.RpLearning-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 27px 16px; }
+.RpLearning-entry { min-width: 0; display: flex; flex-direction: column; }
+.RpLearning-source { display: flex; justify-content: flex-end; align-items: start; gap: 6px; color: var(--muted-color); text-align: right; font-size: 12px; min-height: 19px; margin-bottom: 4px; padding-inline: 14px; overflow-wrap: anywhere; }
+.RpLearning-source .icon { flex-shrink: 0; margin-top: 2px; }
+.RpLearning-card { margin-inline: 6px; }
+.RpLearning-entry.is-unavailable .RpLearning-card { opacity: .46; }
+.RpLearning-action { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 11px 2px 0; margin-top: auto; }
+.RpLearning-cost { white-space: nowrap; }
+.RpLearning-cost .icon { margin-right: 5px; }
+.RpLearning-reasons { display: flex; flex-direction: column; gap: 3px; text-align: right; color: var(--muted-color); font-size: 12px; }
+.RpLearning-empty { text-align: center; padding: 28px 16px; border-radius: 12px; background: var(--control-bg); color: var(--muted-color); }
+.RpLearningConfirm .RpEditorActions { gap: 9px; }
+.RpLearningConfirm .Modal-body { font-family: "Roleplay Jost", sans-serif; }
+.RpLearningConfirm-spell { display: flex; gap: 14px; align-items: center; padding: 16px; border-radius: 11px; background: var(--body-bg); }
+.RpLearningConfirm-pathIcon { display: grid; place-items: center; flex: 0 0 42px; width: 42px; height: 42px; color: var(--learning-color); font-size: 32px; }
+.RpLearningConfirm-spell > div { min-width: 0; }
+.RpLearningConfirm-label { display: block; color: var(--muted-color); font-size: 12px; line-height: 1.4; margin-bottom: 5px; }
+.RpLearningConfirm-spell h3 { color: var(--text-color); font-size: 19px; line-height: 1.3; margin: 0; overflow-wrap: anywhere; }
+.RpLearningConfirm-spell h3 > span { color: var(--learning-color); white-space: nowrap; }
+.RpLearningConfirm-costs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 20px 0; }
+.RpLearningConfirm-costs > div { min-width: 0; }
+.RpLearningConfirm-costs strong { display: flex; gap: 6px; align-items: baseline; font-size: 23px; font-weight: 600; color: var(--text-color); }
+.RpLearningConfirm-costs .icon { color: #b68bea; font-size: 17px; }
+.RpLearningConfirm-costs small { font-size: 13px; font-weight: 400; color: var(--muted-color); }
+.RpLearningConfirm-source { display: flex; gap: 12px; padding: 14px 16px; border-radius: 11px; background: var(--body-bg); }
+.RpLearningConfirm-source > .icon { flex-shrink: 0; margin-top: 2px; color: #b68bea; font-size: 18px; }
+.RpLearningConfirm-source > div { min-width: 0; flex: 1; }
+.RpLearningConfirm-source strong { display: block; font-size: 14px; font-weight: 500; color: var(--text-color); overflow-wrap: anywhere; }
+.RpLearningConfirm-source p { font-size: 12px; color: var(--muted-color); line-height: 1.4; margin: 6px 0 0; }
+.RpLearningConfirm-source .FormControl { width: 100%; min-width: 0; }
+.RpLearningConfirm .RpEditorActions { margin-top: 22px; }
+@media (max-width: 650px) {
+  .RpLearning-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .RpLearning-filters { grid-template-columns: 1fr 1fr; }
+  .RpLearning-filters > input { grid-column: 1 / -1; }
+  .RpLearning-experience { grid-column: 2; justify-self: end; }
+  .RpLearning-grid { grid-template-columns: 1fr; }
+  .RpLearning-pattern { right: -26px; opacity: .1; }
+}

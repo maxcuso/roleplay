@@ -1,6 +1,9 @@
+* text=auto
+
 # GitHub-архивы и composer archive используют разные правила исключения.
 # Повторяем здесь исключения composer.json, чтобы локальные данные не попадали в Git-архив.
 /resources/presentation/icons.local.json export-ignore
 /tests/.runtime export-ignore
 /js/node_modules export-ignore
+/js/.flarum-typings export-ignore
 /vendor export-ignore

@@ -14,7 +14,7 @@ $db->table('roleplay_characters')->where('id', $reviewId)->update([
 $reviewService = new CharacterReview($db, $topics);
 $identity = new CharacterIdentity($db);
 $reviewProfile = new \Maxcuso\Roleplay\Character\Profile\CharacterProfile($db, $topics);
-$reviewController = new CharacterReviewController($db, $topics);
+$reviewController = new CharacterReviewController($reviewService, $identity, $reviewProfile);
 $reviewKeyIndex = 0;
 $reviewKey = function () use (&$reviewKeyIndex): string {
     return sprintf('88888888-8888-4888-8888-%012d', ++$reviewKeyIndex);
@@ -51,7 +51,8 @@ foreach (['attributes', 'skills', 'perks', 'spells', 'weapon_proficiencies', 'ch
 }
 $correct = $correctBody();
 rejected(fn () => $identity->correct($reviewId, $owner, $correct + ['race_id' => $freeRace]), 'invalid_request');
-$badAge = $correct; $badAge['age'] = 1;
+// min_age — нижняя граница продолжительности жизни, а не минимальный возраст героя.
+$badAge = $correct; $badAge['age'] = 91; // У стартовой расы max_age = 90.
 rejected(fn () => $identity->correct($reviewId, $owner, $badAge), 'invalid_age');
 $identityResult = $identity->correct($reviewId, $owner, $correct);
 check($identity->correct($reviewId, $owner, $correct) === $identityResult, 'Identity correction exact retry is idempotent');

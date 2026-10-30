@@ -88,9 +88,10 @@ check($calculated['effective_attributes']['magic']['level'] === 9
 check($calculated['stats']['mana_max']->value === 30 && $calculated['stats']['stamina_max']->value === 62,
     'Attribute effects precede formulas and direct resource bonuses');
 check($calculated['stats']['ignored_damage']->value === 30, 'Physiology defense and both magical and ordinary armor add up');
-check($calculated['attacks'][0]['damage']->value === 42 && $calculated['attacks'][0]['source']['id'] === $equippedInstance
-    && $calculated['attacks'][1]['mode'] === 'magic' && $calculated['attacks'][1]['damage']->value === 23,
-    'Item scope uses its real instance and never leaks into the learned spell');
+check(count($calculated['attacks']) === 1 && $calculated['attacks'][0]['damage']->value === 42
+    && $calculated['attacks'][0]['source']['id'] === $equippedInstance
+    && $calculated['maximum_damage']['magic_damage'] === null,
+    'Item scope uses its real instance; learned spells are separate from weapon damage');
 $withoutWeapon = new CharacterSnapshot(...array_replace(get_object_vars($ready), [
     'equipment' => array_values(array_filter($ready->equipment, fn (array $item) => $item['id'] !== $equippedInstance)),
 ]));

@@ -1,5 +1,6 @@
 import {object, type Fields} from '../../common/catalogData';
 import {requestMessage, requestStatus} from '../../common/requestError';
+import {messageKind} from '../../common/messageKind';
 import type {CharacterSummary, ProfileView, ProfileTransport, ProfileCommand, ReviewPart, ReviewAction, RoleplayerStats} from './types';
 
 /** Состояние страницы без зависимости от Flarum. Поздний ответ не заменяет другого выбранного персонажа. */
@@ -16,6 +17,9 @@ export default class ProfileState {
   listError = '';
   detailError = '';
   actionError = '';
+  clearInputError(): void {
+    if (this.actionError && messageKind(this.actionError) === 'input') this.actionError = '';
+  }
   retryAvailable = false;
   private userId: number | null = null;
   private initialCharacter: number | null = null;
@@ -65,12 +69,15 @@ export default class ProfileState {
       this.roleplayer = result.roleplayer ?? this.roleplayer;
       if (this.selected === null && this.characters.length) {
         // Ссылка из мастера выбирает созданного персонажа только среди доступных записей этого профиля.
-        const preferred = this.characters.find(row => row.id === this.initialCharacter);
+        const requested = this.initialCharacter;
         this.initialCharacter = null;
-        void this.select((preferred ?? this.characters.find(row => row.status === 'active') ?? this.characters[0]).id);
+        void this.select(requested ?? (this.characters.find(row => row.status === 'active') ?? this.characters[0]).id);
+      }
+      else if (this.selected === null && this.initialCharacter !== null) {
+        const requested = this.initialCharacter; this.initialCharacter = null; void this.select(requested);
       }
     } catch (error) {
-      if (generation === this.listGeneration) this.listError = requestMessage(error, 'Не удалось загрузить персонажей.');
+      if (generation === this.listGeneration) this.listError = requestMessage(error, 'Не удалось загрузить персонажей. Попробуйте ещё раз');
     } finally {
       if (generation === this.listGeneration) { this.loading = false; this.loadingMore = false; this.notify(); }
     }
@@ -90,11 +97,17 @@ export default class ProfileState {
     try {
       const view = await this.api.read(id);
       if (!this.disposed && generation === this.selectionGeneration) {
+        const character = object(view.snapshot.character);
+        if (this.userId !== null && Number(character.user_id) !== this.userId) {
+          this.detailError = 'Персонаж не найден. Попробуйте обновить страницу'; return;
+        }
         this.view = view;
+        if (!this.characters.some(row => row.id === id)) this.characters.unshift({id,
+          name: [character.first_name, character.last_name].filter(Boolean).join(' '), status: String(character.status)});
         this.roleplayer = view.roleplayer ?? this.roleplayer;
       }
     } catch (error) {
-      if (generation === this.selectionGeneration) this.detailError = requestMessage(error, 'Не удалось открыть анкету.');
+      if (generation === this.selectionGeneration) this.detailError = requestMessage(error, 'Не удалось открыть анкету. Попробуйте ещё раз');
     } finally {
       if (generation === this.selectionGeneration) { this.detailLoading = false; this.notify(); }
     }
@@ -137,9 +150,10 @@ export default class ProfileState {
     }};
     return this.sendCommand();
   }
-  async develop(kind: 'attribute' | 'skill' | 'proficiency', targetId: number): Promise<boolean> {
+  async develop(kind: 'attribute' | 'skill' | 'proficiency' | 'spell', targetId: number, sourceId?: number): Promise<boolean> {
     if (this.actionsBlocked || !this.view?.development || this.selected === null || !this.api.progress) return false;
-    this.pending = {characterId: this.selected, kind: 'progression', body: {...this.versions(), kind, target_id: targetId, rules_hash: this.view.development.rules_hash}};
+    this.pending = {characterId: this.selected, kind: 'progression', body: {...this.versions(), kind, target_id: targetId, rules_hash: this.view.development.rules_hash,
+      ...(kind === 'spell' ? {source_instance_id: sourceId} : {})}};
     return this.sendCommand();
   }
   async manage(action: string, data: Fields, comment: string): Promise<boolean> {
@@ -188,8 +202,8 @@ export default class ProfileState {
       this.retryAvailable = status === undefined || status === 0 || status >= 500;
       if (!this.retryAvailable) this.pending = null;
       this.actionError = requestMessage(error, this.retryAvailable
-        ? 'Ответ не получен. Можно безопасно повторить действие.'
-        : 'Не удалось выполнить действие. Обнови анкету.');
+        ? 'Не удалось получить ответ сервера. Попробуйте обновить страницу'
+        : 'Не удалось выполнить действие. Попробуйте обновить страницу');
       if (status === 409 || status === 403 || status === 404) {
         // После изменения прав/версии старая анкета не даёт права отправить новую команду.
         if (this.view) {

@@ -1,0 +1,278 @@
+{
+  "createdAt": "2026-10-27",
+  "character": {
+    "name": "Риан Серебролап",
+    "status": "draft",
+    "account": "GuideDemo",
+    "age": 21,
+    "race": "Зверолюд",
+    "attributes": [
+      2,
+      2,
+      4,
+      1
+    ],
+    "skills": [
+      "Знахарство I",
+      "Обман I"
+    ],
+    "proficiencies": [
+      "Метательное оружие"
+    ],
+    "perks": [
+      "Чужая кровь",
+      "Хвост",
+      "Ночное зрение",
+      "Когти",
+      "Травник",
+      "Язык без костей"
+    ],
+    "spells": [
+      "Тёрновый кнут I",
+      "Маскировка I"
+    ]
+  },
+  "screenshots": [
+    {
+      "theme": "dark",
+      "name": "01-basics",
+      "path": "dark/01-basics.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "023912dc97d2e5e4909aca80f8a786c3ad4033023118551d27987fd3fc1b8dfc"
+    },
+    {
+      "theme": "dark",
+      "name": "02-attributes",
+      "path": "dark/02-attributes.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "ff9915937f278cb45162135e37affb37f628f2cbad51caeaeac0189bb46b84e3"
+    },
+    {
+      "theme": "dark",
+      "name": "03-training",
+      "path": "dark/03-training.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "90e54def9689d9d061d28e4990e73420b744bc81d3f6f48ab8871773c57e46e1"
+    },
+    {
+      "theme": "dark",
+      "name": "04-perks-choices-bottom",
+      "path": "dark/04-perks-choices-bottom.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "200e4e337328cb9c7c29f2935d178e19c8151ec13dc9b6caaac97b447408657c"
+    },
+    {
+      "theme": "dark",
+      "name": "04-perks-choices",
+      "path": "dark/04-perks-choices.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "8e6d298d9f036c8d8ab1567cf36d0618e363aa515d7c089c4571d162ff77d267"
+    },
+    {
+      "theme": "dark",
+      "name": "04-perks-overview",
+      "path": "dark/04-perks-overview.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "a209cb716b7c2d7f16bd0aadbf2727668cad63d044a5e943b76214b1013a7f00"
+    },
+    {
+      "theme": "dark",
+      "name": "05-spells-choices-bottom",
+      "path": "dark/05-spells-choices-bottom.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "04bf5c87e17f6757602c400e15d2982bdc917a642dc6107e0bc16bab40b04ef7"
+    },
+    {
+      "theme": "dark",
+      "name": "05-spells-choices",
+      "path": "dark/05-spells-choices.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "8d4b038464f52917884f18538dfdec3d8dc43698b38ee232abc5c4163f21f8b6"
+    },
+    {
+      "theme": "dark",
+      "name": "05-spells",
+      "path": "dark/05-spells.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "aa91eaa796f90f6c2f3bd3a08306050b218b2b089582ee3a9d3327bad4fc91c4"
+    },
+    {
+      "theme": "dark",
+      "name": "06-loadout-extra",
+      "path": "dark/06-loadout-extra.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "55d282cac57a2c45074296187ef05f0ce01e556dda7dab28b5d042a0401d38ce"
+    },
+    {
+      "theme": "dark",
+      "name": "06-loadout",
+      "path": "dark/06-loadout.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "4feeb3f594e50f589d12ed3f167425c01a98de3349371062df1e8d02b3297553"
+    },
+    {
+      "theme": "dark",
+      "name": "07-avatar-menu",
+      "path": "dark/07-avatar-menu.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "be3035e7f23da7666dce7bedfc32aeb446d65287fc7f714e525837a7a78d3619"
+    },
+    {
+      "theme": "dark",
+      "name": "07-review-abilities",
+      "path": "dark/07-review-abilities.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "8dbb23ad8ee49da61e760b2fef0726b54d60ffbcc4809b4edd3e195c69d21274"
+    },
+    {
+      "theme": "dark",
+      "name": "07-review",
+      "path": "dark/07-review.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "432e765a04857a8da744b44233c359f63368e447bf3af0d0b7d4ac997f3bee5c"
+    },
+    {
+      "theme": "dark",
+      "name": "08-confirmation",
+      "path": "dark/08-confirmation.jpg",
+      "width": 612,
+      "height": 359,
+      "sha256": "941249b905fc3360c76c16e676ce773b341f8a04d274dec847ddb1afc9f70cc6"
+    },
+    {
+      "theme": "light",
+      "name": "01-basics",
+      "path": "light/01-basics.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "7167ff8f56535c9a96316f66a398c7d5e88471a7ae7a30eda17e23a8f50eeb75"
+    },
+    {
+      "theme": "light",
+      "name": "02-attributes",
+      "path": "light/02-attributes.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "6d396cf2066d7b957f8793ebd29479695aaf39c5b3ebe13af53ba5e6f1e4ec63"
+    },
+    {
+      "theme": "light",
+      "name": "03-training",
+      "path": "light/03-training.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "45ef4939c7665b1247ca03d4e0f9ac5e9daacc61d15c015285ef1739143570a3"
+    },
+    {
+      "theme": "light",
+      "name": "04-perks-choices-bottom",
+      "path": "light/04-perks-choices-bottom.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "9356291a2c40bf879dbf9dbe1db8577333835d15fb8c0eb05141a9e5040616d4"
+    },
+    {
+      "theme": "light",
+      "name": "04-perks-choices",
+      "path": "light/04-perks-choices.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "83844851c0a9ba8b923ec7fa1124018aecc6f9f49c689a2770f0118c7db44e4f"
+    },
+    {
+      "theme": "light",
+      "name": "04-perks-overview",
+      "path": "light/04-perks-overview.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "9f12c56737cd16dd31f70cdb1d85b3242dddbe6d98cc442400f11183c8b98bdf"
+    },
+    {
+      "theme": "light",
+      "name": "05-spells-choices-bottom",
+      "path": "light/05-spells-choices-bottom.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "d6c6e8533f5632b2b06d1796d44e4a169388e7135431e5d18b729074d3864078"
+    },
+    {
+      "theme": "light",
+      "name": "05-spells-choices",
+      "path": "light/05-spells-choices.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "a6addd72ac060f3778c3c1e0b840ba85f0613629191a8c4572a86ea000bf0749"
+    },
+    {
+      "theme": "light",
+      "name": "05-spells",
+      "path": "light/05-spells.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "98c2cb08abaa04af728751b8dbfea02ffa7f17232abc7533aa770e58d6c2caf3"
+    },
+    {
+      "theme": "light",
+      "name": "06-loadout-extra",
+      "path": "light/06-loadout-extra.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "5baa73bae7cabf27c3614cdea0f4e875900b6f6bb8f4d94e6b4ddca1ff4d81d2"
+    },
+    {
+      "theme": "light",
+      "name": "06-loadout",
+      "path": "light/06-loadout.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "49f67f62f386de0a0c5f9fbc2eaf1d7468bec2eb35d2abd97e246400110e1b58"
+    },
+    {
+      "theme": "light",
+      "name": "07-avatar-menu",
+      "path": "light/07-avatar-menu.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "112d75dcaec8d621c7cd2f6bd9d0ab6329dda68b0cdc9af1dc68dc576aac62b1"
+    },
+    {
+      "theme": "light",
+      "name": "07-review-abilities",
+      "path": "light/07-review-abilities.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "e5b02e1e81c7cf0b299866307fa13d4e292b8ae05f2b44b6b7dfb1d1f0835ea4"
+    },
+    {
+      "theme": "light",
+      "name": "07-review",
+      "path": "light/07-review.jpg",
+      "width": 948,
+      "height": 607,
+      "sha256": "019364f0ab9f227de3687167977917a6f39ebc0a7e944dd7706ff2c93dc9b8ff"
+    },
+    {
+      "theme": "light",
+      "name": "08-confirmation",
+      "path": "light/08-confirmation.jpg",
+      "width": 612,
+      "height": 359,
+      "sha256": "ab4befb1f03d73e98813100326b91e6887b639fd5606e4b33ca2254f8ecaeb63"
+    }
+  ],
+  "notes": "Все выборы сохранены. Создание персонажа не подтверждалось. Старый created-profile.jpg относится к съёмке 25 октября и не входит в эту подборку."
+}

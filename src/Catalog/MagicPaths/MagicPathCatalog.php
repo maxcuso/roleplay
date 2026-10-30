@@ -19,7 +19,7 @@ final class MagicPathCatalog extends AbstractCatalog
         $color = FieldValues::text($input['color'] ?? null, 'Цвет', 7);
         if ($color !== null) {
             $color = '#'.ltrim($color, '#');
-            if (!preg_match('/^#[0-9a-f]{6}$/iD', $color)) FieldValues::invalid('Цвет: нужен HEX из шести знаков.');
+            if (!preg_match('/^#[0-9a-f]{6}$/iD', $color)) FieldValues::invalid('Укажите цвет в формате HEX из шести знаков, например #AABBCC');
         }
         return $common + ['icon' => FieldValues::icon($input['icon'] ?? null), 'color' => $color];
     }

@@ -1,5 +1,6 @@
+import Feedback from '../../common/components/Feedback';
 import app from 'flarum/forum/app';
-import Modal, {type IInternalModalAttrs} from 'flarum/common/components/Modal';
+import Modal, {type IInternalModalAttrs, type ModalHeading} from '../../common/components/RoleplayModal';
 import Button from 'flarum/common/components/Button';
 import Icon from 'flarum/common/components/Icon';
 import type Mithril from 'mithril';
@@ -42,8 +43,8 @@ export default class CharacterManagementModal extends Modal<Attrs> {
     void this.load();
   }
   onremove(vnode: Mithril.VnodeDOM<Attrs, this>): void {super.onremove(vnode); this.disposed = true;}
-  className(): string {return 'RpManagementModal';}
-  title(): Mithril.Children {return <span><Icon name={uiIcon('management.title')}/> Выдать персонажу</span>;}
+  protected modalClassName(): string {return 'RpManagementModal';}
+  protected modalHeading(): ModalHeading {return {label: 'Выдача персонажу', purpose: 'grant'};}
   get action(): string {return this.category === 'rank' ? 'set_rank' : this.category === 'resources' ? 'reward' : (this.removing ? 'remove_' : 'grant_') + this.category;}
   private get disabled(): boolean {return this.loading || this.creating || this.attrs.profile.actionsBlocked;}
   private sameCharacter(): boolean {
@@ -63,7 +64,7 @@ export default class CharacterManagementModal extends Modal<Attrs> {
         await this.load();
       }
     } catch (error) {
-      this.loadError = requestMessage(error, 'Не удалось обновить анкету. Попробуй ещё раз.');
+      this.loadError = requestMessage(error, 'Не удалось обновить анкету. Попробуйте ещё раз');
     } finally {this.loading = false; m.redraw();}
   }
   private async load(): Promise<void> {
@@ -76,7 +77,7 @@ export default class CharacterManagementModal extends Modal<Attrs> {
         await this.attrs.profile.refreshAfterCatalogChange();
       }
       if (this.available()) this.lookups = result.data.lookups;
-    } catch (error) {if (!this.disposed) this.loadError = requestMessage(error, 'Не удалось загрузить варианты выдачи.');}
+    } catch (error) {if (!this.disposed) this.loadError = requestMessage(error, 'Не удалось загрузить варианты выдачи. Попробуйте ещё раз');}
     finally {if (!this.disposed) {this.loading = false; m.redraw();}}
   }
   private chooseCategory(category: Category): void {
@@ -89,21 +90,23 @@ export default class CharacterManagementModal extends Modal<Attrs> {
   content(): Mithril.Children {
     const state = this.attrs.profile, view = state.view;
     if (!this.available() || !view) return <div className="Modal-body">
-      <p role="alert">{state.actionError || 'Эта анкета уже недоступна для изменения.'}</p>
-      {this.loadError && <p role="alert">{this.loadError}</p>}
+      <Feedback message={state.actionError || 'Эту анкету больше нельзя изменить. Попробуйте обновить страницу, чтобы проверить её состояние'}/>
+      {this.loadError && <Feedback message={this.loadError}/>}
       {this.sameCharacter() && <Button type="button" className="Button Button--primary" icon={uiIcon('actions.refresh')}
         disabled={this.loading || state.actionsBlocked} loading={this.loading}
         onclick={() => void this.refreshProfile()}>Обновить анкету</Button>}
     </div>;
     const character = object(view.snapshot.character);
-    return <form className="Modal-body RpManagement" onsubmit={(event: Event) => {event.preventDefault(); void this.save();}}>
+    return <form className="Modal-body RpManagement" oninput={() => state.clearInputError()} onchange={() => state.clearInputError()}
+      onsubmit={(event: Event) => {event.preventDefault(); void this.save();}}>
       <p className="RpManagement-character">{text(character, 'first_name')} {text(character, 'last_name')}</p>
       <div className="RpManagement-tabs" role="tablist" aria-label="Что изменить">
         {tabs.map(tab => <Button key={tab.key} type="button" className="Button" role="tab" aria-selected={String(this.category === tab.key)}
           disabled={this.disabled} onclick={() => this.chooseCategory(tab.key)}><Icon name={uiIcon(tab.icon)}/><span>{tab.label}</span></Button>)}
       </div>
       {this.loading && <p role="status">Загрузка…</p>}
-      {this.loadError && <p role="alert">{this.loadError} <Button type="button" className="Button" onclick={() => void this.load()}>Повторить</Button></p>}
+      {this.loadError && <Feedback message={this.loadError}
+        refresh={{label: 'Обновить варианты выдачи', run: () => void this.load(), disabled: this.loading}}/>}
       <div>
         {this.category === 'rank' ? this.ranks() : <>
         <div className="RpManagement-mode" aria-label="Операция">
@@ -118,10 +121,10 @@ export default class CharacterManagementModal extends Modal<Attrs> {
           <textarea className="FormControl" required maxlength={4000} rows={2} value={this.comment} disabled={this.disabled}
             placeholder="Например: награда за квест" oninput={(event: Event) => {this.comment = (event.target as HTMLTextAreaElement).value;}}/>
         </label>
-        {state.actionError && <p role="alert">{state.actionError}</p>}
+        {state.actionError && <Feedback message={state.actionError}/>}
         <div className="RpManagement-footer">
           {state.retryAvailable ? <Button type="button" className="Button Button--primary" disabled={state.changing} loading={state.changing}
-            onclick={async () => {if (await state.retryOperation()) this.hide();}}>Повторить действие</Button>
+            onclick={async () => {if (await state.retryOperation()) this.complete();}}>Повторить действие</Button>
             : <Button type="submit" className={'Button Button--primary' + (this.removing && this.category !== 'rank' ? ' RpManagement-remove' : '')}
               icon={uiIcon(this.category === 'rank' ? 'management.rank' : this.removing ? 'management.remove' : 'actions.create')}
               disabled={!this.canSave()} loading={state.changing}>{this.submitLabel()}</Button>}
@@ -170,7 +173,7 @@ export default class CharacterManagementModal extends Modal<Attrs> {
           </span>
         </label>;
       })}
-      {this.removing && !this.validResources() && <p className="RpManagement-error" role="alert">Проверь количество и доступные ресурсы.</p>}
+      {this.removing && !this.validResources() && <Feedback message="Проверьте указанное количество и доступные ресурсы персонажа" hint/>}
     </div>;
   }
   private select(title: string, value: number, entries: CatalogRow[], set: (id: number) => void): Mithril.Children {
@@ -286,6 +289,15 @@ export default class CharacterManagementModal extends Modal<Attrs> {
     if (this.category === 'resources') return this.removing ? 'Списать ресурсы' : 'Начислить награду';
     return (this.removing ? 'Изъять ' : 'Выдать ') + {perk: 'перк', spell: 'заклинание', item: 'предмет', rank: 'ранг'}[this.category];
   }
+  /** Только после подтверждённого ответа сервера, в том числе при безопасном повторе. */
+  private complete(): void {
+    const message = this.category === 'rank' ? 'Ранг персонажа обновлён'
+      : this.category === 'resources' ? (this.removing ? 'Ресурсы списаны' : 'Ресурсы начислены персонажу')
+      : this.removing ? {perk: 'Перк изъят', spell: 'Заклинание изъято', item: 'Предмет изъят'}[this.category]
+      : {perk: 'Перк выдан персонажу', spell: 'Заклинание выдано персонажу', item: 'Предмет выдан персонажу'}[this.category];
+    this.hide();
+    app.alerts.show({type: 'success'}, message);
+  }
   private async save(): Promise<void> {
     if (!this.canSave() || !this.available()) return;
     const sign = this.removing ? -1 : 1;
@@ -300,7 +312,7 @@ export default class CharacterManagementModal extends Modal<Attrs> {
       if (needs.has('event')) context.event_name = this.eventName.trim();
       data.source_id = this.sourceId; data.context = context;
     }
-    if (await this.attrs.profile.manage(this.action, data, this.comment.trim())) this.hide();
+    if (await this.attrs.profile.manage(this.action, data, this.comment.trim())) this.complete();
   }
   private async createEntity(): Promise<void> {
     if (this.disabled || !this.available() || this.category === 'rank' || this.category === 'resources') return;
@@ -319,10 +331,10 @@ export default class CharacterManagementModal extends Modal<Attrs> {
           if (this.available() && this.category === kind) {
             this.removing = false; this.search = ''; this.targetId = api.createdId ?? 0; this.revealId = this.targetId;
           }
-        } catch (error) {this.loadError = requestMessage(error, 'Сущность создана, но список не обновился. Повтори загрузку.');}
+        } catch (error) {this.loadError = requestMessage(error, 'Запись создана, но не удалось обновить список. Загрузите список ещё раз');}
         finally {this.loading = false; m.redraw();}
       }}, true);
-    } catch (error) {if (!this.disposed) this.loadError = requestMessage(error, 'Не удалось открыть редактор.');}
+    } catch (error) {if (!this.disposed) this.loadError = requestMessage(error, 'Не удалось открыть редактор. Попробуйте ещё раз');}
     finally {if (!this.disposed) {this.creating = false; m.redraw();}}
   }
 }

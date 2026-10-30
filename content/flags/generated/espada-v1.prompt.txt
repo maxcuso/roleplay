@@ -1,0 +1,14 @@
+Tool: built-in image_gen.imagegen
+Transparent background: true
+Final asset: C:\Forum\Flarum\packages\roleplay-new\content\flags\generated\1200x1600-full\espada-v1.png
+Canvas normalization: 1200x1600, full-bleed Grim swallowtail with uniform ivory field. Emblem pixels retained without scaling or redrawing.
+
+Prompt:
+Create ONE finished banner asset for the fantasy organization Espada, adapting image 1 as the central emblem.
+Input image 1 is the old emblem: a bold angular black stylized skull / war mask, with a flat broad cranium, two angular light eye sockets, a central downward triangular point, and FOUR separated tapered lower teeth. Preserve this immediately recognisable geometry but redraw cleanly with consistent sharp planes. Keep the diagonal cut through the upper right part as an intentional part of the old mark. Make the central figure BLACK, with all negative spaces showing the background.
+Images 2 and 3 are drawing style references only: flat medieval fantasy armorial art, clear dark contours, solid fills, strong simple silhouettes. Do NOT copy their sun, chains, people, armor or other motifs.
+The new flag belongs to GRIM and must have a SWALLOWTAIL bottom: a tall rectangular pennon with straight horizontal top, straight vertical sides extending to TWO equal lower corner tips; a clean symmetric V-shaped notch rises between them to about 80% of the total height. No central downward point: the two bottom tails are at left and right. Exactly one central V notch. Plain black outer edge, no ornamental frame.
+Canvas exactly 1200 pixels wide by 1600 pixels high, ratio 3:4. Flag is FULL BLEED: top touches top edge; vertical sides touch left and right edges; the TWO bottom corner tips reach the bottom edge. NO empty transparent margins around top or sides. Transparency ONLY in the triangular notch cut out from the bottom. Fill all of the actual pennon with one uniform solid warm IVORY (#eee8d8).
+Place one large BLACK (#151515) skull emblem in the center of the rectangular upper part of the flag. Balanced, about 70% of flag width, entirely above the V notch, good clear space around the mark. Emblem itself close to square, never stretched vertically to match the flag. Crisp angular eye sockets and four detached jaw segments, bold readable at small size. No additional drawings.
+Exactly flat black and ivory ink. Absolutely uniform flat fills; no shading, NO gradient, no grain, NO texture, NO cloth folds, no 3D, no metallic shine, no glow, no halos, no golden outlines. No text, no motto, no numbers, no crowns, no helmets, no supporters, no weapons, no pole, no mounting, no nested shield. One isolated complete frontal flag PNG with genuine alpha transparency in the swallowtail cutout only.
+

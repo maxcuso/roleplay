@@ -1,3 +1,4 @@
+import Feedback from '../../common/components/Feedback';
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Icon from 'flarum/common/components/Icon';
@@ -37,13 +38,10 @@ export default class CreationWizardForm extends Component<Attrs> {
       {!this.attrs.embedded && <h1><Icon name={uiIcon('wizard.title')}/> {title}</h1>}
       {notice && <p className="RpWizard-help">{notice}</p>}
       {!loggedIn ? <p>Войдите в аккаунт, чтобы создать персонажа.</p> : <>
-        {state.error && <div className="RpWizard-error" role="alert">{state.error}
-          {state.conflict
-            ? <Button className="Button" onclick={() => void state.load()}>Загрузить сохранённый черновик</Button>
-            : <Button className="Button" disabled={state.busy} onclick={() => void (
-                state.ready ? state.step === 'review' ? create() : state.flush() : state.load()
-              )}>Повторить</Button>}
-        </div>}
+        {state.error && <Feedback message={state.error} refresh={{
+          label: state.conflict ? 'Загрузить сохранённый черновик' : 'Повторить', disabled: state.busy,
+          run: () => void (state.conflict || !state.ready ? state.load() : state.step === 'review' ? create() : state.flush()),
+        }}/>}
         {!state.ready ? <p role="status">Загрузка мастера…</p> : state.createdId !== null
           ? <div className="RpWizard-scroll"><p role="status">Персонаж создан.</p>
             <LinkButton className="Button Button--primary" href={profileUrl(state.createdId)}>Открыть персонажа в профиле</LinkButton>
@@ -52,33 +50,33 @@ export default class CreationWizardForm extends Component<Attrs> {
             <nav key="progress" className="RpWizard-progress" aria-label="Шаги создания">{steps.map((step, position) =>
               <button key={step.key} type="button" className={position > index ? 'is-upcoming' : position === index ? 'is-current is-complete' : 'is-complete'}
                 title={step.name} aria-label={step.name} aria-current={position === index ? 'step' : undefined}
-                disabled={state.busy || state.creating || position > index && position > 0
+                disabled={state.busy || state.creating || state.uploading || position > index && position > 0
                   && !view!.preview.step_validity[steps[position - 1].key]}
                 onclick={() => void state.goTo(step.key)}>
                 <span className="RpWizard-progressLine" aria-hidden="true"/>
                 <Icon name={uiIcon(step.icon)}/>
               </button>)}</nav>
             <div className="RpWizard-scroll" key={state.step}>
-              {!view!.catalog.configuration.enabled && <p className="RpWizard-help">Создание персонажей сейчас недоступно.</p>}
-              <fieldset className="RpWizard-content" disabled={state.conflict || state.creating}>
+              {!view!.catalog.configuration.enabled && <p className="RpWizard-help">Создание персонажей сейчас недоступно</p>}
+              <fieldset className="RpWizard-content" data-step={state.step} disabled={state.conflict || state.creating}>
+                <h2 className="RpWizard-stepTitle">{state.step === 'basics' ? 'Знакомство с героем' : steps[index].name}</h2>
                 {screens[state.step](state)}
+                {state.attempted && (view!.preview.errors[state.step] ?? []).length > 0 &&
+                  <Feedback message={view!.preview.errors[state.step]}/>}
               </fieldset>
-              {state.attempted && (view!.preview.errors[state.step] ?? []).length > 0 &&
-                <ul className="RpWizard-errors" role="alert">{view!.preview.errors[state.step].map((error, errorIndex) =>
-                  <li key={errorIndex}>{error}</li>)}</ul>}
             </div>
             <footer key="navigation" className="RpWizard-navigation">
               <span className="RpWizard-saving" role="status">
-                {state.busy ? draftOnly ? 'Проверяем выбор…' : 'Сохраняем…'
+                {state.uploading ? 'Загружаем аватар…' : state.busy ? draftOnly ? 'Проверяем выбор…' : 'Сохраняем…'
                   : draftOnly ? 'Изменения пока не сохранены' : state.dirty ? 'Есть несохранённые изменения' : 'Сохранено'}
               </span>
-              {index > 0 && <Button className="Button" disabled={state.busy || state.creating}
+              {index > 0 && <Button className="Button" disabled={state.busy || state.creating || state.uploading}
                 onclick={() => void state.goTo(steps[index - 1].key)}>Назад</Button>}
               {index < steps.length - 1
-                ? <Button className="Button Button--primary" disabled={state.busy || state.creating || state.conflict}
+                ? <Button className="Button Button--primary" disabled={state.busy || state.creating || state.uploading || state.conflict}
                     onclick={() => void state.goTo(steps[index + 1].key)}>Далее</Button>
                 : <Button className="Button Button--primary" loading={state.creating}
-                    disabled={state.busy || state.conflict || !view!.catalog.configuration.enabled}
+                    disabled={state.busy || state.uploading || state.conflict || !view!.catalog.configuration.enabled}
                     onclick={() => void create()}>{submitLabel}</Button>}
             </footer>
           </>}

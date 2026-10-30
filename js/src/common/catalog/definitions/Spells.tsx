@@ -28,7 +28,7 @@ export default definition({
       {text(row, 'other_cost') && <span title={text(row, 'other_cost')}>{text(row, 'other_cost')}</span>}
     </span>},
   ],
-  defaults: {magic_path_id: null, level: 1, distance_mode: 'self', distance_value: null, radius_value: 0,
+  defaults: {magic_path_id: null, level: 1, is_starting: true, distance_mode: 'self', distance_value: null, radius_value: 0,
     duration_value: 0, duration_unit: 'turn', damage_units: 0, cast_mode: 'instant', cast_value: null,
     cast_unit: 'turn', cooldown_value: 0, cooldown_unit: 'turn', mana_cost: 0, stamina_cost: 0, other_cost: ''},
   editor: SpellEditor,

@@ -1,0 +1,341 @@
+{
+  "createdAt": "2026-10-27",
+  "character": "Риан Серебролап, зверолюд, 21 год",
+  "method": "Настоящий интерфейс локального форума, отдельная временная копия готового черновика",
+  "temporary_data_removed": true,
+  "original_draft_preserved": true,
+  "screenshots": [
+    {
+      "theme": "dark",
+      "name": "01-unapproved",
+      "caption": "Непринятая анкета в профиле",
+      "path": "dark/01-unapproved.jpg",
+      "width": 844,
+      "height": 503,
+      "sha256": "1168f7c7a371ae89e1a3cd48ae885575d401301e166151b2ea68f413840af42c"
+    },
+    {
+      "theme": "dark",
+      "name": "02-literature-draft",
+      "caption": "Художественная часть: в работе",
+      "path": "dark/02-literature-draft.jpg",
+      "width": 844,
+      "height": 173,
+      "sha256": "51007eedd66ee828d3da736c42b2995721376ff70613e872dc1a142280b0ac43"
+    },
+    {
+      "theme": "dark",
+      "name": "03-literature-review",
+      "caption": "Художественная часть: на проверке",
+      "path": "dark/03-literature-review.jpg",
+      "width": 844,
+      "height": 173,
+      "sha256": "2de6b8ae35fd9bc14280602c638e6970d6a14acac579b1c672218a65ce099e08"
+    },
+    {
+      "theme": "dark",
+      "name": "04-literature-approved",
+      "caption": "Художественная часть одобрена, техническая — на проверке",
+      "path": "dark/04-literature-approved.jpg",
+      "width": 844,
+      "height": 174,
+      "sha256": "d11bd94b80d3e2da2c57f97e0e469b71470456ebdc46c20e60c254ca9bffb56a"
+    },
+    {
+      "theme": "dark",
+      "name": "05-accepted",
+      "caption": "Обе части приняты: персонаж активен",
+      "path": "dark/05-accepted.jpg",
+      "width": 844,
+      "height": 374,
+      "sha256": "988ee2f5d663cec37e9a743c6e59324ed6607bd1a3fe207835cbd0a5e28a8156"
+    },
+    {
+      "theme": "dark",
+      "name": "06-attribute-upgrade",
+      "caption": "Выбор характеристики и стоимость повышения",
+      "path": "dark/06-attribute-upgrade.jpg",
+      "width": 410,
+      "height": 186,
+      "sha256": "fe9a83acc173971c9214e919f954fa818e502d9b1f55810f66419fba2c31ce59"
+    },
+    {
+      "theme": "dark",
+      "name": "07-attribute-result",
+      "caption": "Результат одного повышения: Физиология 2 → 3",
+      "path": "dark/07-attribute-single-level.jpg",
+      "width": 410,
+      "height": 186,
+      "sha256": "03e68a715066a971e07cbe725aa2169ae0812bbf49d6c5413bf0f4c0e1e26471"
+    },
+    {
+      "theme": "dark",
+      "name": "08-skill-learning",
+      "caption": "Выбор нового навыка и кнопка изучения",
+      "path": "dark/08-skill-learning.jpg",
+      "width": 844,
+      "height": 420,
+      "sha256": "3e3a241b21e77dfa7e8b29c28afa4246b81089cf14ba1b24b046fbeffa41803b"
+    },
+    {
+      "theme": "dark",
+      "name": "09-skill-result",
+      "caption": "Изученный навык I уровня",
+      "path": "dark/09-skill-result.jpg",
+      "width": 844,
+      "height": 421,
+      "sha256": "74121a2ff2d2e934b1c0cb9d211bf476337fb3c9194919a8de4ee2d78220d8a4"
+    },
+    {
+      "theme": "dark",
+      "name": "10-proficiency-learning",
+      "caption": "Выбор нового владения и кнопка изучения",
+      "path": "dark/10-proficiency-learning.jpg",
+      "width": 844,
+      "height": 421,
+      "sha256": "c7d9ea562dc37f4de099c9b98d04ee25234a0caa44186f5376efb06f0cba90f3"
+    },
+    {
+      "theme": "dark",
+      "name": "11-proficiency-result",
+      "caption": "Изученное владение оружием",
+      "path": "dark/11-proficiency-result.jpg",
+      "width": 844,
+      "height": 421,
+      "sha256": "63f87a1cece0d8905e5fbdd5fb83788412b6c47b73dbc6cfec292a3852ec45fb"
+    },
+    {
+      "theme": "dark",
+      "name": "12-creation-entry",
+      "caption": "Кнопки создания персонажа и путеводителя",
+      "path": "dark/12-creation-entry.jpg",
+      "width": 257,
+      "height": 79,
+      "sha256": "bba6399e78a1ddd0205fd02eee99752b546196e2119a2a88825fcde9f5d88a8c"
+    },
+    {
+      "theme": "dark",
+      "name": "13-perks",
+      "caption": "Перки персонажа",
+      "path": "dark/13-perks.jpg",
+      "width": 844,
+      "height": 431,
+      "sha256": "0f9e670be458d4df4ea1c373718bf04c8d75d18d25285d70997bde3889d6ac3d"
+    },
+    {
+      "theme": "dark",
+      "name": "14-spells",
+      "caption": "Заклинания персонажа",
+      "path": "dark/14-spells.jpg",
+      "width": 844,
+      "height": 190,
+      "sha256": "e13cdfca676bd22a49bce1bb714a514d194694f6a7c8e21553647d0cca64f1c1"
+    },
+    {
+      "theme": "dark",
+      "name": "15-equipment",
+      "caption": "Инвентарь и экипировка",
+      "path": "dark/15-equipment.jpg",
+      "width": 844,
+      "height": 317,
+      "sha256": "327af1cd7ef08d9d6e86f2fa86182f6425844c407d5ab6d621c99fb16b72d347"
+    },
+    {
+      "theme": "dark",
+      "name": "16-effects",
+      "caption": "Эффекты персонажа",
+      "path": "dark/16-effects.jpg",
+      "width": 620,
+      "height": 148,
+      "sha256": "9c91bce6af385e4ae9c174554f26e373e3cc659263a6357295f9fd021be1c183"
+    },
+    {
+      "theme": "dark",
+      "name": "17-history",
+      "caption": "История изменений персонажа",
+      "path": "dark/17-history.jpg",
+      "width": 480,
+      "height": 272,
+      "sha256": "64b34850641046ed284a886ff3458d2d5d0f3d73ee0cec737ba0351cffaee8ad"
+    },
+    {
+      "theme": "dark",
+      "name": "18-equipped-items",
+      "caption": "Надетые предметы в блоке экипировки анкеты",
+      "path": "dark/18-equipped-items.jpg",
+      "width": 844,
+      "height": 224,
+      "sha256": "550b2fab97335e2c6c7c6e6d81c20782f296147372ab9e48d64aacbbd9bf4395"
+    },
+    {
+      "theme": "light",
+      "name": "01-unapproved",
+      "caption": "Непринятая анкета в профиле",
+      "path": "light/01-unapproved.jpg",
+      "width": 844,
+      "height": 503,
+      "sha256": "85bbed2d3284d6768650f68164f23ef4adfebe74ef1d7dea529d9bfb71c37ab9"
+    },
+    {
+      "theme": "light",
+      "name": "02-literature-draft",
+      "caption": "Художественная часть: в работе",
+      "path": "light/02-literature-draft.jpg",
+      "width": 844,
+      "height": 173,
+      "sha256": "802d1987e0b80f6ea8db0b3206d3850dc794d3e31824d3ab7c58c5e21295e49a"
+    },
+    {
+      "theme": "light",
+      "name": "03-literature-review",
+      "caption": "Художественная часть: на проверке",
+      "path": "light/03-literature-review.jpg",
+      "width": 844,
+      "height": 173,
+      "sha256": "45cbff39e803d6de950f8369f27aae8de4ebc7d5860baac03578dbb26cf26478"
+    },
+    {
+      "theme": "light",
+      "name": "04-literature-approved",
+      "caption": "Художественная часть одобрена, техническая — на проверке",
+      "path": "light/04-literature-approved.jpg",
+      "width": 844,
+      "height": 174,
+      "sha256": "9cbd66cc4a51837e4f6cd9cdad363b1e60356f8a76ab5debffb0d5da82e5f1ff"
+    },
+    {
+      "theme": "light",
+      "name": "05-accepted",
+      "caption": "Обе части приняты: персонаж активен",
+      "path": "light/05-accepted.jpg",
+      "width": 844,
+      "height": 374,
+      "sha256": "490c2c68ed88f50f7548efa3223fa015851042a3c612bc18135c3219cb5aa2d4"
+    },
+    {
+      "theme": "light",
+      "name": "06-attribute-upgrade",
+      "caption": "Выбор характеристики и стоимость повышения",
+      "path": "light/06-attribute-upgrade.jpg",
+      "width": 410,
+      "height": 186,
+      "sha256": "6fcf69f42ee98bd51e930aba4a6741d1948ded7c717412a66a716ef0f3ada6f1"
+    },
+    {
+      "theme": "light",
+      "name": "07-attribute-result",
+      "caption": "Результат одного повышения: Физиология 2 → 3",
+      "path": "light/07-attribute-single-level.jpg",
+      "width": 410,
+      "height": 186,
+      "sha256": "c97345c9b60635d9eb95935a207b35447e8b84490af1a868b1ae63d60dc57e34"
+    },
+    {
+      "theme": "light",
+      "name": "08-skill-learning",
+      "caption": "Выбор нового навыка и кнопка изучения",
+      "path": "light/08-skill-learning.jpg",
+      "width": 844,
+      "height": 420,
+      "sha256": "36a32b817d455aa87cb641d116ca45ff84c89278834385cd760d8c8df2e4b159"
+    },
+    {
+      "theme": "light",
+      "name": "09-skill-result",
+      "caption": "Изученный навык I уровня",
+      "path": "light/09-skill-result.jpg",
+      "width": 844,
+      "height": 421,
+      "sha256": "6c47468722de1455401880c02d51bfd930aa593a4023842f9afd06891ebba0f8"
+    },
+    {
+      "theme": "light",
+      "name": "10-proficiency-learning",
+      "caption": "Выбор нового владения и кнопка изучения",
+      "path": "light/10-proficiency-learning.jpg",
+      "width": 844,
+      "height": 421,
+      "sha256": "bd0663749fb866b920079f569b611321fe03798379ee49d6d6e08bd05d734b72"
+    },
+    {
+      "theme": "light",
+      "name": "11-proficiency-result",
+      "caption": "Изученное владение оружием",
+      "path": "light/11-proficiency-result.jpg",
+      "width": 844,
+      "height": 421,
+      "sha256": "cfcb443c54aaba5ed71e6b1374245e5383ced3b7b23f5be2d74882088ff4b01e"
+    },
+    {
+      "theme": "light",
+      "name": "12-creation-entry",
+      "caption": "Кнопки создания персонажа и путеводителя",
+      "path": "light/12-creation-entry.jpg",
+      "width": 257,
+      "height": 79,
+      "sha256": "dafd7c720653a4cf13e17a084eeb266b06f665ed28f8b4918dc3b1898625d4d9"
+    },
+    {
+      "theme": "light",
+      "name": "13-perks",
+      "caption": "Перки персонажа",
+      "path": "light/13-perks.jpg",
+      "width": 844,
+      "height": 431,
+      "sha256": "a948f89fa6d587cdfd5772b7d714369c40ca1c18b7ab59562b0b03784551e093"
+    },
+    {
+      "theme": "light",
+      "name": "14-spells",
+      "caption": "Заклинания персонажа",
+      "path": "light/14-spells.jpg",
+      "width": 844,
+      "height": 190,
+      "sha256": "c866b972bc79eb2349da984cc24672e856f536c802d0e9e5c56bb8502d9f57a3"
+    },
+    {
+      "theme": "light",
+      "name": "15-equipment",
+      "caption": "Инвентарь и экипировка",
+      "path": "light/15-equipment.jpg",
+      "width": 844,
+      "height": 317,
+      "sha256": "7935f9db6913636ca94893e15fd2b00525c686bedb37741886a696a09553c7f7"
+    },
+    {
+      "theme": "light",
+      "name": "16-effects",
+      "caption": "Эффекты персонажа",
+      "path": "light/16-effects.jpg",
+      "width": 620,
+      "height": 148,
+      "sha256": "7e5d729476c8c4c8eada0cde4b98839203e2869db2289c8b8ffcd44e381a14e3"
+    },
+    {
+      "theme": "light",
+      "name": "17-history",
+      "caption": "История изменений персонажа",
+      "path": "light/17-history.jpg",
+      "width": 480,
+      "height": 272,
+      "sha256": "371c224fde5f4e6816a7fb35261bed71685ae35a6a720e26109c674b045868f3"
+    },
+    {
+      "theme": "light",
+      "name": "18-equipped-items",
+      "caption": "Надетые предметы в блоке экипировки анкеты",
+      "path": "light/18-equipped-items.jpg",
+      "width": 844,
+      "height": 224,
+      "sha256": "7e4595032ba7dc5d75d31eb8e3943074b2349583db767de234907f2fcf4b52e9"
+    }
+  ],
+  "updatedAt": "2026-10-28",
+  "single_level_upgrade": {
+    "attribute": "Физиология",
+    "before": 2,
+    "after": 3,
+    "experience_before": 100,
+    "experience_after": 97
+  }
+}

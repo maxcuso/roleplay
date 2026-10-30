@@ -14,11 +14,12 @@ final class SpellCatalog extends AbstractCatalog
     protected const TABLE = 'spells';
     protected const INTEGER_FIELDS = ['magic_path_id', 'level', 'radius_value', 'duration_value', 'damage_units', 'cast_value', 'cooldown_value', 'mana_cost', 'stamina_cost'];
     protected const DECIMAL_FIELDS = ['distance_value'];
+    protected const BOOLEAN_FIELDS = ['is_starting'];
 
     public function validate(array $input): array
     {
         FieldValues::allowed($input, [
-            'name', 'description', 'enabled', 'sort_order', 'magic_path_id', 'level',
+            'name', 'description', 'enabled', 'sort_order', 'magic_path_id', 'level', 'is_starting',
             'distance_mode', 'distance_value', 'radius_value', 'duration_value', 'duration_unit',
             'damage_units', 'cast_mode', 'cast_value', 'cast_unit', 'cooldown_value', 'cooldown_unit',
             'mana_cost', 'stamina_cost', 'other_cost',
@@ -28,6 +29,7 @@ final class SpellCatalog extends AbstractCatalog
         return FieldValues::common($input) + [
             'magic_path_id' => AbilityValues::reference($this->store, 'magic_paths', $input['magic_path_id'] ?? null),
             'level' => FieldValues::integer($input['level'] ?? 1, 'Круг', 1, 100),
+            'is_starting' => FieldValues::boolean($input['is_starting'] ?? true, 'Стартовое'),
             'distance_mode' => $mode,
             // Метры могут быть дробными (например, 0,5 м). Для себя/касания число не задаётся.
             'distance_value' => $mode === 'distance' ? AbilityValues::number($input['distance_value'] ?? 0, 'Дистанция', 1000000) : null,
@@ -47,7 +49,7 @@ final class SpellCatalog extends AbstractCatalog
         FieldValues::allowed($filters, ['path', 'level']);
         foreach (['path' => 'magic_path_id', 'level' => 'level'] as $key => $column) {
             if (!isset($filters[$key]) || $filters[$key] === '') continue;
-            if (!is_string($filters[$key]) || !ctype_digit($filters[$key])) FieldValues::invalid('Некорректный фильтр заклинаний.');
+            if (!is_string($filters[$key]) || !ctype_digit($filters[$key])) FieldValues::invalid('Не удалось применить фильтр заклинаний. Попробуйте обновить страницу');
             $value = (int) $filters[$key];
             FieldValues::integer($value, 'Фильтр', 1, $key === 'level' ? 100 : PHP_INT_MAX);
             $query->where($column, $value);

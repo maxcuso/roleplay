@@ -21,8 +21,8 @@ $prefix = 'rpn_'.bin2hex(random_bytes(3)).'_';
 if (!preg_match('/^rpn_[0-9a-f]{6}_$/D', $prefix) || $prefix === $original->getTablePrefix()) throw new RuntimeException('Unsafe prefix');
 $db = new ($original::class)($original->getPdo(), $original->getDatabaseName(), $prefix, $original->getConfig());
 $schema = $db->getSchemaBuilder();
-$base = require __DIR__.'/../migrations/2026_10_02_000001_create_base_catalogs.php';
-$migration = require __DIR__.'/../migrations/2026_10_09_000001_add_ranks.php';
+$base = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
+$migration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
 $assert = function (bool $ok, string $message): void {if (!$ok) throw new RuntimeException($message);};
 $reject = function (callable $action, string $code) use ($assert): void {
     try {$action();} catch (ApiProblem $error) {$assert($error->problemCode === $code, 'Wrong rejection: '.$error->problemCode); return;}
@@ -35,8 +35,12 @@ $owner = new class extends User {
 };
 $owner->id = 100; $owner->exists = true;
 $base['up']($schema);
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_17_000001_race_presentation.php')['up']($schema);
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_22_000002_race_quote_image.php')['up']($schema);
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000003_literature_contents.php')['up']($schema);
 $migration['up']($schema);
-(require __DIR__.'/../migrations/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_12_000002_development_configuration.php')['up']($schema);
 try {
     $revision = fn () => (int) $db->table('roleplay_catalog_state')->value('revision');
     $seed = new SeedRanks($db);
@@ -104,6 +108,7 @@ try {
     echo "Ranks passed: defaults, permissions, assignment/removal, retry, profile, history and JSON.\n";
 } finally {
     $schema->dropIfExists('roleplay_player_statistics');
+    $schema->dropIfExists('roleplay_development_config');
     $migration['down']($schema);
     $base['down']($schema);
 }

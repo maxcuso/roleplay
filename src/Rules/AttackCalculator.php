@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Maxcuso\Roleplay\Rules;
 
-/** Урон одного оружия никогда не складывается с уроном соседнего оружия. */
+/** Урон одного оружия никогда не складывается с уроном соседнего оружия или заклинания. */
 final class AttackCalculator
 {
     public function __construct(private readonly StatRules $rules) {}
 
     /**
      * @param array{id: string, mode: string, source: array, damage_units?: int, unarmed?: bool} $attack
-     * source описывает оружие/заклинание/безоружную атаку; id различает варианты атак.
+     * source описывает оружие/безоружную атаку; id различает варианты атак.
      * damage_units — добавка конкретного предмета к базовому урону, а не текст его описания.
      */
     public function calculate(array $attack, array $attributes, array $modifiers = []): array
@@ -73,6 +73,9 @@ final class AttackCalculator
             throw new \DomainException('Атаке нужны идентификатор, способ и источник.');
         }
         CalculatedValue::source($attack['source']);
+        if ($attack['source']['kind'] === 'spell') {
+            throw new \DomainException('Урон заклинания берётся из его карточки и не входит в расчёт атак оружием');
+        }
         $damage = CalculatedValue::number($attack['damage_units'] ?? 0);
         $unarmed = $attack['unarmed'] ?? false;
         if ($damage < 0 || !is_bool($unarmed) || ($unarmed && ($attack['mode'] !== 'melee' || $damage !== 0))) {

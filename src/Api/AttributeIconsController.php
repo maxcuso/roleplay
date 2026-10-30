@@ -20,7 +20,7 @@ final class AttributeIconsController implements RequestHandlerInterface
         try {
             if ($request->getMethod() === 'GET') return ApiResponse::data($this->icons->read($actor));
             $body = OperationRequest::body($request->getParsedBody(), ['revision', 'icons']);
-            if (!is_array($body['icons'] ?? null)) throw new ApiProblem('invalid_request', 'Нужен список иконок.', 400);
+            if (!is_array($body['icons'] ?? null)) throw new ApiProblem('invalid_request', 'Не удалось обработать иконки: ожидается список. Попробуйте обновить страницу', 400);
             return ApiResponse::data($this->icons->save($actor, OperationRequest::revision($body['revision'] ?? null), $body['icons']));
         } catch (ApiProblem $problem) {return ApiResponse::problem($problem);}
     }

@@ -154,8 +154,8 @@ try {
 } finally { $db->unprepared("DROP TRIGGER IF EXISTS $trigger"); }
 $equipment->change($profileId, $owner, $failCommand);
 
-$profileController = new CharacterProfileController($db, $topics);
-$gearController = new CharacterEquipmentController($db, $topics);
+$profileController = new CharacterProfileController(new \Maxcuso\Roleplay\Character\Profile\CharacterProfile($db, $topics));
+$gearController = new CharacterEquipmentController($equipment, new \Maxcuso\Roleplay\Character\Profile\CharacterProfile($db, $topics));
 $profileRequest = RequestUtil::withActor((new ServerRequest())->withQueryParams(['id' => $profileId]), $owner);
 $response = $profileController->handle($profileRequest);
 check($response->getStatusCode() === 200 && $response->getHeaderLine('Cache-Control') === 'private, no-store',

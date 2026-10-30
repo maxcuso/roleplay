@@ -30,8 +30,6 @@
 .RpReview-actions .RpReview-editButton { background: color-mix(in srgb, var(--text-color) 12%, var(--control-bg)); color: var(--text-color); font-weight: 600; }
 .RpReview-actions .RpReview-editButton:hover:not(:disabled) { background: color-mix(in srgb, var(--text-color) 18%, var(--control-bg)); }
 .RpReview-topicLink { font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
-.RpReview-warning { margin: 0 0 12px; color: #cb8137; font-size: 12px; }
-.RpReview-warning .icon { margin-right: 4px; }
 .RpReview-form label {display: block; margin: 16px 0; font-weight: bold;}
 .RpReview-form label .FormControl {margin-top: 6px; font-weight: normal;}
 .RpReview-form textarea {min-height: 120px; resize: vertical;}
@@ -53,9 +51,6 @@
 /* История персонажа: компактный список. Заголовок остаётся снаружи прокручиваемой части.
  * Отдельные классы сохраняют прежнее оформление журнала проверки анкеты. */
 .RpCharacterHistoryModal.Modal { width: 480px; max-width: calc(100% - 32px); }
-.RpCharacterHistoryModal .Modal-header { padding: 22px 24px; }
-.RpCharacterHistoryModal .Modal-header h3 { font-size: 20px; font-weight: 700; }
-.RpCharacterHistoryModal .Modal-header h3 > .icon { margin-right: 6px; color: var(--muted-color); font-size: 17px; }
 .RpCharacterHistoryModal .Modal-body { padding: 18px 24px 22px; scrollbar-gutter: stable; }
 .RpCharacterHistory-day + .RpCharacterHistory-day { margin-top: 24px; }
 .RpCharacterHistory-day h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 0; font-size: 12px; font-weight: 700; color: var(--muted-color); }
@@ -77,7 +72,5 @@
 .RpCharacterHistory-comment { margin-top: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .RpCharacterHistory-empty { margin: 0; color: var(--muted-color); }
 @media (max-width: 480px) {
-  .RpCharacterHistoryModal .Modal-header { padding: 20px 16px; }
-  .RpCharacterHistoryModal .Modal-header h3 { font-size: 18px; }
   .RpCharacterHistoryModal .Modal-body { padding: 16px; }
 }

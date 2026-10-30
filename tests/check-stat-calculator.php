@@ -70,7 +70,7 @@ $weapons = [
     ['id' => 'sword-a', 'mode' => 'melee', 'damage_units' => 3, 'source' => source('item', 'Меч A', 10)],
     ['id' => 'sword-b', 'mode' => 'melee', 'damage_units' => 9, 'source' => source('item', 'Меч B', 11)],
     ['id' => 'dagger', 'mode' => 'ranged', 'damage_units' => 3, 'source' => source('item', 'Метательный нож', 12)],
-    ['id' => 'spell', 'mode' => 'magic', 'damage_units' => 3, 'source' => source('spell', 'Заклинание', 13)],
+    ['id' => 'staff', 'mode' => 'magic', 'damage_units' => 3, 'source' => source('item', 'Посох', 13)],
 ];
 $modifiers = [
     new StatModifier('melee_damage', 6, source('perk', 'Перк')),
@@ -90,7 +90,10 @@ check($result['attacks'][0]['damage']->value === 21 && $result['attacks'][1]['da
 check($result['maximum_damage']['melee_damage']['damage']->value === 24
     && $result['maximum_damage']['melee_damage']['id'] === 'sword-b', 'Profile maximum is 24, not weapon sum 45');
 check($result['attacks'][2]['damage']->value === 6, 'Thrown weapon in melee uses Agility');
-check($result['attacks'][3]['damage']->value === 12, 'Spell attack adds its own damage to Magic');
+check($result['attacks'][3]['damage']->value === 12, 'Magical weapon adds its damage to the attribute baseline');
+rejected(fn () => $attacks->calculate([
+    'id' => 'spell', 'mode' => 'magic', 'damage_units' => 27, 'source' => source('spell', 'Заклинание', 14),
+], $state), 'Spell cannot accidentally reuse the weapon damage calculator');
 check($result['stats']['mana_max']->value === 60 && $result['stats']['stamina_max']->value === 0, 'Resource bonuses and zero floor');
 check($result['stats']['carry_capacity']->value === 45.125 && $result['inventory_weight']->value === 1.55, 'Fractional capacity and quantity times item weight');
 check($result['skill_check_bonuses'] === ['unarmed-combat' => 2, 'awareness' => 3], 'Skill level is total check bonus');

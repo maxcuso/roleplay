@@ -1,0 +1,7 @@
+Built-in imagegen shape edit.
+
+Use case: precise-object-edit. Edit ONLY the outer silhouette of this College of Magic banner, keeping the owl, open gold book, crescent, colors, proportions and drawing unchanged. Replace the swallowtail rectangle with ONE five-sided heraldic shield. Exactly five vertices: upper left near (160,0), upper right near (1040,0), right shoulder (1200,480), bottom point (600,1600), left shoulder (0,480). Thus the two side shoulder corners are distinctly wider than the two upper corners. Straight horizontal top, sloping outward upper sides, then long sides tapering to ONE lower point. Whole shield extends to all four image bounds, canvas portrait 1200x1600. Flat uniform deep purple #352648, black outer outline, transparent outside shield. Keep owl, crescent and book completely inside and unobstructed. No new symbols, no crown, no frame or ornaments. Do not redesign the emblem or change its scale.
+
+Generated draft: C:\Users\KusoT\.codex\generated_images\01a149af-703a-7770-91da-8fdb295c9ba6\exec-7d8c2efb-444e-4201-8027-3570ac84f164.png
+Final preparation: preserve original v1 emblem at original pixel size and position. Correct lower shoulder positions to y=1240 to prevent clipping the wide book. Final five vertices: (160,6), (1039,6), (1193,1240), (599.5,1592), (6,1240). Field #352648, exact 1200x1600 canvas. Previous image retained.
+

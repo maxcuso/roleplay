@@ -35,21 +35,21 @@ final class AdminCatalogController implements RequestHandlerInterface
                 case 'POST':
                 case 'PUT':
                     FieldValues::allowed($body, ['revision', 'fields']);
-                    if (!is_array($body['fields'] ?? null)) FieldValues::invalid('Нужен объект полей формы.');
+                    if (!is_array($body['fields'] ?? null)) FieldValues::invalid('Не удалось обработать данные формы: ожидается объект полей. Попробуйте обновить страницу');
                     $result = $service->save($id, $revision, $body['fields'], $actor);
                     break;
                 case 'PATCH':
                     FieldValues::allowed($body, ['revision', 'enabled']);
-                    if ($id === null) FieldValues::invalid('Не указана запись.');
+                    if ($id === null) FieldValues::invalid('Не удалось определить запись. Попробуйте обновить страницу');
                     $result = $service->toggle($id, $revision, FieldValues::boolean($body['enabled'] ?? null, 'Статус'), $actor);
                     break;
                 case 'DELETE':
                     FieldValues::allowed($body, ['revision']);
-                    if ($id === null) FieldValues::invalid('Не указана запись.');
+                    if ($id === null) FieldValues::invalid('Не удалось определить запись. Попробуйте обновить страницу');
                     $result = $service->remove($id, $revision, $actor);
                     break;
                 default:
-                    throw new ApiProblem('invalid_request', 'Неизвестная операция.', 400);
+                    throw new ApiProblem('invalid_request', 'Не удалось определить действие. Попробуйте обновить страницу', 400);
             }
             return ApiResponse::data($result, $request->getMethod() === 'POST' ? 201 : 200);
         } catch (ApiProblem $problem) {

@@ -20,14 +20,14 @@ final class UploadPerkImageController implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        Access::catalogCreate(RequestUtil::getActor($request));
+        Access::catalogImage(RequestUtil::getActor($request));
         try {
             $file = $request->getUploadedFiles()['image'] ?? null;
             if (!$file instanceof UploadedFileInterface || $file->getError() !== UPLOAD_ERR_OK) {
-                FieldValues::invalid('Выбери изображение для загрузки.');
+                FieldValues::invalid('Выберите изображение для загрузки');
             }
             if ($file->getSize() === null || $file->getSize() > PerkImageEncoder::MAX_BYTES) {
-                FieldValues::invalid('Размер изображения — не более 5 МБ.');
+                FieldValues::invalid('Выберите изображение размером не более 5 МБ');
             }
             $stream = $file->getStream();
             if ($stream->isSeekable()) $stream->rewind();

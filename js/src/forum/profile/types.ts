@@ -1,6 +1,6 @@
 import type {Fields, Lookups} from '../../common/catalogData';
 
-export interface CharacterSummary {id: number; name: string; status: string}
+export interface CharacterSummary {id: number; name: string; status: string; avatar?: string | null}
 export interface RoleplayerStats {earned_experience: number; active_characters: number; started_at: string | null}
 export interface CharacterList {characters: CharacterSummary[]; next_before: number | null; roleplayer?: RoleplayerStats}
 export type ReviewPart = 'mechanics' | 'literature';
@@ -11,6 +11,7 @@ export interface ReviewView {
   history: {id: number; type: string; actor_id: number; created_at: string; details: Fields}[];
 }
 export interface ProfileView {
+  learning?: {rules_hash: string; experience: number; spells: LearningSpell[]} | null;
   roleplayer?: RoleplayerStats;
   snapshot: Fields; calculation: Fields; lookups: Lookups;
   permissions: {can_equip: boolean; can_manage?: boolean};
@@ -22,7 +23,9 @@ interface VersionedCommand {operation_key: string; revision: number; catalog_rev
 export interface EquipmentCommand extends VersionedCommand {instance_id: number; equipped: boolean}
 export interface ReviewCommand extends VersionedCommand {part: ReviewPart; action: ReviewAction; comment: string; topic_hash: string | null}
 export interface IdentityCommand extends VersionedCommand {first_name: string; last_name: string; age: number}
-export interface ProgressionCommand extends VersionedCommand {kind: 'attribute' | 'skill' | 'proficiency'; target_id: number; rules_hash: string}
+export interface LearningSource {instance_id: number; item_id: number; name: string; consumed: boolean}
+export interface LearningSpell {id: number; spell: Fields; path: import('../../common/catalogData').CatalogRow; cost: number | null; allowed: boolean; reasons: string[]; sources: LearningSource[]}
+export interface ProgressionCommand extends VersionedCommand {kind: 'attribute' | 'skill' | 'proficiency' | 'spell'; target_id: number; rules_hash: string; source_instance_id?: number}
 export interface ManagementCommand extends VersionedCommand {action: string; data: Fields; comment: string}
 /** Тело и UUID сохраняем до получения ответа, чтобы безопасно повторить любую команду. */
 export type ProfileCommand =

@@ -39,41 +39,41 @@ final class CreateCharacter
                     // Повтор того же запроса возвращает прежний результат даже после удаления черновика.
                     if ((int) $previous->actor_user_id !== (int) $actor->id
                         || $previous->type !== 'create_character' || !hash_equals($previous->request_hash, $hash)) {
-                        throw new ApiProblem('operation_key_conflict', 'Этот ключ уже использован для другого запроса.', 409);
+                        throw new ApiProblem('operation_key_conflict', 'Не удалось создать персонажа: данные повторного запроса отличаются от исходных. Попробуйте обновить страницу', 409);
                     }
                     if ($previous->character_id === null) {
-                        throw new ApiProblem('character_deleted', 'Этот персонаж уже удалён. Начни создание заново.', 409);
+                        throw new ApiProblem('character_deleted', 'Этот персонаж уже удалён. Начните создание заново', 409);
                     }
                     return json_decode($previous->result, true, flags: JSON_THROW_ON_ERROR);
                 }
                 if (!$catalog['configuration']['enabled']) {
-                    throw new ApiProblem('creation_disabled', 'Создание персонажей временно выключено.', 403);
+                    throw new ApiProblem('creation_disabled', 'Создание персонажей временно отключено. Попробуйте позже', 403);
                 }
                 $owned = $this->db->table('roleplay_characters')->where('user_id', $actor->id);
                 if ((clone $owned)->where('status', 'creating')->exists()
                     || (clone $owned)->whereIn('status', ['creating', 'active'])->count() >= $catalog['configuration']['max_characters']) {
-                    throw new ApiProblem('character_limit_reached', 'Достигнут лимит персонажей.', 409);
+                    throw new ApiProblem('character_limit_reached', 'Вы уже создали максимально допустимое количество персонажей', 409);
                 }
                 CreationRequest::current($catalog, $catalogRevision, $rulesHash);
                 if ($catalog['configuration']['application']['tag_id'] === null) {
-                    throw new ApiProblem('application_not_configured', 'Администратор ещё не выбрал тег литературных анкет.', 403);
+                    throw new ApiProblem('application_not_configured', 'Не удалось создать тему анкеты: тег для анкет не настроен. Обратитесь к администратору', 403);
                 }
                 $draft = $this->db->table('roleplay_creation_drafts')->where('user_id', $actor->id)->lockForUpdate()->first();
                 if ($draft === null || (int) $draft->id !== $draftId || (int) $draft->revision !== $draftRevision
                     || (int) $draft->catalog_revision !== $catalogRevision || !hash_equals($draft->rules_hash, $rulesHash)) {
-                    throw new ApiProblem('creation_draft_conflict', 'Черновик изменился. Проверь его перед созданием.', 409);
+                    throw new ApiProblem('creation_draft_conflict', 'Черновик изменился. Проверьте актуальные данные перед созданием персонажа', 409);
                 }
-                $payload = (new CreationPayload())->normalize(json_decode($draft->payload, true, flags: JSON_THROW_ON_ERROR));
+                $payload = (new CreationPayload())->normalize(json_decode($draft->payload, true, flags: JSON_THROW_ON_ERROR), (int) $actor->id);
                 // Сервер заново вычисляет план; preview и выдачи из запроса игрока не принимаются.
-                $plan = (new CreationPlanBuilder())->build($payload, $catalog['definitions'], $catalog['configuration']);
+                $plan = (new CreationPlanBuilder($catalog['development']))->build($payload, $catalog['definitions'], $catalog['configuration']);
                 if (!$plan['valid']) {
-                    throw new ApiProblem('creation_incomplete', 'Заверши обязательные шаги мастера перед созданием.');
+                    throw new ApiProblem('creation_incomplete', 'Завершите все обязательные шаги мастера, прежде чем создавать персонажа');
                 }
                 $now = gmdate('Y-m-d H:i:s');
                 $id = (int) $this->db->table('roleplay_characters')->insertGetId([
                     'user_id' => $actor->id, 'race_id' => $payload['race_id'],
                     'first_name' => $payload['first_name'], 'last_name' => $payload['last_name'] === '' ? null : $payload['last_name'],
-                    'age' => $payload['age'], 'creation_catalog_revision' => $catalogRevision,
+                    'age' => $payload['age'], 'avatar' => $payload['avatar'], 'creation_catalog_revision' => $catalogRevision,
                     'status' => 'creating', 'literature_approved' => false, 'created_at' => $now, 'updated_at' => $now,
                 ]);
                 $this->db->table('roleplay_operations')->insert([
@@ -103,7 +103,7 @@ final class CreateCharacter
             });
         } catch (QueryException $error) {
             if (($error->errorInfo[1] ?? null) === 1062) {
-                throw new ApiProblem('operation_key_conflict', 'Конфликт повторного запроса. Обнови мастер.', 409);
+                throw new ApiProblem('operation_key_conflict', 'Не удалось обработать повторный запрос. Попробуйте обновить страницу', 409);
             }
             throw $error;
         }

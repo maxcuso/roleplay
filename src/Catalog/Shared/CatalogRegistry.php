@@ -51,7 +51,7 @@ final class CatalogRegistry
 
     public function get(string $key): AbstractCatalog
     {
-        if (!isset(self::SERVICES[$key])) throw new ApiProblem('unknown_catalog', 'Справочник не найден.', 404);
+        if (!isset(self::SERVICES[$key])) throw new ApiProblem('unknown_catalog', 'Справочник не найден. Обновите страницу и выберите доступный справочник', 404);
         $class = self::SERVICES[$key][0];
         return $this->makeCatalog($class);
     }
@@ -61,7 +61,7 @@ final class CatalogRegistry
 
     public static function tableFor(string $key): string
     {
-        if (!isset(self::SERVICES[$key])) throw new ApiProblem('unknown_catalog', 'Справочник не найден.', 404);
+        if (!isset(self::SERVICES[$key])) throw new ApiProblem('unknown_catalog', 'Справочник не найден. Обновите страницу и выберите доступный справочник', 404);
         return self::SERVICES[$key][1];
     }
 
@@ -82,12 +82,28 @@ final class CatalogRegistry
         return $this->revision->read(fn () => $this->lookups());
     }
 
+    /** Рабочая база использует те же каталоги, формы, версии и валидаторы. */
+    public function listForWorkspace(string $key, User $actor, string $search, ?bool $enabled, int $page, array $filters): array
+    {
+        \Maxcuso\Roleplay\Workspace\WorkspaceAccess::catalog($actor, $key, 'view');
+        return $this->revision->read(function () use ($key, $actor, $search, $enabled, $page, $filters): array {
+            $result = $this->get($key)->list($actor, $search, $enabled, $page, $filters);
+            // Только справочные данные редакторов, без персонажей и настроек форума.
+            $result['lookups'] = [];
+            foreach (array_unique([$key, 'attributes', 'skills', 'proficiencies', 'paths', 'item-types', ...($key === 'items' ? ['spells'] : [])]) as $reference) {
+                $result['lookups'][$reference] = $this->definitionsFor($reference);
+            }
+            $result['capabilities'] = \Maxcuso\Roleplay\Workspace\WorkspaceAccess::capabilities($actor);
+            return $result;
+        });
+    }
+
     /** Узкий контракт редактора из окна выдачи: без настроек рас, персонажей и правил создания. */
     public function creationForm(string $key, User $actor): array
     {
         $this->assertCreatable($key, $actor);
         return $this->revision->read(function (int $revision) use ($key): array {
-            $keys = $key === 'spells' ? ['paths'] : ($key === 'items' ? ['item-types', 'proficiencies', 'attributes', 'skills'] : ['attributes', 'skills']);
+            $keys = $key === 'spells' ? ['paths'] : ($key === 'items' ? ['item-types', 'proficiencies', 'attributes', 'skills', 'spells', 'paths'] : ['attributes', 'skills']);
             $lookups = [];
             foreach ($keys as $reference) $lookups[$reference] = $this->definitionsFor($reference);
             return ['revision' => $revision, 'rows' => [], 'total' => 0, 'page' => 1, 'per_page' => 30, 'lookups' => $lookups];
@@ -104,7 +120,7 @@ final class CatalogRegistry
     {
         Access::catalogCreate($actor);
         if (!in_array($key, ['perks', 'spells', 'items'], true)) {
-            throw new ApiProblem('catalog_creation_forbidden', 'Этот справочник нельзя создавать из окна выдачи.', 403);
+            throw new ApiProblem('catalog_creation_forbidden', 'Создание записей этого справочника из окна выдачи недоступно. Откройте справочник в панели администратора', 403);
         }
     }
 

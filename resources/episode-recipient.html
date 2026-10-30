@@ -1,0 +1,13 @@
+<div class="RpEpisodeReceipt-person">
+  <a class="RpEpisodeReceipt-name"><xsl:if test="@profile"><xsl:attribute name="href"><xsl:value-of select="@profile"/></xsl:attribute></xsl:if><span class="RpEpisodeReceipt-avatar" aria-hidden="true"><xsl:choose><xsl:when test="@avatar"><img src="{@avatar}" alt="" loading="lazy"/></xsl:when><xsl:otherwise><xsl:value-of select="@initial"/></xsl:otherwise></xsl:choose></span><strong><xsl:value-of select="@name"/></strong></a>
+  <div class="RpEpisodeReceipt-rewards">
+    <div class="RpEpisodeReceipt-resources">
+      <xsl:if test="@experience &gt; 0">
+        <span class="RpEpisodeReceipt-experience" title="{@experience_hint}"><i class="icon fas fa-star" aria-hidden="true"/> +<xsl:value-of select="@experience"/> опыта</span>
+      </xsl:if>
+      <xsl:if test="@gold &gt; 0"><span class="RpEpisodeReceipt-gold" title="{@gold_hint}"><i class="icon fas fa-coins" aria-hidden="true"/> +<xsl:value-of select="@gold"/> золота</span></xsl:if>
+    </div>
+    <xsl:apply-templates select="RP_GRANT"/>
+    <xsl:if test="@experience = 0 and @gold = 0 and not(RP_GRANT)"><span class="RpEpisodeReceipt-empty">Без награды</span></xsl:if>
+  </div>
+</div>

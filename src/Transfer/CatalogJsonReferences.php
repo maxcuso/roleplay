@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Maxcuso\Roleplay\Transfer;
 
 use Maxcuso\Roleplay\Api\ApiProblem;
+use Maxcuso\Roleplay\Catalog\Items\LiteratureContent;
 
 /**
  * Единственное описание переносимых связей. В файле *_key / *_keys, в редакторе *_id / *_ids.
@@ -29,6 +30,17 @@ final class CatalogJsonReferences
         foreach (self::PATHS[$catalog] ?? [] as $path => $target) {
             $this->walk($fields, explode('.', $path), $import, fn ($value) => $resolve($target, $value));
         }
+        if ($catalog === 'items' && array_key_exists('literature_contents', $fields)) {
+            if (!is_array($fields['literature_contents']) || !array_is_list($fields['literature_contents'])) {
+                $this->invalid('Укажите содержимое литературы списком');
+            }
+            foreach ($fields['literature_contents'] as &$entry) {
+                if (!is_array($entry)) $this->invalid('Проверьте запись содержимого литературы');
+                $target = LiteratureContent::catalog($entry['type'] ?? null);
+                $this->walk($entry, ['knowledge_id'], $import, fn ($value) => $resolve($target, $value));
+            }
+            unset($entry);
+        }
         // Эти связи уже хранятся ключами, но нужны для включения зависимостей в экспорт.
         if (!$import) {
             $attributes = $catalog === 'races'
@@ -43,10 +55,10 @@ final class CatalogJsonReferences
     {
         $segment = array_shift($path);
         if ($segment === '*') {
-            if (!array_is_list($node)) $this->invalid('Связи должны быть списком.');
+            if (!array_is_list($node)) $this->invalid('Укажите связи списком');
             foreach ($node as &$value) {
                 if ($path) {
-                    if (!is_array($value)) $this->invalid('Некорректная запись связи.');
+                    if (!is_array($value)) $this->invalid('Проверьте параметры записи связи');
                     $this->walk($value, $path, $import, $resolve);
                 } elseif ($value !== null) $value = $resolve($value);
             }
@@ -56,12 +68,12 @@ final class CatalogJsonReferences
         $source = $import ? $external : $segment;
         $destination = $import ? $segment : $external;
         if ($import && $source !== $destination && array_key_exists($destination, $node)) {
-            $this->invalid('В JSON укажи '.$source.' — системный ключ, а не числовой ID.');
+            $this->invalid('В поле '.$source.' укажите системный ключ записи вместо числового ID');
         }
         if (!array_key_exists($source, $node)) return;
         $value = $node[$source];
         if ($path) {
-            if (!is_array($value)) $this->invalid('Поле '.$source.' должно быть объектом или списком.');
+            if (!is_array($value)) $this->invalid('Укажите поле '.$source.' в виде объекта или списка');
             $this->walk($value, $path, $import, $resolve);
         } elseif ($value !== null) $value = $resolve($value);
         if ($source !== $destination) unset($node[$source]);

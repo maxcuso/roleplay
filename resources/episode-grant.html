@@ -1,0 +1,4 @@
+<div class="RpEpisodeReceipt-grant">
+  <xsl:choose><xsl:when test="@kind = 'item'"><i class="icon fas fa-box" aria-hidden="true"/></xsl:when><xsl:when test="@kind = 'perk'"><i class="icon fas fa-leaf" aria-hidden="true"/></xsl:when><xsl:otherwise><i class="icon fas fa-book" aria-hidden="true"/></xsl:otherwise></xsl:choose>
+  <span><xsl:value-of select="@name"/><xsl:if test="@kind = 'spell'"> <xsl:value-of select="@level"/></xsl:if><xsl:if test="@quantity &gt; 1"> × <xsl:value-of select="@quantity"/></xsl:if></span>
+</div>

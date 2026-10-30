@@ -1,3 +1,4 @@
+import Feedback from '../../common/components/Feedback';
 import Component from 'flarum/common/Component';
 import Icon from 'flarum/common/components/Icon';
 import {uiIcon} from '../../common/uiIcons';
@@ -10,7 +11,7 @@ export default class SettingsFeedback extends Component<Attrs> {
     const state = this.attrs.state;
     return <div className="RpSettings-feedback">
       {state.loading && <p role="status"><Icon name={uiIcon('actions.refresh')}/> Загрузка…</p>}
-      {state.error && <p role="alert" className="RpCatalog-error"><Icon name={uiIcon('review.warning')}/> {state.error}</p>}
+      {state.error && <Feedback message={state.error}/>}
       {state.saved && <p role="status"><Icon name={uiIcon('actions.select')}/> Изменения сохранены.</p>}
     </div>;
   }

@@ -1,3 +1,4 @@
+import {clearInputFeedback} from '../../common/messageKind';
 import Component, {type ComponentAttrs} from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Icon from 'flarum/common/components/Icon';
@@ -35,14 +36,14 @@ export default class CreationSettingsPanel extends Component {
       <SettingsHeader title="Создание персонажей" icon="wizard.title" caption="Настройки старта для новых персонажей."
         disabled={disabled} refresh={() => void state.load()}/>
       <SettingsFeedback state={state}/>
-      {config && data && <form onsubmit={(event: Event) => {event.preventDefault(); void state.save();}}>
+      {config && data && <form oninput={() => clearInputFeedback(state)} onchange={() => clearInputFeedback(state)} onsubmit={(event: Event) => {event.preventDefault(); void state.save();}}>
         <label className="RpSettings-toggle"><input type="checkbox" checked={config.enabled} disabled={disabled}
           onchange={(event: Event) => {config.enabled = (event.target as HTMLInputElement).checked; changed();}}/>
           Разрешить создание персонажей
         </label>
         <div className="RpSettings-numbers">
           {numberInput('Персонажей у игрока', 'sections.characters', 'max_characters', 1)}
-          {numberInput('Заклинаний при Магии от 3', 'sections.spells', 'starting_spell_count')}
+          {numberInput('Заклинаний при доступном I круге', 'sections.spells', 'starting_spell_count')}
           {numberInput('Стартовое золото', 'resources.gold', 'starting_gold', 0, Number.MAX_SAFE_INTEGER)}
           {numberInput('Стартовый опыт', 'resources.activeExperience', 'starting_experience', 0, Number.MAX_SAFE_INTEGER)}
         </div>

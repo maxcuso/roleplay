@@ -14,7 +14,7 @@ use Maxcuso\Roleplay\Character\State\CharacterSnapshotBuilder;
 use Maxcuso\Roleplay\Character\State\CharacterStateReader;
 use Maxcuso\Roleplay\Character\Progression\ProgressionOptions;
 use Maxcuso\Roleplay\Creation\CreationCatalog;
-use Maxcuso\Roleplay\Rules\DevelopmentRules;
+use Maxcuso\Roleplay\Rules\DevelopmentConfigurationStore;
 
 /** Профиль соединяет права, снимок и общий расчёт мастера/анкеты. */
 final class CharacterProfile
@@ -31,7 +31,7 @@ final class CharacterProfile
         $rows = $rows->take(30);
         return ['roleplayer' => (new RoleplayerStatistics($this->db))->read($userId),
             'characters' => $rows->map(fn ($row) => [
-            'id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name), 'status' => $row->status,
+            'avatar' => $row->avatar ?? null, 'id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name), 'status' => $row->status,
         ])->all(), 'next_before' => $hasMore ? (int) $rows->last()->id : null];
     }
 
@@ -53,12 +53,13 @@ final class CharacterProfile
             $visibility = new CharacterVisibility();
             $reader = new CharacterStateReader($this->db);
             $state = $reader->read($id, fn (array $character) => $visibility->assertVisible($character, $actor));
-            $snapshot = (new CharacterSnapshotBuilder($reader, DevelopmentRules::defaults()))->fromState($state);
-            $calculation = CharacterCalculationBuilder::defaults()->calculate($snapshot);
+            $rules = (new DevelopmentConfigurationStore($this->db))->read();
+            $snapshot = (new CharacterSnapshotBuilder($reader, $rules->learning()))->fromState($state);
+            $calculation = CharacterCalculationBuilder::defaults($rules)->calculate($snapshot);
             $data = $snapshot->jsonSerialize();
             // Публичный заголовок разрешаем явным списком; не публикуем внутренние настройки создания.
             $data['character'] = array_intersect_key($snapshot->character, array_flip([
-                'id', 'user_id', 'first_name', 'last_name', 'age', 'status', 'revision',
+                'id', 'user_id', 'first_name', 'last_name', 'age', 'avatar', 'status', 'revision',
                 'literature_approved', 'discussion_id', 'mechanics_status', 'literature_status',
             ]));
             $data['character']['race'] = array_intersect_key($snapshot->character['race'], array_flip(['id', 'name', 'icon', 'rules_url']));
@@ -77,14 +78,15 @@ final class CharacterProfile
             $effectSkills = $skillIds ? array_map(fn (array $row) => ['id' => $row['id'], 'name' => $row['name']],
                 (new CatalogRegistry($this->db))->definitionsFor('skills', $skillIds)) : [];
             $canDevelop = $snapshot->character['status'] === 'active' && (int) $snapshot->character['user_id'] === (int) $actor->id;
-            $development = $canDevelop ? (new CreationCatalog($this->db))->read(fn (array $catalog) =>
-                (new ProgressionOptions())->evaluate($snapshot, $catalog['definitions'], $catalog['configuration'])
-                    + ['rules_hash' => $catalog['rules_hash']]) : null;
+            $catalog = $canDevelop ? (new CreationCatalog($this->db))->read(fn (array $catalog) => $catalog) : null;
+            $development = $catalog ? (new ProgressionOptions($catalog['development']))->evaluate($snapshot, $catalog['definitions'], $catalog['configuration'])
+                    + ['rules_hash' => $catalog['rules_hash']] : null;
             return [
                 'roleplayer' => (new RoleplayerStatistics($this->db))->read((int) $snapshot->character['user_id']),
                 'snapshot' => $data, 'calculation' => $calculation,
                 'lookups' => ['attributes' => $attributes, 'skills' => $effectSkills],
                 'development' => $development,
+                'learning' => $catalog ? \Maxcuso\Roleplay\Character\Progression\SpellLearning::options($snapshot, $catalog) : null,
                 'permissions' => ['can_equip' => $visibility->canEquip($snapshot->character, $actor),
                     'can_manage' => $snapshot->character['status'] === 'active' && \Maxcuso\Roleplay\Character\Moderation\ReviewPermissions::staff($actor)],
                 'history' => $this->history($id, $snapshot->character, $actor),

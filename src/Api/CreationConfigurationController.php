@@ -32,12 +32,12 @@ final class CreationConfigurationController implements RequestHandlerInterface
                             'sources' => (new \Maxcuso\Roleplay\Catalog\Shared\CatalogRegistry($this->db))->definitionsFor('sources'),
                         ]]));
             }
-            if ($request->getMethod() !== 'PUT') throw new ApiProblem('invalid_request', 'Неизвестная операция.', 400);
+            if ($request->getMethod() !== 'PUT') throw new ApiProblem('invalid_request', 'Не удалось определить действие. Попробуйте обновить страницу', 400);
             $body = CreationRequest::body($request->getParsedBody(), ['revision', 'configuration']);
-            if (!is_array($body['configuration'] ?? null)) throw new ApiProblem('invalid_request', 'Нужен объект настроек.', 400);
+            if (!is_array($body['configuration'] ?? null)) throw new ApiProblem('invalid_request', 'Не удалось обработать настройки: ожидается объект JSON. Попробуйте обновить страницу', 400);
             $tagId = $body['configuration']['application']['tag_id'] ?? null;
             if ($tagId !== null && !\Flarum\Tags\Tag::query()->where('id', $tagId)->exists()) {
-                throw new ApiProblem('application_tag_missing', 'Тег не найден.');
+                throw new ApiProblem('application_tag_missing', 'Раздел не найден. Обновите список и выберите доступный раздел');
             }
             return ApiResponse::data($store->save($actor, CreationRequest::revision($body['revision'] ?? null), $body['configuration']));
         } catch (ApiProblem $problem) {

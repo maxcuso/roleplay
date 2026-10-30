@@ -38,11 +38,13 @@ if (!preg_match('/^rpn_[0-9a-f]{6}_$/D', $testPrefix) || $testPrefix === $origin
     throw new RuntimeException('Небезопасный тестовый префикс.');
 }
 $db = new ($originalDb::class)($originalDb->getPdo(), $originalDb->getDatabaseName(), $testPrefix, $originalDb->getConfig());
+// Как у подключения Flarum: послефиксационные callbacks работают и на изолированной БД.
+$db->setTransactionManager(new \Illuminate\Database\DatabaseTransactionsManager());
 $schema = $db->getSchemaBuilder();
-$migration = require __DIR__.'/../migrations/2026_10_02_000001_create_base_catalogs.php';
-$ranks = require __DIR__.'/../migrations/2026_10_09_000001_add_ranks.php';
-$grantMigration = require __DIR__.'/../migrations/2026_10_08_000001_track_creation_grants.php';
-$purposeMigration = require __DIR__.'/../migrations/2026_10_08_000002_add_item_purposes.php';
+$migration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
+$ranks = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
+$grantMigration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_08_000001_track_creation_grants.php';
+$purposeMigration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_08_000002_add_item_purposes.php';
 
 function check(bool $ok, string $message): void {
     if (!$ok) throw new RuntimeException($message);
@@ -60,10 +62,16 @@ try {
     $ranks['up']($schema);
     $grantMigration['up']($schema);
     $purposeMigration['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_09_000002_inline_effects.php')['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_10_000001_fractional_item_prices.php')['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_10_000003_fractional_spell_distances.php')['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_17_000001_race_presentation.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_22_000002_race_quote_image.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_25_000001_character_avatar.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000002_inline_effects.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000001_fractional_item_prices.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000003_fractional_spell_distances.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000002_starting_spells.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000003_literature_contents.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_12_000002_development_configuration.php')['up']($schema);
     check($db->table('roleplay_attributes')->count() === 0, 'Schema contains no artwork or game definitions');
     $store = new DefinitionStore($db, new CatalogRevision($db));
     $attributes = new AttributeCatalog($store);
@@ -138,16 +146,27 @@ try {
     } catch (\Illuminate\Database\QueryException $e) {
         echo "OK: database rejects invalid ages\n";
     }
-    $schema->create('roleplay_test_topics', function ($table): void {
-        $table->increments('id');
+    // Редактор выше использует реальные ID тем только для проверки ссылки.
+    // Временные темы не должны совпадать с ними на восстановленном форуме.
+    $testTopicStart = ((int) \Flarum\Discussion\Discussion::max('id')) + 1;
+    $schema->create('roleplay_test_topics', function ($table) use ($testTopicStart): void {
+        $table->increments('id')->startingValue($testTopicStart);
         $table->unsignedInteger('user_id');
         $table->unsignedInteger('tag_id');
         $table->string('title');
         $table->text('content');
         $table->boolean('hidden')->default(false);
     });
+    // Минимальный изолированный источник номеров постов для ссылок уведомлений.
+    // Художественные темы здесь имитирует TemporaryApplicationTopics.
+    $schema->create('posts', function ($table): void {
+        $table->increments('id');
+        $table->unsignedInteger('discussion_id');
+        $table->unsignedInteger('number');
+    });
     require __DIR__.'/TemporaryApplicationTopics.php';
     $topics = new TemporaryApplicationTopics($db);
+    require __DIR__.'/avatar-scenarios.php';
     require __DIR__.'/admin-catalog-scenarios.php';
     require __DIR__.'/moderation-scenarios.php';
     require __DIR__.'/forum-event-scenarios.php';
@@ -155,7 +174,9 @@ try {
     require __DIR__.'/management-scenarios.php';
     require __DIR__.'/application-scenarios.php';
     require __DIR__.'/mechanics-edit-scenarios.php';
-    (require __DIR__.'/../migrations/2026_10_10_000002_roleplayer_statistics.php')['down']($schema);
+    require __DIR__.'/spell-learning-scenarios.php';
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_12_000002_development_configuration.php')['down']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000002_roleplayer_statistics.php')['down']($schema);
     $grantMigration['down']($schema);
     $purposeMigration['down']($schema);
     $ranks['down']($schema);
@@ -165,15 +186,22 @@ try {
     $ranks['up']($schema);
     $grantMigration['up']($schema);
     $purposeMigration['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_09_000002_inline_effects.php')['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_10_000001_fractional_item_prices.php')['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_10_000003_fractional_spell_distances.php')['up']($schema);
-    (require __DIR__.'/../migrations/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_17_000001_race_presentation.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_22_000002_race_quote_image.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_25_000001_character_avatar.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000002_inline_effects.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000001_fractional_item_prices.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000003_fractional_spell_distances.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000002_starting_spells.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000003_literature_contents.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000002_roleplayer_statistics.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_12_000002_development_configuration.php')['up']($schema);
     check($db->table('roleplay_catalog_state')->value('revision') == 1, 'Clean reinstall recreates technical state');
     echo "Base catalogue checks passed.\n";
 } finally {
     // Удаляем только таблицы с проверенным уникальным префиксом этого теста.
-    foreach (['player_statistics', 'test_topics', 'character_events', 'operations', 'character_balances', 'character_choices', 'creation_drafts', 'actor_states', 'creation_config',
+    $schema->dropIfExists('posts');
+    foreach (['development_config', 'player_statistics', 'test_topics', 'character_events', 'operations', 'character_balances', 'character_choices', 'creation_drafts', 'actor_states', 'creation_config',
         'character_items', 'character_spells', 'character_perks', 'character_attributes', 'character_skills', 'character_weapon_proficiencies', 'characters', 'ranks', 'perk_effects', 'item_effects', 'effects', 'skill_levels', 'races', 'items', 'skills', 'weapon_proficiencies', 'spells', 'perks', 'perk_sources', 'item_types', 'magic_paths', 'attributes', 'catalog_state'] as $name) {
         $schema->dropIfExists('roleplay_'.$name);
     }

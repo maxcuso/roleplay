@@ -1,0 +1,13 @@
+Built-in imagegen.
+
+Use case: style-transfer.
+Asset: medieval fantasy heraldic banner for the College of Magic.
+Input image 1 is the old College emblem: adapt its recognizable owl sitting on an open book, with crescent moon above. Images 2 and 3 are STYLE REFERENCES ONLY for simplified flag heraldry, not content to copy.
+Produce a clean flat heraldic illustration, bold black outlines, large simple silhouettes, limited solid colors, symmetrical and frontal, no perspective. A stern silver/ivory horned owl with folded wings faces straight forward and grips a broad open gold book. Simplify the wing plumage to a few large graphic divisions. Pale cyan eyes with black pupils, no glow. A single small ivory crescent floats above the owl. Keep the owl and book prominent and easy to read at thumbnail scale.
+Field is entirely solid deep purple #352648. No shields within the flag, no ornamental border, no decorative gold frame, no city crown, no helmet, no letters or runes, no stars, no sparks, no nebula, no gradients, shading, texture or 3D.
+Canvas exactly 1200 wide by 1600 high, 3:4. The flag fills the complete canvas edge to edge. Straight top and sides; shallow swallowtail bottom: both lower corners extend to the image bottom, a small V notch rises 200px in the middle. Thin black outer contour. Transparent ONLY outside that lower notch; the purple field itself is fully opaque. Center the emblem with generous breathing room, no clipping. Do not turn this into a cute cartoon or a detailed painting.
+
+Original generated source: C:\Users\KusoT\.codex\generated_images\01a149af-703a-7770-91da-8fdb295c9ba6\exec-63ea913a-30ac-412f-8fd6-449c295b4dd9.png
+Final file: 1200x1600-full/collegium-v1.png
+Technical preparation: solid field #352648, full-bleed shallow swallowtail 1200x1600. Foreground artwork copied at original scale; no stretching or redrawing.
+

@@ -1,0 +1,10 @@
+<xsl:choose>
+  <xsl:when test="@available = 1">
+    <div class="RpEpisodeReceipt">
+      <div class="RpEpisodeReceipt-heading"><span class="RpEpisodeReceipt-mark" aria-hidden="true"><i class="icon fas fa-scroll"/></span><strong>Эпизод завершён</strong></div>
+      <xsl:if test="@quest_title"><div class="RpEpisodeReceipt-title"><xsl:value-of select="@quest_title"/></div></xsl:if>
+      <div class="RpEpisodeReceipt-list"><xsl:apply-templates select="RP_RECIPIENT"/></div>
+    </div>
+  </xsl:when>
+  <xsl:otherwise><span class="RpEpisodeReceipt-unavailable">Завершение эпизода</span></xsl:otherwise>
+</xsl:choose>

@@ -14,8 +14,8 @@ spl_autoload_register(function (string $class): void {
 $original = $container->make(\Illuminate\Database\ConnectionInterface::class);
 $prefix = 'rpn_'.bin2hex(random_bytes(3)).'_';
 $db = new ($original::class)($original->getPdo(), $original->getDatabaseName(), $prefix, $original->getConfig());
-$migration = require __DIR__.'/../migrations/2026_10_02_000001_create_base_catalogs.php';
-$ranks = require __DIR__.'/../migrations/2026_10_09_000001_add_ranks.php';
+$migration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
+$ranks = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
 function expectTransfer(bool $ok, string $message): void {
     if (!$ok) throw new RuntimeException($message);
     echo "OK: $message\n";
@@ -24,13 +24,17 @@ $legacy = json_decode(file_get_contents(__DIR__.'/.runtime/legacy-catalogs.json'
 $plan = (new \Maxcuso\Roleplay\Transfer\LegacyCatalogPlan())->build($legacy);
 try {
     $migration['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_17_000001_race_presentation.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_22_000002_race_quote_image.php')['up']($db->getSchemaBuilder());
     $ranks['up']($db->getSchemaBuilder());
-    $grantMigration = require __DIR__.'/../migrations/2026_10_08_000001_track_creation_grants.php';
+    $grantMigration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_08_000001_track_creation_grants.php';
     $grantMigration['up']($db->getSchemaBuilder());
-    (require __DIR__.'/../migrations/2026_10_08_000002_add_item_purposes.php')['up']($db->getSchemaBuilder());
-    (require __DIR__.'/../migrations/2026_10_09_000002_inline_effects.php')['up']($db->getSchemaBuilder());
-    (require __DIR__.'/../migrations/2026_10_10_000001_fractional_item_prices.php')['up']($db->getSchemaBuilder());
-    (require __DIR__.'/../migrations/2026_10_10_000003_fractional_spell_distances.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_08_000002_add_item_purposes.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000002_inline_effects.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000001_fractional_item_prices.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000003_fractional_spell_distances.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000002_starting_spells.php')['up']($db->getSchemaBuilder());
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000003_literature_contents.php')['up']($db->getSchemaBuilder());
     // Ошибка в конце импорта должна отменить в том числе ранее вставленные характеристики/перки.
     $bad = $plan;
     $bad['catalogs']['races'][0]['input']['rules']['fixed_perk_ids'] = [999999];

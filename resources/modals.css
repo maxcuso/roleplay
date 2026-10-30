@@ -1,0 +1,35 @@
+/* Единая шапка всех окон Roleplay. Размер и шрифт меняем только здесь.
+ * Симметричные отступы центрируют заголовок относительно окна и оставляют место крестику.
+ * Ширину и высоту самих окон задают их разделы. */
+.RpModal .Modal-header { padding: 20px 48px; text-align: center; flex-shrink: 0; }
+.RpModal .Modal-header h3 { margin: 0; font-family: Arial, sans-serif; font-size: 20px; line-height: 1.35; font-weight: 400; text-align: center; color: var(--text-color); }
+.RpModalHeading { display: inline-flex; align-items: flex-start; gap: 10px; max-width: 100%; vertical-align: top; }
+.RpModalHeading-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 22px; height: 27px; font-size: 18px; color: inherit; }
+.RpModalHeading-icon > .icon { margin: 0; }
+.RpModalHeading-text { min-width: 0; overflow-wrap: anywhere; }
+
+/* Стандартные предупреждения в формах не прилипают к соседним полям и кнопкам. */
+.RpModal .Alert--warning { margin-block: 18px 12px; max-width: 100%; box-sizing: border-box; }
+
+/* Уведомления находятся вне Modal: цвет стрелки наследуется от самого Alert. */
+.Alert .Alert-controls .Button.RpFeedback-refresh {
+  display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px;
+  min-width: 28px; padding: 0; margin: 0 4px; border: 0; border-radius: 50%; box-shadow: none;
+  background: transparent; color: inherit; font-size: 14px; line-height: 1; vertical-align: middle;
+}
+.Alert .Alert-controls .Button.RpFeedback-refresh:hover:not(:disabled),
+.Alert .Alert-controls .Button.RpFeedback-refresh:active:not(:disabled) { background: color-mix(in srgb, currentColor 16%, transparent); color: inherit; }
+.Alert .Alert-controls .Button.RpFeedback-refresh:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.Alert .Alert-controls .Button.RpFeedback-refresh:disabled { opacity: .45; }
+.Alert .RpFeedback-refresh > .icon { margin: 0; color: inherit; }
+
+@media (max-width: 767px) {
+  .RpModal .Modal-content { padding-top: 0; }
+  .RpModal .Modal-header { padding: 16px 44px; }
+  /* Ядро переносит App-* элементы в шапку приложения на телефоне.
+   * Отменяем только эти important-правила, чтобы заголовок и закрытие остались в окне. */
+  .RpModal .Modal-header .App-titleControl { position: static !important; top: auto !important; left: auto; right: auto;
+    width: auto; height: auto; max-width: none; margin: 0; padding: 0; overflow: visible; white-space: normal;
+    text-overflow: clip; color: var(--text-color) !important; }
+  .RpModal .Modal-close { position: absolute !important; top: 8px !important; right: 8px; left: auto; bottom: auto; width: auto; height: auto; }
+}

@@ -1,0 +1,30 @@
+/* Компактное меню нижней панели. Popover выводит его за пределы overflow toolbar. */
+.TextEditor-toolbar .RpModeratorTools { vertical-align: middle; }
+.TextEditor-toolbar .RpModeratorTools > .Dropdown-toggle > .Button-icon,
+.TextEditor-toolbar .RpCheckRoll-button > .Button-icon { font-size: 1em; line-height: 1; }
+/* Те же размеры, цвета и тень, что у установленной панели Magicbb «Больше». */
+.RpModeratorTools > .RpModeratorMenu.Dropdown-menu { position: fixed; inset: auto; margin: 0; width: max-content; min-width: unset; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow-y: auto; overflow-x: hidden; white-space: normal; padding: 10px; border: 1px solid rgba(0, 0, 0, .06); border-radius: 12px; background: var(--control-bg); color: var(--muted-color); font-size: inherit; box-shadow: 0 10px 30px rgba(0, 0, 0, .15); }
+.dark .RpModeratorTools > .RpModeratorMenu.Dropdown-menu { border-color: rgba(255, 255, 255, .08); box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+.RpModeratorTools.open > .RpModeratorMenu { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.RpModeratorTools.open > .Dropdown-toggle { background: transparent; color: var(--primary-color); }
+.RpModeratorMenu.Dropdown-menu > li { display: block; flex: 0 0 auto; width: auto; margin: 0; padding: 0; white-space: normal; }
+.RpModeratorMenu.Dropdown-menu .Button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 10px; font-size: inherit; background: transparent; color: var(--muted-color); transition: background .2s ease, color .2s ease; }
+.RpModeratorMenu.Dropdown-menu .Button:hover:not(:disabled),
+.RpModeratorMenu.Dropdown-menu .Button:focus-visible { background: var(--primary-bg); color: var(--primary-color); outline: none; }
+.RpModeratorMenu .Button .icon { margin: 0; font-size: inherit; line-height: 1; }
+
+/* Создание использует штатный слой ModalManager за пределами toolbar с overflow. */
+.QuestEventCreateModal { width: 640px; max-width: calc(100vw - 32px); margin: 32px auto; }
+.QuestEventCreateModal .Modal-content { display: flex; flex-direction: column; max-height: calc(100dvh - 64px); overflow: hidden; }
+.QuestEventCreateModal .QuestEventEditForm { display: flex; min-height: 0; margin: 0; padding: 0; border: 0; max-width: none; }
+.QuestEventCreateModal .QuestEventForm-layout { display: flex; flex-direction: column; min-height: 0; width: 100%; }
+.QuestEventCreateModal .QuestEventForm-body { min-height: 0; max-height: none; }
+.QuestEventCreateModal .QuestEventForm-footer { flex-shrink: 0; }
+@media (max-width: 767px) {
+  html:has(.QuestEventCreateModal) { scrollbar-gutter: auto; }
+  .ModalManager:has(.QuestEventCreateModal) { scrollbar-gutter: auto; overflow: hidden; }
+  .QuestEventCreateModal { position: fixed; inset: 0; width: 100vw; max-width: 100vw; margin: 0; }
+  .QuestEventCreateModal .Modal-content { height: 100dvh; max-height: 100dvh; border-radius: 0; }
+  .QuestEventCreateModal .QuestEventEditForm { flex: 1; }
+  .QuestEventCreateModal .QuestEventForm-body { flex: 1; }
+}

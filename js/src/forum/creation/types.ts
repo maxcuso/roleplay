@@ -12,7 +12,7 @@ export const steps: {key: CreationStep; name: string; icon: UiIconName}[] = [
 ];
 export type CreationStep = 'basics' | 'attributes' | 'training' | 'perks' | 'spells' | 'loadout' | 'review';
 export interface CreationPayload {
-  first_name: string; last_name: string; age: number | null; race_id: number | null;
+  avatar?: string | null; first_name: string; last_name: string; age: number | null; race_id: number | null;
   base_attributes: Record<string, number | null>; racial_attributes: string[];
   skills: number[]; proficiencies: number[]; racial_proficiency_ids: number[];
   perk_ids: number[]; spell_ids: number[]; racial_spell_ids: number[]; loadout: Record<string, string[]>;

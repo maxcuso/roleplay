@@ -7,6 +7,7 @@ namespace Maxcuso\Roleplay\Creation;
 use Illuminate\Database\ConnectionInterface;
 use Maxcuso\Roleplay\Catalog\Shared\CatalogRegistry;
 use Maxcuso\Roleplay\Catalog\Shared\CatalogRevision;
+use Maxcuso\Roleplay\Rules\DevelopmentConfigurationStore;
 
 /** Использует нормализаторы новых каталогов, а не второй SQL-загрузчик игровых определений. */
 final class CreationCatalog
@@ -23,15 +24,14 @@ final class CreationCatalog
                 $definitions[$key] = array_column($registry->definitionsFor($key), null, 'id');
             }
             $configuration = (new CreationConfigurationStore($this->db))->read();
-            // Правка файлов правил тоже делает подтверждение устаревшим, даже без SQL-миграции.
+            $development = (new DevelopmentConfigurationStore($this->db))->read();
+            // Редактирование баланса инвалидирует старое подтверждение мастера и повышения.
             $hash = hash('sha256', json_encode([
                 $configuration,
-                require __DIR__.'/../../resources/rules/development.php',
-                require __DIR__.'/../../resources/rules/stats.php',
-                require __DIR__.'/../../resources/rules/experience.php',
+                $development->values,
             ], JSON_THROW_ON_ERROR));
             return $action(['revision' => $revision, 'rules_hash' => $hash,
-                'configuration' => $configuration, 'definitions' => $definitions]);
+                'configuration' => $configuration, 'development' => $development, 'definitions' => $definitions]);
         });
     }
 

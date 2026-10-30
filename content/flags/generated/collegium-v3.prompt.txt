@@ -1,0 +1,7 @@
+Built-in imagegen.
+
+Use case: precise-object-edit. Change ONLY the purple outer shield silhouette in the supplied College of Magic coat of arms from five sides to SEVEN sides. Preserve the existing owl, open gold book, crescent, colors, size and positions exactly. Canvas 1200x1600. The outline is a symmetric seven-sided shield with exactly these seven vertices in clockwise order: (160,6), (1039,6), (1193,250), (1140,1240), (599.5,1592), (59,1240), (6,250). Straight horizontal narrow top, two short outward-sloping upper edges to the broad shoulders, two long near-vertical inward-sloping side edges, then two diagonal edges meeting at a single bottom point. The two wide shoulder corners extend wider than the top two corners. Keep the book entirely inside the field without cropping. Solid uniform deep purple #352648, simple black outer outline. Transparent outside shield only; field fully opaque. No decorative border, crown, text, new symbols, glow or texture. Do not redesign or rescale the emblem.
+
+Generated source: C:\Users\KusoT\.codex\generated_images\01a149af-703a-7770-91da-8fdb295c9ba6\exec-f6ba8558-8cc3-4707-b390-14fedd4ea1bd.png
+Final preparation: exact 1200x1600 seven-vertex contour and uniform field #352648. Original v1 emblem retained at its original size and position without redrawing, distortion or clipping. Previous versions retained.
+

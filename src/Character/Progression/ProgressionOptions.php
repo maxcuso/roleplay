@@ -13,13 +13,14 @@ use Maxcuso\Roleplay\Rules\ProficiencyEligibility;
  */
 final class ProgressionOptions
 {
+    public function __construct(private readonly ?\Maxcuso\Roleplay\Rules\DevelopmentConfiguration $configuration = null) {}
     public function evaluate(CharacterSnapshot $snapshot, array $definitions, array $configuration): array
     {
-        $rules = DevelopmentRules::defaults();
+        $rules = DevelopmentRules::defaults($this->configuration);
         $attributes = [];
         foreach ($snapshot->attributes as $slug => $attribute) {
             $cost = $attribute['level'] < $rules->maximumAttributeLevel()
-                ? ExperienceCosts::forLevel($attribute['level'] + 1) : null;
+                ? ExperienceCosts::forLevel($attribute['level'] + 1, $this->configuration) : null;
             $enabled = $definitions['attributes'][$attribute['id']]['enabled'] ?? false;
             $attributes[] = ['id' => $attribute['id'], 'name' => $attribute['name'], 'icon' => $attribute['icon'],
                 'level' => $attribute['level'], 'cost' => $cost,
@@ -38,7 +39,7 @@ final class ProgressionOptions
                 $ownedSkills[$skill['id']] ?? 0, $this->remaining($snapshot, $attribute['id'], 'skill'),
                 array_values($definitions['perks']), $snapshot->ownedPerkIds());
             if ($result['allowed'] && $result['grant_perk'] && !$sourceAvailable) {
-                $result = ['allowed' => false, 'code' => 'skill_source_missing', 'reason' => 'Не настроен источник навыковых перков.'];
+                $result = ['allowed' => false, 'code' => 'skill_source_missing', 'reason' => 'Получение навыковых перков не настроено. Обратитесь к администратору'];
             }
             $skills[] = ['id' => $skill['id'], 'name' => $skill['name'], 'attribute_id' => $attribute['id'],
                 'level' => $ownedSkills[$skill['id']] ?? 0] + $result;

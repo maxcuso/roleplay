@@ -1,3 +1,4 @@
+import {clearInputFeedback} from '../../common/messageKind';
 import Component, {type ComponentAttrs} from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Icon from 'flarum/common/components/Icon';
@@ -50,7 +51,7 @@ export default class AttributeIconsPanel extends Component {
           disabled={disabled} onclick={() => void this.transfer('export')}/>
       </SettingsHeader>
       <SettingsFeedback state={state}/>
-      {state.data && <form onsubmit={(event: Event) => {event.preventDefault(); void state.save();}}>
+      {state.data && <form oninput={() => clearInputFeedback(state)} onchange={() => clearInputFeedback(state)} onsubmit={(event: Event) => {event.preventDefault(); void state.save();}}>
         <div className="RpAttributeIcons-row">
           {state.data.rows.map(row => <label key={row.id} className="RpSettings-field">
             <span className="RpForm-label"><Icon name={catalogueIcon(row.icon)}/> {row.name}</span>

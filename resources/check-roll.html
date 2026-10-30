@@ -1,0 +1,6 @@
+<xsl:choose><xsl:when test="@available = 1">
+  <div class="RpCheck RpCheck--{@outcome}" title="{@character}">
+    <div class="RpCheck-heading"><span class="RpCheck-mark" aria-hidden="true"><xsl:if test="@outcome = 'neutral'"><i class="icon fas fa-dice"/></xsl:if></span><strong>Бросок проверки «<xsl:value-of select="@name"/>»</strong><xsl:if test="@difficulty"><span class="RpCheck-difficulty"><xsl:value-of select="@difficulty"/></span></xsl:if></div>
+    <div class="RpCheck-result"><span class="RpCheck-dice" data-check-first="{@first}" data-check-second="{@second}"><xsl:value-of select="@first"/> + <xsl:value-of select="@second"/></span><span title="{@hint}"><xsl:value-of select="@bonus"/></span><span>=</span><strong><xsl:value-of select="@total"/></strong></div>
+  </div>
+</xsl:when><xsl:otherwise><span class="RpCheck-unavailable">Бросок проверки</span></xsl:otherwise></xsl:choose>

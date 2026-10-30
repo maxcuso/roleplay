@@ -28,7 +28,7 @@ final class CatalogJsonController implements RequestHandlerInterface
             }
             $body = CatalogRequest::body($request->getParsedBody());
             FieldValues::allowed($body, ['document', 'mode', 'revision', 'apply']);
-            if (!is_array($body['document'] ?? null)) FieldValues::invalid('Нужен JSON-объект справочников.');
+            if (!is_array($body['document'] ?? null)) FieldValues::invalid('Укажите справочники в виде объекта JSON');
             return ApiResponse::data($this->transfer->import($actor, $body['document'],
                 FieldValues::text($body['mode'] ?? 'skip', 'Режим', 16, true),
                 CatalogRequest::positive($body['revision'] ?? null, 'Версия справочников'),

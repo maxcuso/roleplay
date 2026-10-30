@@ -27,17 +27,17 @@ final class AttributeIcons
     {
         Access::admin($actor);
         return (new CatalogRevision($this->db))->write($revision, function () use ($rows): array {
-            if (!array_is_list($rows) || count($rows) > 100) FieldValues::invalid('Нужен список иконок, не более 100 характеристик.');
+            if (!array_is_list($rows) || count($rows) > 100) FieldValues::invalid('Не удалось сохранить иконки: ожидается список не более чем для 100 характеристик. Попробуйте обновить страницу');
             $changes = [];
             foreach ($rows as $row) {
-                if (!is_array($row)) FieldValues::invalid('Некорректная настройка иконки.');
+                if (!is_array($row)) FieldValues::invalid('Не удалось обработать настройку иконки. Попробуйте обновить страницу');
                 FieldValues::allowed($row, ['id', 'icon']);
                 $id = FieldValues::integer($row['id'] ?? null, 'Характеристика', 1, PHP_INT_MAX);
-                if (array_key_exists($id, $changes)) FieldValues::invalid('Характеристика повторяется.');
+                if (array_key_exists($id, $changes)) FieldValues::invalid('Характеристика указана несколько раз. Уберите повторную запись');
                 $changes[$id] = FieldValues::icon($row['icon'] ?? null);
             }
             $found = $this->db->table('roleplay_attributes')->whereIn('id', array_keys($changes))->count();
-            if ($found !== count($changes)) FieldValues::invalid('Одна из характеристик больше не существует. Обнови настройки.');
+            if ($found !== count($changes)) FieldValues::invalid('Одна из характеристик больше не существует');
             // Все значения проверены до первой записи; ошибочная иконка отменяет всю форму.
             foreach ($changes as $id => $icon) $this->db->table('roleplay_attributes')->where('id', $id)
                 ->update(['icon' => $icon, 'updated_at' => gmdate('Y-m-d H:i:s')]);

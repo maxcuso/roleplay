@@ -21,13 +21,15 @@ $prefix = 'rpn_'.bin2hex(random_bytes(3)).'_';
 if (!preg_match('/^rpn_[0-9a-f]{6}_$/D', $prefix) || $prefix === $original->getTablePrefix()) throw new RuntimeException('Unsafe prefix');
 $db = new ($original::class)($original->getPdo(), $original->getDatabaseName(), $prefix, $original->getConfig());
 $schema = $db->getSchemaBuilder();
-$base = require __DIR__.'/../migrations/2026_10_02_000001_create_base_catalogs.php';
-$ranks = require __DIR__.'/../migrations/2026_10_09_000001_add_ranks.php';
-$purpose = require __DIR__.'/../migrations/2026_10_08_000002_add_item_purposes.php';
+$base = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
+$ranks = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
+$purpose = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_08_000002_add_item_purposes.php';
 $admin = User::findOrFail(1);
 $assert = function (bool $ok, string $message): void {if (!$ok) throw new RuntimeException($message);};
 try {
     $base['up']($schema); $ranks['up']($schema); $purpose['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000002_starting_spells.php')['up']($schema);
+    (require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000003_literature_contents.php')['up']($schema);
     $registry = new CatalogRegistry($db);
     $create = fn (string $key, array $fields) => $registry->get($key)->save(null,
         (int) $db->table('roleplay_catalog_state')->value('revision'), $fields, $admin)['id'];

@@ -1,7 +1,5 @@
 /* Окно выдачи: поверхности и цвета берутся из темы форума, размеры списка не зависят от количества записей. */
 .RpManagementModal { width: 480px; max-width: calc(100vw - 24px); }
-.RpManagementModal .Modal-header h3 { font-size: 20px; font-weight: 700; }
-.RpManagementModal .Modal-header h3 .icon { margin-right: 8px; }
 .RpManagement { padding: 20px 24px 24px; }
 .RpManagement-character { margin: 0 0 18px; color: var(--muted-color); }
 .RpManagement-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 4px; background: var(--control-bg); border-radius: 10px; }
@@ -21,8 +19,7 @@
 .RpManagement-resources input { font-size: 20px; font-weight: 700; }
 .RpManagement-result { display: flex; align-items: center; gap: 8px; color: var(--muted-color); font-variant-numeric: tabular-nums; }
 .RpManagement-result strong { color: var(--text-color); font-size: 18px; }
-.RpManagement-result.is-invalid strong, .RpManagement-error { color: #b64b4b; }
-.RpManagement-error { grid-column: 1 / -1; }
+.RpManagement-result.is-invalid strong { color: #b64b4b; }
 .RpManagement-listToolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .RpManagement-listToolbar .FormControl { flex: 1; width: 100%; min-width: 0; }
 .RpManagement-listToolbar .Button { flex-shrink: 0; }

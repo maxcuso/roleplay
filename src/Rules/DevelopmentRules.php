@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Maxcuso\Roleplay\Rules;
 
-/** Единый набор порогов для будущих мастера и профиля. Не читает и не изменяет состояние персонажа. */
+/** Единый набор порогов для мастера и профиля. Не читает и не изменяет состояние персонажа. */
 final class DevelopmentRules
 {
     public function __construct(private readonly array $configuration)
@@ -33,7 +33,7 @@ final class DevelopmentRules
                 $this->invalid();
             }
             foreach (['skill_choices', 'proficiency_choices'] as $kind) {
-                $this->validateChoiceLevels($rules[$kind] ?? null);
+                $this->validateChoiceLevels($rules[$kind] ?? null, array_key_exists('choice_entries', $rules));
             }
             $automatic = $rules['automatic_proficiencies'] ?? null;
             if (!is_array($automatic)) {
@@ -57,8 +57,9 @@ final class DevelopmentRules
     }
 
     /** Загрузка файла отделена от расчётов. В тестах можно явно передать другой набор правил. */
-    public static function defaults(): self
+    public static function defaults(?DevelopmentConfiguration $configuration = null): self
     {
+        if ($configuration !== null) return $configuration->learning();
         return new self(require __DIR__.'/../../resources/rules/development.php');
     }
 
@@ -96,6 +97,25 @@ final class DevelopmentRules
     public function proficiencyChoiceLevels(string $slug): array
     {
         return $this->attribute($slug)['proficiency_choices'];
+    }
+
+    /** Права на обучение имеют собственные ключи и порядковые номера, даже на одном уровне. */
+    public function choiceSlots(string $slug): array
+    {
+        $attribute = $this->attribute($slug);
+        if (isset($attribute['choice_entries'])) return $attribute['choice_entries'];
+        $result = [];
+        foreach (['skill' => 'skill_choices', 'proficiency' => 'proficiency_choices'] as $kind => $field) {
+            foreach ($attribute[$field] as $level) $result[] = ['kind' => $kind, 'threshold' => $level,
+                'rule_key' => "$slug:$kind:$level", 'rule_ordinal' => 1];
+        }
+        return $result;
+    }
+
+    /** Повышение выдаёт только награду достигнутого уровня, не новые правила задним числом. */
+    public function automaticProficienciesAt(string $slug, int $level): array
+    {
+        return $this->attribute($slug)['automatic_proficiencies'][$level] ?? [];
     }
 
     /** Число заработанных выборов, не остаток. Расходы учитывает состояние персонажа, не этот расчёт. */
@@ -147,7 +167,7 @@ final class DevelopmentRules
         }
     }
 
-    private function validateChoiceLevels(mixed $levels): void
+    private function validateChoiceLevels(mixed $levels, bool $multiple = false): void
     {
         if (!is_array($levels) || !array_is_list($levels)) {
             $this->invalid();
@@ -155,7 +175,7 @@ final class DevelopmentRules
         $previous = 0;
         foreach ($levels as $level) {
             // Последний уровень зарезервирован под особую награду.
-            if (!is_int($level) || $level <= $previous || $level >= $this->maximumAttributeLevel()) {
+            if (!is_int($level) || $level < 1 || ($multiple ? $level < $previous : $level <= $previous) || $level >= $this->maximumAttributeLevel()) {
                 $this->invalid();
             }
             $previous = $level;

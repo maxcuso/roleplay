@@ -1,3 +1,4 @@
+import {clearInputFeedback} from '../../common/messageKind';
 import Component, {type ComponentAttrs} from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
 import Icon from 'flarum/common/components/Icon';
@@ -24,7 +25,7 @@ export default class ApplicationSettingsPanel extends Component {
       <SettingsHeader title="Анкеты и проверка" icon="review.application"
         caption="Тема создаётся автоматически; литературную часть отправляет игрок." disabled={disabled} refresh={() => void state.load()}/>
       <SettingsFeedback state={state}/>
-      {data && <form onsubmit={(event: Event) => {event.preventDefault(); void state.save();}}>
+      {data && <form oninput={() => clearInputFeedback(state)} onchange={() => clearInputFeedback(state)} onsubmit={(event: Event) => {event.preventDefault(); void state.save();}}>
         <div className="RpSettings-grid">
           <label className="RpSettings-field"><FieldLabel label="Тег анкет" icon="fields.name"/>
             <select className="FormControl" value={String(data.application.tag_id ?? '')} disabled={disabled}

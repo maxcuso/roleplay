@@ -1,3 +1,4 @@
+import Feedback from '../../common/components/Feedback';
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
@@ -16,6 +17,7 @@ import showModal from '../../common/showModal';
 import type ProfileState from './ProfileState';
 import CreationWizardModal from '../creation/CreationWizardModal';
 import RoleplayerSummary from './RoleplayerSummary';
+import LearningPanel from './LearningPanel';
 
 interface Attrs {state: ProfileState; picker?: boolean; own?: boolean}
 type ProfileTab = 'character' | 'training' | 'craft';
@@ -58,8 +60,8 @@ export default class ProfilePanel extends Component<Attrs> {
       || view?.review?.literature_status === 'changes_requested';
     return <div className="RpProfile">
       {state.loading ? <p role="status">Загрузка персонажей…</p> : <>
-        {state.listError && <p role="alert">{state.listError} <Button className="Button"
-          onclick={() => void state.loadList()}>Повторить</Button></p>}
+        {state.listError && <Feedback message={state.listError}
+          refresh={{label: 'Обновить список персонажей', run: () => void state.loadList()}}/>}
         {state.roleplayer && <RoleplayerSummary stats={state.roleplayer}/>}
         {view && <ReviewPanel state={state}/>}
         {view && active && <nav className="RpProfile-tabs" aria-label="Разделы персонажа">
@@ -69,23 +71,25 @@ export default class ProfilePanel extends Component<Attrs> {
             disabled={state.changing} onclick={() => {this.selectedTab = tab.id;}}>{tab.label}</Button>)}
         </nav>}
         {this.toolbar()}
-        {this.attrs.picker && !state.listError && !state.characters.length && <p>
-          {this.attrs.own ? 'У тебя пока нет созданных персонажей.' : 'Нет доступных для просмотра персонажей.'}
-          {this.attrs.own && app.forum.attribute('roleplayCanCreate') && <Button className="Button"
-            onclick={() => showModal(CreationWizardModal, {})}>Создать персонажа</Button>}
-        </p>}
+        {this.attrs.picker && !state.listError && !state.characters.length && <div className="RpProfile-empty">
+          <h3>{this.attrs.own ? 'У вас пока нет персонажей' : 'Нет доступных для просмотра персонажей'}</h3>
+          {this.attrs.own && app.forum.attribute('roleplayCanCreate') && <>
+            <p>Мастер поможет выбрать расу, распределить характеристики и подобрать способности</p>
+            <Button className="Button Button--primary" icon={uiIcon('actions.create')}
+              onclick={() => void CreationWizardModal.open()}>Создать персонажа</Button>
+          </>}
+        </div>}
         {state.nextBefore !== null && <Button className="Button Button--link" loading={state.loadingMore}
           disabled={state.loadingMore || state.changing} onclick={() => void state.loadList(true)}>Показать ещё</Button>}
         {state.detailLoading && <p role="status">Загрузка анкеты…</p>}
-        {state.detailError && <p role="alert">{state.detailError} <Button className="Button"
-          onclick={() => state.selected !== null && void state.select(state.selected)}>Повторить</Button></p>}
-        {state.actionError && <p role="alert">{state.actionError}
-          {state.retryAvailable && <Button className="Button" disabled={state.changing}
-            onclick={() => void state.retryOperation()}>Повторить действие</Button>}
-          <Button className="Button" disabled={state.changing}
-            onclick={() => state.selected !== null && void state.select(state.selected)}>Обновить анкету</Button>
-        </p>}
-        {view && this.selectedTab !== 'character' && <div className="RpProfile-placeholder" role="status">
+        {state.detailError && <Feedback message={state.detailError}
+          refresh={{label: 'Обновить анкету', run: () => {if (state.selected !== null) void state.select(state.selected);}}}/>}
+        {state.actionError && <Feedback message={state.actionError} refresh={{
+          label: state.retryAvailable ? 'Повторить действие' : 'Обновить анкету', disabled: state.changing,
+          run: () => {if (state.retryAvailable) void state.retryOperation(); else if (state.selected !== null) void state.select(state.selected);},
+        }}/>}
+        {view && this.selectedTab === 'training' && <LearningPanel profile={state}/>}
+        {view && this.selectedTab === 'craft' && <div className="RpProfile-placeholder" role="status">
           <strong>{tabs.find(tab => tab.id === this.selectedTab)?.label}</strong><p>В разработке</p>
         </div>}
         {view && this.selectedTab === 'character' && <CharacterSheet review={view}

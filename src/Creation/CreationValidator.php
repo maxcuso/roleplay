@@ -17,17 +17,17 @@ final class CreationValidator
         $rows = [];
         $race = $catalog['races'][$payload['race_id']] ?? null;
         if ($payload['first_name'] === '') {
-            $errors[] = 'Укажи имя персонажа.';
+            $errors[] = 'Укажите имя персонажа';
         }
         if ($race === null || !$race['enabled']) {
-            $errors[] = 'Выбери доступную расу.';
+            $errors[] = 'Выберите доступную расу персонажа';
             $race = null;
         }
+        // Нижняя граница продолжительности жизни справочная и не ограничивает возраст.
         if ($payload['age'] === null) {
-            $errors[] = 'Укажи возраст.';
-        } elseif ($race !== null && (($race['min_age'] !== null && $payload['age'] < $race['min_age'])
-            || ($race['max_age'] !== null && $payload['age'] > $race['max_age']))) {
-            $errors[] = 'Возраст не подходит выбранной расе.';
+            $errors[] = 'Укажите возраст персонажа';
+        } elseif ($race !== null && $race['max_age'] !== null && $payload['age'] > $race['max_age']) {
+            $errors[] = 'Укажите возраст в пределах, допустимых для выбранной расы';
         }
         $basicErrors = $errors;
         $errors = [];
@@ -35,7 +35,7 @@ final class CreationValidator
         $definitions = array_column($catalog['attributes'], null, 'slug');
         foreach ($slugs as $slug) {
             if (!isset($definitions[$slug]) || !$definitions[$slug]['enabled']) {
-                $errors[] = 'Не настроена доступная характеристика: '.$slug.'.';
+                $errors[] = 'Характеристика '.$slug.' не настроена или недоступна. Обратитесь к администратору';
             }
         }
         $base = $payload['base_attributes'];
@@ -51,13 +51,13 @@ final class CreationValidator
             !is_int($value) || $value < $minimum || $value > $maximum);
         if (array_diff(array_keys($base), $slugs) || array_diff($slugs, array_keys($base))
             || $outsideRange || array_sum($values) !== $budget) {
-            $errors[] = 'Распредели '.$budget.' очков между характеристиками: каждая от '.$minimum.' до '.$maximum.'.';
+            $errors[] = 'Распределите '.$budget.' очков между характеристиками. Значение каждой должно быть от '.$minimum.' до '.$maximum;
         }
         $racial = $race['rules'] ?? [];
         $chosen = $payload['racial_attributes'];
         if (count($chosen) !== ($racial['attribute_count'] ?? 0)
             || array_diff($chosen, $racial['choice_attributes'] ?? [])) {
-            $errors[] = 'Проверь количество и доступность расовых прибавок.';
+            $errors[] = 'Проверьте количество выбранных расовых бонусов и характеристики, к которым они применяются';
         }
         foreach ($slugs as $slug) {
             if (!isset($definitions[$slug]) || !is_int($base[$slug] ?? null)) {
@@ -69,7 +69,7 @@ final class CreationValidator
             }
             $final = $base[$slug] + $bonus;
             if ($final < 1 || $final > $this->rules->maximumAttributeLevel()) {
-                $errors[] = 'Расовый бонус выводит характеристику за пределы 1–25.';
+                $errors[] = 'После расовых бонусов значение характеристики должно быть от 1 до 25. Измените распределение очков или бонусов';
                 continue;
             }
             $rows[$slug] = [

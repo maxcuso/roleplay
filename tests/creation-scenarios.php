@@ -32,8 +32,8 @@ $startPhysSkill = $create('skills', ['name' => 'Другой стартовый 
     'enabled' => true, 'levels' => [['level' => 1, 'perk_id' => $nextPerk],
         ['level' => 2, 'perk_id' => $lastPerk], ['level' => 3, 'perk_id' => $startPerk]]]);
 $startPath = $create('paths', ['name' => 'Стартовый путь', 'enabled' => true]);
-$fixedSpell = $create('spells', ['name' => 'Фиксированное V', 'magic_path_id' => $startPath, 'level' => 5, 'enabled' => true]);
-$chosenSpell = $create('spells', ['name' => 'Расовое IV', 'magic_path_id' => $startPath, 'level' => 4, 'enabled' => true]);
+$fixedSpell = $create('spells', ['name' => 'Фиксированное V', 'magic_path_id' => $startPath, 'level' => 5, 'enabled' => true, 'is_starting' => false]);
+$chosenSpell = $create('spells', ['name' => 'Расовое IV', 'magic_path_id' => $startPath, 'level' => 4, 'enabled' => true, 'is_starting' => false]);
 $ordinarySpell = $create('spells', ['name' => 'Обычное I', 'magic_path_id' => $startPath, 'level' => 1, 'enabled' => true]);
 $ordinarySpellTwo = $create('spells', ['name' => 'Другое I', 'magic_path_id' => $startPath, 'level' => 1, 'enabled' => true]);
 $startRace = $create('races', ['name' => 'Стартовая раса', 'enabled' => true, 'min_age' => 12, 'max_age' => 90,
@@ -78,7 +78,8 @@ $saveBody = fn (array $view, array $payload) => [
     'revision' => $view['draft']['revision'], 'catalog_revision' => $view['catalog']['revision'],
     'rules_hash' => $view['catalog']['rules_hash'], 'step' => 'review', 'payload' => $payload,
 ];
-$payload = ['first_name' => '  Новый  ', 'last_name' => '', 'age' => 20, 'race_id' => $startRace,
+$testAvatar = 'avatar-'.$admin->id.'-'.str_repeat('a', 32).'.webp';
+$payload = ['avatar' => $testAvatar, 'first_name' => '  Новый  ', 'last_name' => '', 'age' => 20, 'race_id' => $startRace,
     'base_attributes' => ['physiology' => 3, 'agility' => 2, 'magic' => 1, 'charisma' => 1],
     'skills' => [$startSkill, $startPhysSkill], 'racial_spell_ids' => [$chosenSpell], 'loadout' => ['gear' => ['kit']]];
 $oldBody = $saveBody($view, []);
@@ -86,6 +87,8 @@ $partial = $creationApi('draft', 'PUT', $oldBody)['data'];
 check($partial['draft']['revision'] === 1 && !$partial['preview']['valid'], 'Incomplete draft saves without grants');
 $creationApi('draft', 'PUT', $oldBody, 409);
 $view = $creationApi('draft', 'PUT', $saveBody($partial, $payload))['data'];
+check($view['draft']['payload']['avatar'] === $testAvatar
+    && $view['preview']['review']['snapshot']['character']['avatar'] === $testAvatar, 'Saved draft and review preserve the avatar');
 check($view['preview']['valid'] && $view['draft']['payload']['first_name'] === 'Новый', 'Valid draft is normalized and gets full server plan');
 check(count($view['preview']['perks']) === 2 && $view['preview']['perks'][0]['source_id'] === $raceSource,
     'Skill overlapping racial perk never duplicates it or changes first source');
@@ -117,6 +120,23 @@ $magicPlan = (new CreationPlanBuilder())->build((new CreationPayload())->normali
 check($magicPlan['valid'] && count($magicPlan['spells']) === 4 && count($magicPlan['proficiencies']) === 1
     && $magicPlan['proficiencies'][0]['slug'] === 'magic-weapon',
     'Magic 5 automatically grants its proficiency and two ordinary spells in addition to both racial spells');
+// Переключатель ограничивает и список, и серверную проверку обычного выбора.
+$nonStartingCatalog = $magicCatalog;
+$nonStartingCatalog['spells'][$ordinarySpell]['is_starting'] = false;
+$nonStartingPlan = (new CreationPlanBuilder())->build((new CreationPayload())->normalize($magicPayload),
+    $nonStartingCatalog, $catalogForLevels['configuration']);
+check(!$nonStartingPlan['valid'] && !in_array($ordinarySpell, $nonStartingPlan['spell_choices']['ordinary_ids'], true),
+    'Non-starting spell is hidden from the ordinary pool and rejected in a submitted selection');
+check(in_array($chosenSpell, $nonStartingPlan['spell_choices']['racial_ids'], true)
+    && in_array($fixedSpell, array_column($nonStartingPlan['spells'], 'id'), true),
+    'Starting flag does not restrict explicit racial choices or fixed racial grants');
+$racialPathCatalog = $nonStartingCatalog;
+$racialPathCatalog['races'][$startRace]['rules']['spell_choice_ids'] = [];
+$racialPathCatalog['races'][$startRace]['rules']['spell_choice_path_ids'] = [$startPath];
+$racialPathPlan = (new CreationPlanBuilder())->build((new CreationPayload())->normalize($magicPayload),
+    $racialPathCatalog, $catalogForLevels['configuration']);
+check(in_array($ordinarySpell, $racialPathPlan['spell_choices']['racial_ids'], true),
+    'Non-starting spells remain available to racial path-based choices');
 // Новые расовые владения: список задаёт раса, уровень характеристики не ограничивает получение.
 $proficiencyIds = array_column($catalogForLevels['definitions']['proficiencies'], 'id', 'slug');
 $racialCatalog = $catalogForLevels['definitions'];
@@ -283,6 +303,7 @@ try {
 $created = $creationApi('create', 'POST', $body, 201)['data'];
 $createdId = $created['character_id'];
 $createdHeader = $db->table('roleplay_characters')->find($createdId);
+check($createdHeader->avatar === $testAvatar, 'Character creation persists the avatar from its saved draft');
 $createdTopic = $db->table('roleplay_test_topics')->find($createdHeader->discussion_id);
 check($createdHeader->mechanics_status === 'review' && $createdHeader->literature_status === 'draft',
     'Mechanics starts under review; literature remains a draft until submitted');

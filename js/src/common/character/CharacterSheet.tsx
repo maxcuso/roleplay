@@ -1,5 +1,6 @@
 import Component from 'flarum/common/Component';
 import Icon from 'flarum/common/components/Icon';
+import Tooltip from 'flarum/common/components/Tooltip';
 import type Mithril from 'mithril';
 import type {Fields, Lookups, CatalogRow} from '../catalogData';
 import {object, text, lookup} from '../catalogData';
@@ -12,6 +13,8 @@ import ItemCard from '../cards/ItemCard';
 import SelectableEntityCard from '../cards/SelectableEntityCard';
 import {characterStatus} from './characterStatus';
 import RankLabel from './RankLabel';
+import characterAvatarUrl from './characterAvatarUrl';
+import {combatValue, combatHint} from './damagePresentation';
 
 interface Attrs {
   review: {snapshot: Fields; calculation: Fields};
@@ -29,14 +32,10 @@ export default class CharacterSheet extends Component<Attrs> {
   view(): Mithril.Children {
     const {snapshot, calculation} = this.attrs.review;
     const lookups = this.attrs.lookups, character = object(snapshot.character);
+    const avatar = characterAvatarUrl(character.avatar);
     const attributes = object(calculation.effective_attributes), balances = object(snapshot.balances);
     const stats = object(calculation.stats);
     const value = (key: string): number => Number(object(stats[key]).value ?? 0);
-    // Итог атаки уже включает базу, оружие и применимые эффекты: повторно базу не прибавляем.
-    // Без доступного оружия/заклинания показываем чистый вклад характеристики, а не «Нет».
-    const damageValue = (key: string): number => Number(
-      object(object(object(calculation.maximum_damage)[key]).damage).value
-      ?? object(object(calculation.base_damage)[key]).value ?? 0);
     const inventory = rows(snapshot.inventory), equipment = rows(snapshot.equipment);
     const skills = rows(snapshot.skills), proficiencies = rows(snapshot.proficiencies);
     const section = (title: string, caption: string, icon: Parameters<typeof uiIcon>[0], content: Mithril.Children,
@@ -62,14 +61,19 @@ export default class CharacterSheet extends Component<Attrs> {
     return <article className="RpSheet">
       <div className="RpSheet-summary">
         <div className="RpSheet-identity">
-          <strong>{text(character, 'first_name')} {text(character, 'last_name')}</strong>
           <span className={'RpSheet-status is-' + (this.attrs.statusLabel === 'Требуются исправления' ? 'changes_requested' : text(character, 'status'))}>• {(this.attrs.statusLabel ?? characterStatus(text(character, 'status'))).toLocaleUpperCase('ru')}</span>
-          <p>{text(object(character.race), 'name')} • {text(character, 'age')}
-            {character.rank ? <> • <RankLabel rank={object(character.rank)}/></> : ''}</p>
+          <div className="RpSheet-heading">
+            {avatar && <img className="RpSheet-avatar" src={avatar} alt="Аватар персонажа"/>}
+            <div>
+              <strong>{text(character, 'first_name')} {text(character, 'last_name')}</strong>
+              <p>{text(object(character.race), 'name')} • {text(character, 'age')}
+                {character.rank ? <> • <RankLabel rank={object(character.rank)}/></> : ''}</p>
+            </div>
+          </div>
           <div className="RpSheet-resources">
-            <span className="RpMana"><Icon name={uiIcon('resources.mana')}/> {value('mana_max')}</span>
-            <span className="RpStamina"><Icon name={uiIcon('resources.stamina')}/> {value('stamina_max')}</span>
-            <span><Icon name={uiIcon('resources.lifetimeExperience')}/> {Number(balances.experience_total ?? 0)}</span>
+            <Tooltip text="Запас маны"><span className="RpMana" tabindex="0"><Icon name={uiIcon('resources.mana')}/> {value('mana_max')}</span></Tooltip>
+            <Tooltip text="Запас выносливости"><span className="RpStamina" tabindex="0"><Icon name={uiIcon('resources.stamina')}/> {value('stamina_max')}</span></Tooltip>
+            <Tooltip text="Накопленный опыт"><span tabindex="0"><Icon name={uiIcon('resources.lifetimeExperience')}/> {Number(balances.experience_total ?? 0)}</span></Tooltip>
           </div>
         </div>
         <div className="RpSheet-numbers">
@@ -80,7 +84,8 @@ export default class CharacterSheet extends Component<Attrs> {
             const hint = text(row, 'name') + '\nПриобретено: ' + Number(acquired.level ?? row.level)
               + '\nИтог: ' + Number(row.level) + '\n' + details.join('\n');
             const control = this.attrs.attributeControl?.(Number(row.id));
-            return <div key={slug} title={hint} className={(control?.allowed ? 'is-available ' : '') + (control?.selected ? 'is-selected' : '')}
+            return <div key={slug} title={hint} data-attribute={slug}
+              className={(control?.allowed ? 'is-available ' : '') + (control?.selected ? 'is-selected' : '')}
               role={control?.allowed ? 'button' : undefined} tabindex={control?.allowed ? 0 : undefined}
               aria-pressed={control?.allowed ? control.selected : undefined} onclick={control?.allowed ? control.choose : undefined}
               onkeydown={control?.allowed ? (event: KeyboardEvent) => {
@@ -92,22 +97,25 @@ export default class CharacterSheet extends Component<Attrs> {
             </div>;
           })}</div>
           <div className="RpSheet-balances">
-            <span><Icon name={uiIcon('resources.activeExperience')}/> {Number(balances.experience_active ?? 0)}</span>
-            <span className="RpGold"><Icon name={uiIcon('resources.gold')}/> {Number(balances.gold ?? 0)}</span>
+            <Tooltip text="Активный опыт"><span tabindex="0"><Icon name={uiIcon('resources.activeExperience')}/> {Number(balances.experience_active ?? 0)}</span></Tooltip>
+            <Tooltip text="Золото"><span className="RpGold" tabindex="0"><Icon name={uiIcon('resources.gold')}/> {Number(balances.gold ?? 0)}</span></Tooltip>
           </div>
           {this.attrs.attributeActions}
         </div>
       </div>
       <div className="RpSheet-combat">{[
-        ['combat.melee', 'Урон в ближнем бою', damageValue('melee_damage')],
-        ['combat.ranged', 'Урон в дальнем бою / метательным оружием', damageValue('ranged_damage')],
-        ['combat.magic', 'Магический урон', damageValue('magic_damage')],
-        ['combat.defense', 'Игнорируемый урон', value('ignored_damage')],
-      ].map(([icon, title, amount]) => <span key={String(icon)} title={String(title)}>
-        <span className="RpSheet-combatValue"><Icon name={uiIcon(icon as Parameters<typeof uiIcon>[0])}/> {damage(Number(amount))}</span>
-      </span>)}</div>
+        ['combat.melee', 'Урон в ближнем бою', 'melee_damage'],
+        ['combat.ranged', 'Урон в дальнем бою / метательным оружием', 'ranged_damage'],
+        ['combat.magic', 'Урон магическим оружием', 'magic_damage'],
+        ['combat.defense', 'Игнорируемый урон', 'ignored_damage'],
+      ].map(([icon, title, stat]) => {
+        const result = combatValue(calculation, stat);
+        return <Tooltip key={icon} text={combatHint(result, title, stat === 'ignored_damage' ? 'Базовый игнорируемый урон' : 'Базовый урон')}>
+          <span tabindex="0"><span className="RpSheet-combatValue"><Icon name={uiIcon(icon as Parameters<typeof uiIcon>[0])}/> {damage(Number(result.value ?? 0))}</span></span>
+        </Tooltip>;
+      })}</div>
       {section('Навыки и владения', 'Что умеет персонаж и каким оружием владеет', 'sections.training',
-        this.attrs.trainingContent ?? <div className="RpSheet-training">{lookups.attributes.map(attribute => <div key={attribute.id}>
+        this.attrs.trainingContent ?? <div className="RpSheet-training">{lookups.attributes.map(attribute => <div key={attribute.id} data-attribute={text(attribute, 'slug')}>
           <Icon name={catalogueIcon(text(attribute, 'icon'))}/>
           {skills.filter(row => object(row.definition).attribute_id === attribute.id).map(row =>
             <span className="is-learned" key={'skill:' + row.id}>{text(row, 'name')} {roman(Number(row.level))}</span>)}

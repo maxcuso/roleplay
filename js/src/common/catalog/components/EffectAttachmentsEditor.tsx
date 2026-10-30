@@ -23,7 +23,7 @@ export default function EffectAttachmentsEditor({state, lookups, owner}: Context
       const attack = row.mechanic === 'stat' && isAttackTarget(row.stat);
       const fractional = ['percent', 'base_percent'].includes(String(row.operation)) || row.stat === 'carry_capacity' || row.mechanic === 'shop_discount';
       // При смене механики/цели очищаем только несовместимые настройки, а не соседние эффекты.
-      const mechanic = (value: string): void => update(index, {mechanic: value, operation: 'add',
+      const mechanic = (value: string): void => update(index, {mechanic: value, operation: effectMechanic(value).operations[0],
         stat: value === 'stat' ? 'mana_max' : null, attribute_id: null, skill_id: null,
         value: effectMechanic(value).numeric ? 0 : null, condition: effectConditions(value)[0], condition_text: null, scope: 'all', stack_group: null});
       const select = (field: string, label: string, icon: UiIconName, choices: Record<string, string>,

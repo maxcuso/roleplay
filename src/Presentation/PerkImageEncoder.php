@@ -14,10 +14,10 @@ final class PerkImageEncoder
 
     public function encode(string $bytes): array
     {
-        if ($bytes === '' || strlen($bytes) > self::MAX_BYTES) FieldValues::invalid('Выбери изображение не более 5 МБ.');
+        if ($bytes === '' || strlen($bytes) > self::MAX_BYTES) FieldValues::invalid('Выберите изображение размером не более 5 МБ');
         $mime = (new \finfo(FILEINFO_MIME_TYPE))->buffer($bytes);
         if (in_array($mime, ['image/png', 'image/webp'], true)) return $this->raster($bytes, $mime);
-        if (preg_match('/<!DOCTYPE|<!ENTITY|<\?(?!xml\s)/i', $bytes)) FieldValues::invalid('Недопустимое содержимое SVG.');
+        if (preg_match('/<!DOCTYPE|<!ENTITY|<\?(?!xml\s)/i', $bytes)) FieldValues::invalid('В SVG есть недопустимое содержимое. Удалите его или выберите другое изображение');
         $previous = libxml_use_internal_errors(true);
         try {
             $doc = new \DOMDocument();
@@ -28,11 +28,11 @@ final class PerkImageEncoder
             libxml_clear_errors();
             libxml_use_internal_errors($previous);
         }
-        if (!$valid) FieldValues::invalid('Допустимы SVG, PNG и WebP.');
+        if (!$valid) FieldValues::invalid('Выберите изображение в формате SVG, PNG или WebP');
         $sanitizer = new Sanitizer();
         $sanitizer->removeRemoteReferences(true);
         $clean = $sanitizer->sanitize($bytes);
-        if (!$clean) FieldValues::invalid('Не удалось обработать SVG.');
+        if (!$clean) FieldValues::invalid('Не удалось обработать SVG. Проверьте файл или выберите другое изображение');
         // Некоторые SVG используют href без пространства имён xlink.
         // Библиотека очищает код; дополнительно исключаем внешние ссылки в обоих вариантах атрибута.
         $safe = new \DOMDocument();
@@ -51,9 +51,9 @@ final class PerkImageEncoder
     private function raster(string $bytes, string $mime): array
     {
         $size = @getimagesizefromstring($bytes);
-        if (!$size || $size[0] > 4096 || $size[1] > 4096) FieldValues::invalid('Изображение должно быть не больше 4096 × 4096.');
+        if (!$size || $size[0] > 4096 || $size[1] > 4096) FieldValues::invalid('Выберите изображение размером не более 4096 × 4096 пикселей');
         $image = @imagecreatefromstring($bytes);
-        if (!$image) FieldValues::invalid('Не удалось прочитать изображение.');
+        if (!$image) FieldValues::invalid('Не удалось прочитать изображение. Проверьте файл или выберите другое изображение');
         imagealphablending($image, false);
         imagesavealpha($image, true);
         ob_start();
@@ -64,7 +64,7 @@ final class PerkImageEncoder
             ob_end_clean();
             imagedestroy($image);
         }
-        if (!$ok) FieldValues::invalid('Не удалось обработать изображение.');
+        if (!$ok) FieldValues::invalid('Не удалось обработать изображение. Попробуйте обновить страницу');
         return [$result, $mime === 'image/png' ? 'png' : 'webp'];
     }
 }

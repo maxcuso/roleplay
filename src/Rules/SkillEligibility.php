@@ -20,21 +20,22 @@ final class SkillEligibility extends LearningEligibility
             return $problem;
         }
         if ($currentLevel < 0 || $currentLevel > $this->rules->maximumSkillLevel() || $remainingChoices < 0) {
-            return $this->denied('invalid_learning_state', 'Некорректное состояние обучения.');
+            return $this->denied('invalid_learning_state', 'Не удалось определить состояние обучения. Попробуйте обновить страницу');
         }
         if ($currentLevel === $this->rules->maximumSkillLevel()) {
-            return $this->denied('maximum_skill_level', 'Навык уже достиг III уровня.');
+            return $this->denied('maximum_skill_level', 'Навык уже достиг максимального III уровня');
         }
 
         $target = $currentLevel + 1;
         $firstChoice = $this->rules->skillChoiceLevels($attribute['slug'])[0] ?? PHP_INT_MAX;
-        $minimum = max($firstChoice, $this->rules->minimumSkillAttribute($target));
+        // Заработанный выбор остаётся пригоден после переноса или удаления его порога.
+        $minimum = max($remainingChoices > 0 ? 1 : $firstChoice, $this->rules->minimumSkillAttribute($target));
         if ($attributeLevel < $minimum) {
-            return $this->denied('attribute_level_required', 'Для этого уровня навыка нужна характеристика '.$minimum.'.',
+            return $this->denied('attribute_level_required', 'Для получения этого уровня навыка повысьте характеристику до уровня '.$minimum,
                 ['target_level' => $target, 'minimum_attribute_level' => $minimum]);
         }
         if ($remainingChoices === 0) {
-            return $this->denied('no_skill_choices', 'Нет неиспользованного выбора обучения навыку.');
+            return $this->denied('no_skill_choices', 'У вас нет неиспользованных выборов обучения навыку');
         }
 
         $perkId = null;
@@ -50,11 +51,11 @@ final class SkillEligibility extends LearningEligibility
             }
         }
         if ($perk === null) {
-            return $this->denied('missing_level_perk', 'Для следующего уровня не настроен существующий перк.');
+            return $this->denied('missing_level_perk', 'Перк следующего уровня навыка не настроен или удалён. Обратитесь к администратору');
         }
         $owned = in_array($perkId, $ownedPerkIds, true);
         if (empty($perk['enabled']) && !$owned) {
-            return $this->denied('perk_disabled', 'Перк следующего уровня выключен для новых получений.');
+            return $this->denied('perk_disabled', 'Перк следующего уровня отключён. Повышение уровня навыка недоступно');
         }
 
         return $this->allowed([

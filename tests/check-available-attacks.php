@@ -88,11 +88,16 @@ $result = $calculator->calculate(snapshot([$sword, $secondSword], [1]));
 check(count($result['attacks']) === 2 && $result['maximum_damage']['melee_damage']['damage']->value === 18,
     'Two weapons are separate options; maximum is not their sum');
 
-$result = $calculator->calculate(snapshot([], [], [spell(1, 9), spell(2, 0)]));
-check(count($result['attacks']) === 2 && $result['maximum_damage']['magic_damage']['damage']->value === 12,
-    'Learned damaging spell survives disabled path/high circle/cost; non-damaging spell creates no attack');
-check($result['attacks'][1]['source']['definition_id'] === 1 && $result['attacks'][1]['source']['id'] === 101,
-    'Spell source distinguishes its catalogue definition and owned grant');
+$learned = snapshot([], [], [spell(1, 81), spell(2, 0)]);
+$result = $calculator->calculate($learned);
+check(count($result['attacks']) === 1 && $result['attacks'][0]['id'] === 'unarmed'
+    && $result['maximum_damage']['magic_damage'] === null && $result['base_damage']['magic_damage']->value === 3,
+    'Learned spells never become weapon attacks or increase profile magic damage');
+check($learned->spells[0]['definition']['damage_units'] === 81,
+    'Spell retains its catalogue damage unchanged for its card');
+$withSpells = $calculator->calculate(snapshot([$enchanted], [1, 2], [spell(1, 81)]));
+check($withSpells['attacks'] == $both['attacks'] && $withSpells['maximum_damage'] == $both['maximum_damage'],
+    'Even a stronger learned spell does not change equipped magical weapon damage or its sources');
 check($result['magic_circle'] === 1, 'Racial spell does not raise acquired magic circle');
 
 $withUnarmedBonus = new CharacterSnapshot(...array_replace(get_object_vars($empty), [
@@ -196,7 +201,7 @@ check($manualCheckResult['check_effects']['all']->value === 0
     && $manualCheckResult['effects'][0]['application'] === 'conditional',
     'Conditional all-check effect stays a single visible effect without permanent bonuses');
 
-foreach ([snapshot([$sword, $sword], [1]), snapshot([], [], [spell(1, 9), spell(1, 9)]),
+foreach ([snapshot([$sword, $sword], [1]),
     snapshot([item(40, ['is_melee_weapon' => true])])] as $invalid) {
     try {
         $builder->build($invalid);

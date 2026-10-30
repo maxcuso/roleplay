@@ -7,19 +7,20 @@ namespace Maxcuso\Roleplay\Creation;
 /** Перенос расовых выдач и выбора заклинаний: определения читаются из новых каталогов. */
 final class AbilityCreationPlan
 {
+    public function __construct(private readonly ?\Maxcuso\Roleplay\Rules\DevelopmentConfiguration $development = null) {}
     public function racialPerks(array $payload, array $race, array $catalog): array
     {
         $errors = [];
         $rules = $race['rules'];
         $selected = $payload['perk_ids'];
         if (count($selected) !== $rules['perk_choice_count'] || array_diff($selected, $rules['perk_choice_ids'])) {
-            $errors[] = 'Проверь расовый выбор перков.';
+            $errors[] = 'Проверьте количество и доступность выбранных расовых перков';
         }
         $ids = array_values(array_unique(array_merge($rules['fixed_perk_ids'], $selected)));
         $grants = [];
         foreach ($ids as $id) {
             if (!isset($catalog['perks'][$id]) || !$catalog['perks'][$id]['enabled']) {
-                $errors[] = 'Расовый перк недоступен для нового получения.';
+                $errors[] = 'Выбранный расовый перк больше нельзя получить. Выберите другой доступный перк';
                 continue;
             }
             $grants[] = ['id' => $id, 'kind' => 'race',
@@ -39,7 +40,7 @@ final class AbilityCreationPlan
             }
             $sourceId = $configuration['perk_sources'][$grant['kind']] ?? null;
             if ($sourceId === null || !isset($catalog['sources'][$sourceId]) || !$catalog['sources'][$sourceId]['enabled']) {
-                $errors[] = 'Не настроен доступный источник перка: '.$grant['kind'].'.';
+                $errors[] = 'Не удалось определить источник перка: '.$grant['kind'].'. Обратитесь к администратору';
                 continue;
             }
             // Обычная редкость относится к стартовой выдаче, не переписывает общий каталог.
@@ -63,27 +64,29 @@ final class AbilityCreationPlan
         $racialPool = array_values(array_filter($racialPool, fn (int $id) => $this->spellAvailable($id, $catalog)));
         $racialSelected = $payload['racial_spell_ids'];
         if (count($racialSelected) !== $rules['spell_choice_count'] || array_diff($racialSelected, $racialPool)) {
-            $errors[] = 'Проверь расовый выбор заклинаний.';
+            $errors[] = 'Проверьте количество и доступность выбранных расовых заклинаний';
         }
-        $ordinaryCount = ($attributes['magic']['level'] ?? 0) >= 3 ? $configuration['starting_spell_count'] : 0;
+        $circle = \Maxcuso\Roleplay\Rules\StatRules::defaults($this->development)->magicCircleAt($attributes['magic']['level'] ?? 0);
+        $ordinaryCount = $circle >= 1 ? $configuration['starting_spell_count'] : 0;
         $ordinaryPool = [];
         foreach ($catalog['spells'] as $spell) {
-            if ($spell['level'] === 1 && $this->spellAvailable($spell['id'], $catalog)
+            // Расовые выдачи настраиваются отдельно и не зависят от этого признака.
+            if ($spell['is_starting'] && $spell['level'] === 1 && $this->spellAvailable($spell['id'], $catalog)
                 && !in_array($spell['id'], array_merge($fixed, $racialSelected), true)) {
                 $ordinaryPool[] = $spell['id'];
             }
         }
         if (count($payload['spell_ids']) !== $ordinaryCount || array_diff($payload['spell_ids'], $ordinaryPool)) {
-            $errors[] = 'Выбери '.$ordinaryCount.' разных обычных стартовых заклинаний I круга.';
+            $errors[] = 'Выберите '.$ordinaryCount.' разных обычных стартовых заклинаний I круга';
         }
         $ids = array_merge($fixed, $racialSelected, $payload['spell_ids']);
         if (count(array_unique($ids)) !== count($ids)) {
-            $errors[] = 'Одно заклинание нельзя получить через два стартовых выбора.';
+            $errors[] = 'Одно заклинание выбрано дважды. Замените его в одном из стартовых выборов';
         }
         $spells = [];
         foreach (array_unique($ids) as $id) {
             if (!$this->spellAvailable($id, $catalog)) {
-                $errors[] = 'Стартовое заклинание или его путь выключены.';
+                $errors[] = 'Выбранное заклинание или его путь больше недоступны. Выберите другое доступное заклинание';
                 continue;
             }
             // Для расовых заклинаний, включая выбор, не проверяем Магию и доступный круг.

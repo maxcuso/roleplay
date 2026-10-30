@@ -33,7 +33,7 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   const count = commands.length;
   await wizard.create();
   assert.equal(wizard.createdId, null);
-  assert.ok(wizard.error.includes('Повтори действие'));
+  assert.ok(wizard.error.includes('Не удалось получить ответ сервера'));
   await wizard.create();
   assert.equal(wizard.createdId, edit.draft.id);
   assert.equal(writes, 1);
@@ -56,6 +56,7 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
     && JSON.stringify(node.children).includes('Редактировать'));
   assert.ok(button);
   button.attrs.onclick();
+  await tick(); // Мастер открывается после предварительной загрузки данных.
   assert.equal(app.lastModal.ModalClass, Modal);
   const modal = new Modal();
   modal.oninit(m(Modal, {...app.lastModal.attrs, state: {modalManager: true}}));

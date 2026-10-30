@@ -1,0 +1,47 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {loadClient} = require('./client-runtime.cjs');
+const tick = () => new Promise(resolve => setImmediate(resolve));
+
+(async () => {
+  const {modules, m, app, expand, pageClass} = loadClient('admin');
+  const exported = name => modules.get(name).default || modules.get(name);
+  const Panel = exported('admin/settings/development/DevelopmentSettingsPanel');
+  const Editor = exported('admin/settings/development/DevelopmentRuleModal');
+  const data = JSON.parse(fs.readFileSync(path.join(__dirname, '.runtime/development-view.json'), 'utf8'));
+  app.result = data;
+  const panel = new Panel(); panel.oninit(m(Panel, {})); await tick();
+  panel.selected = 'magic';
+  let nodes = expand(panel.view());
+  assert.equal(nodes.filter(node => node.tag === 'form').length, 1, 'Settings have one save form');
+  assert.ok(!nodes.some(node => node.attrs?.rowspan), 'Same-level rules remain separate rows');
+  const before = data.configuration.attributes.magic.rules.find(row => row.id === 'magic:circle:7').level;
+  const move = nodes.find(node => node.tag === 'button' && node.attrs['aria-label'] === 'На уровень позже: Выбор навыка · 7');
+  assert.ok(move && !move.attrs.disabled); move.attrs.onclick();
+  assert.equal(data.configuration.attributes.magic.rules.find(row => row.id === 'magic:skill:7').level, 8);
+  assert.equal(data.configuration.attributes.magic.rules.find(row => row.id === 'magic:circle:7').level, before, 'Moving one rule leaves its former neighbour alone');
+  nodes = expand(panel.view());
+  nodes.find(node => node.tag === 'button' && node.attrs['aria-label'] === 'Редактировать: Выбор навыка · 8').attrs.onclick();
+  assert.equal(app.lastModal.ModalClass, Editor);
+  const editor = new Editor(); editor.oninit(m(Editor, app.lastModal.attrs));
+  const key = editor.rule.id; editor.rule.level = 9;
+  editor.rule.description = 'Получите {skill_levels} в новом или уже изученном навыке на выбор';
+  // Отправляем настоящую форму редактора: ключ остаётся прежним.
+  editor.wrapper(null).attrs.onsubmit({preventDefault() {}});
+  assert.equal(data.configuration.attributes.magic.rules.find(row => row.id === key).level, 9);
+  const requests = [];
+  app.request = async request => {requests.push(request); return {data};};
+  await panel.settings.save();
+  const save = requests.find(request => request.method === 'PUT');
+  assert.equal(save.url, '/api/roleplay/admin/development');
+  assert.equal(save.body.revision, data.revision);
+  assert.equal(save.body.configuration.attributes.magic.rules.find(row => row.id === key).level, 9);
+  assert.equal(save.body.configuration.attributes.magic.rules.find(row => row.id === key).description, editor.rule.description);
+  panel.onremove();
+  const page = new pageClass(); page.oninit(m(pageClass, {})); page.selected = 'development-settings';
+  const pageNodes = expand(page.view());
+  const settings = pageNodes.find(node => node.tag === 'nav' && node.attrs['aria-label'] === 'Настройки Roleplay');
+  assert.equal(settings.children.length, 4, 'Development is the fourth settings tab');
+  console.log('Development client: separate rows, independent arrows, stable rule keys, API save and fourth tab passed.');
+})().catch(error => {console.error(error); process.exitCode = 1;});

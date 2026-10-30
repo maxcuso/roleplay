@@ -12,16 +12,16 @@ final class FieldValues
     public static function allowed(array $input, array $fields): void
     {
         if (array_diff(array_keys($input), $fields)) {
-            self::invalid('В форме присутствуют неизвестные поля.');
+            self::invalid('В форме есть неизвестные поля. Проверьте названия полей и уберите неподдерживаемые');
         }
     }
 
     public static function text(mixed $value, string $label, int $max = 100, bool $required = false): ?string
     {
-        if ($value !== null && !is_string($value)) self::invalid("$label: требуется текст.");
+        if ($value !== null && !is_string($value)) self::invalid($label.': укажите текст');
         $text = trim($value ?? '');
-        if ($required && $text === '') self::invalid("$label: обязательное поле.");
-        if (mb_strlen($text) > $max) self::invalid("$label: слишком длинное значение.");
+        if ($required && $text === '') self::invalid('Заполните поле «'.$label.'»');
+        if (mb_strlen($text) > $max) self::invalid($label.': сократите значение до допустимой длины');
         return $text === '' ? null : $text;
     }
 
@@ -29,14 +29,14 @@ final class FieldValues
     {
         if ($value === null && $nullable) return null;
         if (!is_int($value) || $value < $min || $value > $max) {
-            self::invalid("$label: недопустимое целое число.");
+            self::invalid($label.': укажите целое число в допустимых пределах');
         }
         return $value;
     }
 
     public static function boolean(mixed $value, string $label): bool
     {
-        if (!is_bool($value)) self::invalid("$label: требуется переключатель.");
+        if (!is_bool($value)) self::invalid($label.': укажите значение переключателя — включено или выключено');
         return $value;
     }
 
@@ -44,7 +44,7 @@ final class FieldValues
     {
         $icon = self::text($value, 'Иконка');
         if ($icon !== null && !preg_match('/^[a-zA-Z0-9_-]+(?: +[a-zA-Z0-9_-]+)*$/D', $icon)) {
-            self::invalid('Иконка: укажи классы Font Awesome без HTML.');
+            self::invalid('Укажите классы иконки Font Awesome без HTML-разметки');
         }
         return $icon;
     }

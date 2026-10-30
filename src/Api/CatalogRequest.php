@@ -19,7 +19,7 @@ final class CatalogRequest
     {
         $search = FieldValues::text($query['search'] ?? '', 'Поиск', 100) ?? '';
         $enabled = $query['enabled'] ?? '';
-        if (!in_array($enabled, ['', '0', '1'], true)) FieldValues::invalid('Неизвестный фильтр статуса.');
+        if (!in_array($enabled, ['', '0', '1'], true)) FieldValues::invalid('Не удалось применить фильтр статуса. Попробуйте обновить страницу');
         $filters = array_diff_key($query, array_flip(['catalog', 'id', 'search', 'enabled', 'page']));
         return [$search, $enabled === '' ? null : $enabled === '1',
             self::positive($query['page'] ?? 1, 'Страница'), $filters];
@@ -27,7 +27,7 @@ final class CatalogRequest
 
     public static function body(mixed $body): array
     {
-        if (!is_array($body)) throw new ApiProblem('invalid_request', 'Нужен объект запроса.', 400);
+        if (!is_array($body)) throw new ApiProblem('invalid_request', 'Не удалось обработать запрос: ожидается объект данных. Попробуйте обновить страницу', 400);
         return $body;
     }
 }

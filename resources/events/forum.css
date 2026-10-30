@@ -1,0 +1,660 @@
+/* ============================================================
+   ПЕРЕМЕННЫЕ РАЗМЕРОВ ТЕКСТА 
+   px — базовый размер, em — относительно базового.
+   ============================================================ */
+.QuestWidget, .QuestEventEmbed {
+    --quest-font-size: 11px;
+    --quest-title-size: 1.3em;
+    --quest-title-mobile-size: 1.25em;
+    --quest-description-size: 1em;
+    --quest-reward-size: .9em;
+    --quest-button-size: 1em;
+    --quest-status-size: .75em;
+    --quest-count-size: 1.13em;
+    --quest-timer-size: .8em;
+}
+
+/* ============================================================
+   1. СТРАНИЦА СОБЫТИЙ (список)
+   ============================================================ */
+.QuestEventsPage { padding-top: 24px; padding-bottom: 40px; }
+.QuestEventsPage-intro { color: var(--muted-color); }
+.QuestEventsPage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+.QuestEventsPage-management {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin: 20px 0;
+}
+.QuestEventsPage-confirm {
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--control-bg);
+    border-radius: 8px;
+}
+@media (max-width: 640px) {
+    .QuestEventsPage-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ============================================================
+   2. КАРТОЧКА СОБЫТИЯ (статичная, в списке)
+   ============================================================ */
+.QuestEventCard {
+    padding: 20px;
+    border: 1px solid var(--control-bg);
+    border-radius: 12px;
+}
+.QuestEventCard h2 { margin: 12px 0; font-size: 21px; }
+.QuestEventCard-status { color: var(--muted-color); font-size: 13px; }
+.QuestEventCard-description { white-space: pre-wrap; overflow-wrap: anywhere; }
+.QuestEventCard-participants { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.QuestEventCard-participant { display: inline-flex; align-items: center; gap: 6px; }
+.QuestEventCard-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+.QuestEventCard-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--control-bg);
+    color: var(--control-color);
+}
+.QuestEventCard .QuestWidget-rewardRow { padding-left: 0; margin-bottom: 10px; }
+
+/* ============================================================
+   3. EMBED СОБЫТИЯ (компактный блок)
+   ============================================================ */
+.QuestEventEmbed {
+    margin: 12px 0;
+    padding: 12px 14px;
+    border: 1px solid var(--primary-color);
+    border-left-width: 4px;
+    border-radius: 10px;
+    background: var(--control-bg);
+    color: var(--text-color);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+.QuestEventEmbed-title { font-weight: 700; font-size: 10px; margin-bottom: 6px; }
+.QuestEventEmbed-description { white-space: pre-wrap; }
+.QuestEventEmbed-actions { margin-top: 14px; }
+.QuestEventEmbed-rewards { display: flex; flex-wrap: wrap; gap: 24px; margin: 12px 0; }
+
+/* Интерактивная версия (Mithril-компонент, без рамки) */
+.QuestEventEmbed--interactive { padding: 0; border: 0; background: transparent; }
+
+/* ============================================================
+   4. ВИДЖЕТ СОБЫТИЯ (интерактивная карточка)
+   ============================================================ */
+.QuestWidget {
+    position: relative;
+    padding: 14px 16px 20px;
+    border-radius: 20px;
+    background: var(--quest-color);
+    color: var(--quest-ink);
+    font-size: var(--quest-font-size);
+    line-height: 1.45;
+    container-type: inline-size;
+}
+
+/* --- 4.1. Верхняя часть: иконка + заголовок + мета --- */
+.QuestWidget-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 6px 10px;
+}
+.QuestWidget-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(128,128,128,.14);
+    font-size: 30px;
+    line-height: 1;
+}
+.QuestWidget-heading {
+    flex: 1 1 12rem;
+    min-width: 0;
+}
+
+.Post-body .QuestWidget-title, .QuestWidget-title {
+    margin: 1px 0 6px;
+    font-size: var(--quest-title-size);
+    text-transform: uppercase;
+    font-weight: 750;
+    line-height: 1.2;
+    color: inherit;
+}
+.Post-body .QuestWidget-description, .QuestWidget-description {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: var(--quest-description-size);
+}
+
+/* --- 4.2. Мета-блок: статус и счётчик --- */
+.QuestWidget-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 12px;
+    flex: 0 1 auto;
+    margin-left: auto;
+}
+.QuestWidget-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 30px;
+    padding: 6px 12px;
+    font-size: var(--quest-status-size);
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.QuestWidget-status--recruiting        { background: #c1efc8; color: #153f1d; }
+.QuestWidget-status--recruiting > span { color: #218a1a; }
+.QuestWidget-status--active            { background: #ddd9ff; color: #303a8b; }
+.QuestWidget-status--active > span     { color: #3c50d9; }
+.QuestWidget-status--completed         { background: #e0e1e4; color: #414650; }
+
+.QuestWidget-count { white-space: nowrap; font-size: var(--quest-count-size); }
+.QuestWidget-count .icon { font-size: 14px; margin-right: 4px; }
+
+/* --- 4.3. Нижняя часть: лидер, участники, время, кнопка --- */
+.QuestWidget-bottom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.QuestWidget-leader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 16px;
+    border-right: 1px solid rgba(128,128,128,.25);
+    max-width: 100%;
+}
+.QuestWidget-leader > span:last-child { overflow-wrap: anywhere; max-width: 150px; }
+
+.QuestWidget-avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(128,128,128,.22);
+    font-size: 18px;
+    font-weight: 600;
+}
+.Post-body .QuestWidget-avatar img, .QuestWidget-avatar img {
+    display: block;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+}
+.QuestWidget-avatar--leader { width: 35px; height: 35px; font-size: 12px; }
+.QuestWidget-crown {
+    position: absolute;
+    right: -4px;
+    top: -5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #243b42;
+    color: #ffcf33;
+    font-size: 9px;
+}
+
+.QuestWidget-participants { display: flex; align-items: center; gap: 5px; }
+.QuestWidget-empty {
+    width: 20px;
+    height: 20px;
+    border: 1px dashed currentColor;
+    opacity: .25;
+    border-radius: 50%;
+}
+.QuestWidget-more {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(128,128,128,.16);
+    color: inherit;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.QuestWidget-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border-radius: 16px;
+    background: rgba(128,128,128,.14);
+    font-size: var(--quest-timer-size);
+}
+.QuestWidget-time .icon { font-size: 20px; }
+
+/* --- 4.4. Кнопка действия --- */
+.QuestWidget-button {
+    margin-left: auto;
+    min-width: 150px;
+    min-height: 40px;
+    padding: 10px 15px;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    background:rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font: inherit;
+    font-size: var(--quest-button-size);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.QuestWidget-button .icon { margin-right: 8px; }
+.QuestWidget-button:hover:not(:disabled) { background:rgba(0, 0, 0, 0.4); }
+.QuestWidget-button:disabled {
+    cursor: default;
+    background: rgba(128,128,128,.19);
+    color: inherit;
+    opacity: .65;
+}
+.QuestWidget-button--joined { background: rgba(239, 255, 238, 0.5); color: rgba(0, 52, 16, 0.9); }
+.QuestWidget-leaveLabel { display: none; }
+.QuestWidget-button--joined:hover:not(:disabled),
+.QuestWidget-button--joined:focus-visible {
+    background: #853939;
+    color: #fff;
+    border-color: #d64040;
+}
+.QuestWidget-button--joined:hover:not(:disabled) .QuestWidget-joinedLabel,
+.QuestWidget-button--joined:focus-visible .QuestWidget-joinedLabel { display: none; }
+.QuestWidget-button--joined:hover:not(:disabled) .QuestWidget-leaveLabel,
+.QuestWidget-button--joined:focus-visible .QuestWidget-leaveLabel { display: inline; }
+
+.QuestWidget button:focus-visible { outline: 2px solid var(--quest-ink); outline-offset: 3px; }
+
+.QuestWidget-refresh {
+    position: absolute;
+    right: 8px;
+    bottom: 3px;
+    padding: 3px 6px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 10px;
+    opacity: .65;
+}
+.QuestWidget-refresh:disabled { cursor: wait; }
+
+.QuestWidget-allParticipants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(128,128,128,.25);
+}
+.QuestWidget-allParticipants > span { display: inline-flex; align-items: center; gap: 8px; }
+
+.QuestWidget-error {
+    background: #ffe4e4;
+    color: #7b2020;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 14px 0 0;
+}
+
+/* --- 4.5. Награды в виджете --- */
+.QuestWidget-rewardRow { margin-top: 5px; display: flex; justify-content: flex-end;}
+.QuestWidget-rewards {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    max-width: 100%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: var(--quest-reward-size, .95em);
+}
+.QuestWidget-reward { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.QuestWidget-reward .icon,
+.QuestReward-chest { width: 1.2em; height: 1.2em; flex: 0 0 auto; vertical-align: middle; }
+
+/* --- 4.6. Общие текстовые стили для описаний/наград --- */
+.QuestEventEmbed-title, .QuestEventCard h2 { text-transform: uppercase; }
+.QuestWidget-description s,
+.QuestEventEmbed-description s,
+.QuestEventCard-description s { text-decoration: line-through; }
+.QuestWidget-description u,
+.QuestEventEmbed-description u,
+.QuestEventCard-description u { text-decoration: underline; }
+
+/* ============================================================
+   5. ФОРМА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ СОБЫТИЯ
+   ============================================================ */
+.QuestEventForm {
+    width: 360px;
+    max-width: calc(100vw - 24px);
+    max-height: 82vh;
+    overflow-y: auto;
+    padding: 16px;
+    white-space: normal;
+}
+.QuestEventForm h3 { margin: 0 0 14px; font-size: 17px; }
+.QuestEventForm-field { display: block; margin-bottom: 7px; font-weight: normal; }
+.QuestEventForm-field > span { display: block; margin-bottom: 5px; font-size: 13px; }
+.QuestEventForm-field .FormControl { width: 100%; }
+.QuestEventForm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.QuestEventForm-actions { display: flex; gap: 8px; margin-top: 16px; }
+.QuestEventForm-error { color: var(--alert-error-color, #c33); }
+.QuestEventForm-colorPreview {
+    margin-top: 8px;
+    height: 16px;
+    border-radius: 5px;
+    border: 1px solid rgba(128,128,128,.3);
+}
+.QuestEventForm input[type=color] { padding: 4px; height: 40px; }
+
+/* Поле награды в форме */
+.QuestEventForm-reward {
+    border: 1px solid var(--control-bg);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 0 12px;
+    min-width: 0;
+}
+.QuestEventForm-reward legend {
+    width: auto;
+    margin: 0;
+    padding: 0 5px;
+    border: 0;
+    font-size: 14px;
+}
+.QuestEventForm-rewardFields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+.QuestEventForm-rewardFields .FormControl { min-width: 0; }
+
+/* Поиск пользователей (автокомплит) */
+.QuestEventForm-userResults {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+    border: 1px solid var(--control-bg);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.QuestEventForm-userResults button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 0;
+    background: var(--body-bg);
+    color: var(--text-color);
+    text-align: left;
+    cursor: pointer;
+}
+.QuestEventForm-userResults button:hover,
+.QuestEventForm-userResults button:focus-visible { background: var(--control-bg); }
+.QuestEventForm-userResults img,
+.QuestEventForm-userInitial {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.QuestEventForm-userInitial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--control-bg);
+}
+.QuestEventForm-userResults strong,
+.QuestEventForm-userResults small { display: block; overflow-wrap: anywhere; }
+.QuestEventForm-userResults small { color: var(--muted-color); }
+
+/* ============================================================
+   6. ФОРМА РЕДАКТИРОВАНИЯ (обёртка)
+   ============================================================ */
+.QuestEventEditForm {
+    margin: 24px 0;
+    max-width: 680px;
+    padding: 24px;
+    border: 1px solid var(--control-bg);
+    border-radius: 12px;
+}
+.QuestEventEditForm h3 { margin-top: 0; }
+
+/* ============================================================
+   7. АДАПТИВНОСТЬ
+   ============================================================ */
+@media (hover: none) {
+    .QuestWidget-button--joined .QuestWidget-leaveLabel {
+        display: block;
+        font-size: 12px;
+        margin-top: 2px;
+    }
+}
+
+
+
+.Post-body .QuestWidget-title a,
+.Post-body .QuestWidget-title a:link,
+.Post-body .QuestWidget-title a:visited,
+.Post-body .QuestWidget-title a:hover,
+.Post-body .QuestWidget-title a:focus,
+.Post-body .QuestWidget-title a:active,
+.QuestWidget .QuestWidget-titleLink,
+.QuestWidget .QuestWidget-titleLink:link,
+.QuestWidget .QuestWidget-titleLink:visited,
+.QuestWidget .QuestWidget-titleLink:hover,
+.QuestWidget .QuestWidget-titleLink:focus,
+.QuestWidget .QuestWidget-titleLink:active {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 0;
+  box-shadow: none;
+}
+.QuestWidget .QuestWidget-titleLink:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* Аватарки остаются ссылками без обводки и эффекта наведения. */
+.QuestWidget a.QuestWidget-avatar,
+.QuestWidget a.QuestWidget-avatar:hover,
+.QuestWidget a.QuestWidget-avatar:focus,
+.QuestWidget a.QuestWidget-avatar:active {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  text-decoration: none;
+  color: inherit;
+}
+.QuestEventsTable-scroll { overflow-x: auto; margin-top: 20px; }
+.QuestEventsTable { width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: 13px; }
+.QuestEventsTable th { color: var(--muted-color); text-align: left; padding: 10px; white-space: nowrap; }
+.QuestEventsTable td { padding: 12px 10px; border-top: 1px solid var(--control-bg); border-bottom: 1px solid var(--control-bg); vertical-align: middle; }
+.QuestEventsTable td:first-child { border-left: 1px solid var(--control-bg); border-radius: 8px 0 0 8px; }
+.QuestEventsTable td:last-child { border-right: 1px solid var(--control-bg); border-radius: 0 8px 8px 0; }
+.QuestEventsTable-title { min-width: 160px; overflow-wrap: anywhere; font-weight: 600; }
+.QuestEventsTable-status { display: inline-block; border-radius: 20px; padding: 4px 9px; background: var(--control-bg); white-space: nowrap; }
+.QuestEventsTable-status--recruiting { background: #eaf5ed; color: #28603b; }
+.QuestEventsTable-status--active { background: #edf0ff; color: #344ca2; }
+.QuestEventsTable .QuestEventForm-actions { margin: 0; flex-wrap: wrap; }
+.QuestEventsTable .QuestWidget-rewardRow { margin: 0; padding: 0; }
+.QuestEventsTable .QuestWidget-rewards { padding: 0; background: none; gap: 8px; font-size: inherit; }
+.QuestEventsTable .QuestEventsPage-confirm { min-width: 220px; }
+
+/* Consecutive cards in a post share a two-column grid. */
+.QuestEventGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 16px 0; }
+.QuestEventGrid > .QuestEventEmbed { min-width: 0; margin: 0; container-type: inline-size; }
+.QuestEventGrid .QuestWidget { height: 100%; box-sizing: border-box; }
+
+@media (max-width: 767px) {
+  .QuestEventGrid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Компактная горизонтальная карточка: настройки общие для одной и двух колонок. */
+.QuestWidget {
+    --quest-title-size: 1.08em;
+    --quest-title-mobile-size: 1.08em;
+    --quest-status-size: .78em;
+    --quest-timer-size: .95em;
+    line-height: 1.35;
+    border-radius: 16px;
+}
+.QuestWidget-top {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    align-items: start;
+}
+.QuestWidget-symbol { width: 30px; height: 30px; font-size: 25px; }
+.QuestWidget-heading { min-width: 0; }
+.QuestWidget-meta { order: 0; width: auto; gap: 5px; margin: 0; flex-wrap: nowrap; }
+.QuestWidget-status { padding: 3px 6px; gap: 3px; }
+.QuestWidget-count { font-size: 10px; }
+.QuestWidget-count .icon { font-size: 10px; margin-right: 2px; }
+.Post-body .QuestWidget-title, .QuestWidget-title { margin: 0 0 4px; line-height: 1.2; }
+.QuestWidget-bottom { gap: 6px 8px; }
+.QuestWidget-leader { gap: 6px; padding-right: 8px; min-width: 0; }
+.QuestWidget-leader > span:last-child { max-width: 72px; line-height: 1.2; }
+.QuestWidget-avatar--leader { width: 30px; height: 30px; }
+.QuestWidget-crown { width: 14px; height: 14px; top: -3px; right: -3px; font-size: 8px; }
+.QuestWidget-participants { gap: 3px; }
+.QuestWidget-more { width: 22px; height: 22px; font-size: 10px; }
+.QuestWidget-time { gap: 4px; padding: 5px 6px; border-radius: 9px; white-space: nowrap; }
+.QuestWidget-time .icon { font-size: 13px; }
+.QuestWidget-button { width: auto; min-width: 104px; min-height: 32px; padding: 6px 9px; border-radius: 10px; line-height: 1.2; }
+.QuestWidget-button .icon { margin-right: 4px; }
+.QuestWidget .QuestWidget-rewards { gap: 6px 14px; padding: 4px 7px; }
+.QuestWidget-allParticipants { margin-top: 10px; padding-top: 8px; gap: 8px; }
+
+/* Здесь учитывается ширина самой карточки, а не всего окна. */
+@container (max-width: 380px) {
+    .QuestWidget-top { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 6px; }
+    .QuestWidget-symbol { width: 26px; height: 26px; font-size: 22px; }
+    .QuestWidget-meta { flex-direction: row; align-items: center; gap: 5px; }
+    .QuestWidget-leader > span:last-child { max-width: 52px; }
+    .QuestWidget-button { min-width: 96px; }
+}
+@container (max-width: 260px) {
+    .QuestWidget-top { grid-template-columns: 26px minmax(0, 1fr); }
+    .QuestWidget-meta { grid-column: 2; flex-direction: row; justify-content: flex-start; flex-wrap: wrap; }
+    .QuestWidget-button { flex: 1 1 100%; }
+}
+
+/* Полное описание доступно внутри прокручиваемой области. */
+.Post-body .QuestWidget-description, .QuestWidget-description {
+    --quest-description-lines: 3;
+    line-height: 1.4;
+    max-height: calc(var(--quest-description-lines) * 1.4em);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, .55) transparent;
+}
+.QuestWidget-description:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Описание занимает отдельную строку под всей шапкой. */
+.Post-body .QuestWidget > .QuestWidget-description,
+.QuestWidget > .QuestWidget-description {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0 0;
+}
+
+/* Редактор события: компактные секции и закреплённые действия. */
+.QuestEventForm { width: 520px; padding: 0; max-height: none; overflow: hidden; border-radius: 14px; background: var(--body-bg); box-shadow: 0 12px 40px rgba(0,0,0,.16); }
+.QuestEventForm-layout { margin: 0; color: var(--text-color); }
+.QuestEventForm-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--control-bg); }
+.QuestEventForm-header small { color: var(--muted-color); font-size: 10px; letter-spacing: .1em; }
+.QuestEventForm-header h3 { margin: 4px 0 0; font-size: 18px; font-weight: 650; }
+.QuestEventForm-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; padding: 20px; max-height: 58vh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.QuestEventForm-section { min-width: 0; margin: 0; padding: 0; border: 0; }
+.QuestEventForm-section:has(legend .fa-feather-alt),
+.QuestEventForm-section:has(legend .fa-gift),
+.QuestEventForm-section:has(legend .fa-file-alt) { grid-column-start: 1; grid-column-end: -1; }
+.QuestEventForm-section legend { float: none; width: 100%; margin: 0 0 12px; padding: 0 0 8px; border: 0; border-bottom: 1px solid var(--control-bg); font-size: 12px; font-weight: 700; color: var(--text-color); }
+.QuestEventForm-label { display: inline-flex; align-items: center; gap: 7px; }
+.QuestEventForm-label .fas { width: 13px; text-align: center; color: var(--muted-color); font-size: 11px; }
+.QuestEventForm-field { margin-bottom: 10px; min-width: 0; }
+.QuestEventForm-field > .QuestEventForm-label { display: flex; font-size: 12px; margin-bottom: 5px; }
+.QuestEventForm-field .FormControl { min-width: 0; height: 36px; padding: 7px 10px; border-radius: 8px; font-size: 13px; }
+.QuestEventForm-field textarea.FormControl { height: auto; min-height: 62px; resize: vertical; }
+.QuestEventForm-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.QuestEventForm-row--schedule { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.QuestEventForm-colorPreview { height: 3px; margin-top: 5px; border: 0; border-radius: 2px; }
+.QuestEventForm-body .helpText { font-size: 11px; line-height: 1.5; margin: 0 0 6px; }
+.QuestEventForm-details { font-size: 11px; color: var(--muted-color); }
+.QuestEventForm-details summary { cursor: pointer; padding: 3px 0; }
+.QuestEventForm-details[open] summary { margin-bottom: 6px; }
+.QuestEventForm-footer { border-top: 1px solid var(--control-bg); padding: 12px 20px; background: var(--body-bg); }
+.QuestEventForm-footer .QuestEventForm-actions { margin: 0; align-items: center; gap: 8px; }
+.QuestEventForm-footer .helpText { flex: 1; margin: 0; font-size: 11px; line-height: 1.4; }
+.QuestEventForm-footer .Button { flex: 0 0 auto; border-radius: 8px; }
+.QuestEventEditModal { width: 640px; max-width: calc(100vw - 24px); }
+.QuestEventEditModal .Modal-content { border-radius: 14px; overflow: hidden; }
+.QuestEventEditModal .Modal-header { padding: 20px 48px 18px 20px; border-bottom: 1px solid var(--control-bg); text-align: left; }
+.QuestEventEditModal .Modal-header h3 { font-size: 18px; margin: 0; }
+.QuestEventEditModal .QuestEventEditForm { margin: 0; padding: 0; border: 0; max-width: none; }
+.QuestEventEditModal .QuestEventForm-body { max-height: 65vh; }
+@media (max-width: 480px) {
+    .QuestEventForm-body { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 16px; max-height: 52vh; }
+    .QuestEventForm-header, .QuestEventForm-footer { padding: 12px 16px; }
+    .QuestEventForm-footer .QuestEventForm-actions { flex-wrap: wrap; justify-content: flex-end; }
+    .QuestEventForm-footer .helpText { flex-basis: 100%; }
+    .QuestEventEditModal .QuestEventForm-body { max-height: 60vh; }
+}
+
+
+.QuestEventsTable-startError { min-width: 200px; max-width: 320px; margin: 8px 0; color: var(--alert-error-color, #a33); font-size: 12px; }
+.QuestEventsTable-startError small { display: block; color: var(--muted-color); margin-top: 4px; }
+.QuestParticipants-list { list-style: none; margin: 16px 0 0; padding: 0; }
+.QuestParticipants-list > li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--control-bg); padding: 10px 0; }
+.QuestParticipants-confirm { flex-basis: 100%; padding: 12px; border-radius: 8px; background: var(--control-bg); }
+.QuestParticipants-confirm .Button { margin: 4px 8px 0 0; }
+
+/* Компактный выбор для подключаемого типа участия. Цвета следуют теме форума. */
+.QuestRegistrationChoiceModal { width: 480px; max-width: calc(100vw - 24px); }
+.QuestRegistrationChoiceModal .Modal-header { text-align: left; padding: 22px 48px 18px 24px; }
+.QuestRegistrationChoiceModal .Modal-header h3 { font-size: 20px; font-weight: 700; }
+.QuestRegistration-event { margin: 0 0 16px; color: var(--muted-color); overflow-wrap: anywhere; }
+.QuestRegistration-choices { display: grid; gap: 8px; max-height: 320px; overflow-y: auto; }
+.QuestRegistration-choice { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid transparent; border-radius: 8px; background: var(--control-bg); color: var(--text-color); text-align: left; }
+.QuestRegistration-choice span { min-width: 0; overflow-wrap: anywhere; }
+.QuestRegistration-choice .icon { margin: 0; color: var(--muted-color); }
+.QuestRegistration-choice.is-selected { border-color: var(--primary-color); }
+.QuestRegistration-choice.is-selected .icon { color: var(--primary-color); }
+.QuestRegistration-choice:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+.QuestRegistration-actions { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+.QuestParticipants-character { color: var(--muted-color); font-size: 13px; }

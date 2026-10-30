@@ -8,17 +8,19 @@ export default function BasicsStep(state: CreationState): JSX.Element {
   const payload = state.view!.draft.payload;
   const currentRace = race(state);
   const bonuses = object(raceRules(state).fixed_bonuses);
-  return <div className="RpWizard-basics">
-    <label>Имя<input className="FormControl" maxlength={100} placeholder="Введите имя персонажа…"
+  return <div>
+    <p className="RpWizard-instruction">Задайте имя, возраст и расу вашего персонажа. Затем выберите характеристики, способности и снаряжение — мастер проведёт вас по каждому шагу</p>
+    <div className="RpWizard-basics RpWizard-panel">
+    <label>Имя<input className="FormControl" maxlength={100} placeholder="Имя персонажа"
       value={payload.first_name} oninput={(event: Event) => state.change(() => {
         payload.first_name = (event.target as HTMLInputElement).value;
       })}/></label>
-    <label>Фамилия<input className="FormControl" maxlength={100} placeholder="Введите фамилию персонажа…"
+    <label>Фамилия<input className="FormControl" maxlength={100} placeholder="Клан или род персонажа"
       value={payload.last_name} oninput={(event: Event) => state.change(() => {
         payload.last_name = (event.target as HTMLInputElement).value;
       })}/></label>
     <div className="RpWizard-person">
-      <label>Возраст<input className="FormControl" type="number" min={Number(currentRace?.min_age ?? 0)}
+      <label>Возраст<input className="FormControl" type="number" min={0}
         max={Number(currentRace?.max_age ?? 1000000)} value={payload.age ?? ''} placeholder="…"
         oninput={(event: Event) => state.change(() => {
           const value = (event.target as HTMLInputElement).value;
@@ -39,5 +41,6 @@ export default function BasicsStep(state: CreationState): JSX.Element {
     <div className="RpWizard-bonuses">{state.view!.catalog.definitions.attributes
       .filter(row => Number(bonuses[text(row, 'slug')])).map(row =>
         <span key={row.id}>{row.name} <strong>{signed(Number(bonuses[text(row, 'slug')]))}</strong></span>)}</div>
+    </div>
   </div>;
 }

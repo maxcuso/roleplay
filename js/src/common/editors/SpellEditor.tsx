@@ -1,5 +1,5 @@
 import type {EditorContext} from '../catalog/types';
-import {TextField, TextArea, NumberField, SelectField} from '../catalog/components/FormFields';
+import {TextField, TextArea, NumberField, SelectField, CheckField} from '../catalog/components/FormFields';
 import CardPreviews from '../catalog/components/CardPreviews';
 import TimedFields from '../catalog/components/TimedFields';
 import DamageEditor from '../catalog/components/DamageEditor';
@@ -16,6 +16,8 @@ export default function SpellEditor({state, lookups}: EditorContext): JSX.Elemen
       {SelectField({state, field: 'magic_path_id', label: 'Путь магии', required: true, numeric: true,
         options: {'': 'Выбери путь', ...options(lookups, 'paths')}})}
     </div>
+    {CheckField({state, field: 'is_starting', label: 'Стартовое', icon: 'wizard.spells'})}
+    <p className="helpText">Доступно в обычном стартовом выборе заклинаний I круга. Расовые выдачи настраиваются отдельно</p>
     <div className="RpGrid RpGrid--3">
       <div>
         {SelectField({state, field: 'distance_mode', label: 'Дистанция',

@@ -11,6 +11,7 @@ use Maxcuso\Roleplay\Rules\ProficiencyEligibility;
 /** Варианты для интерфейса строим теми же правилами, что подтверждение. Клиент не считает пороги. */
 final class CreationOptions
 {
+    public function __construct(private readonly ?\Maxcuso\Roleplay\Rules\DevelopmentConfiguration $configuration = null) {}
     public function build(array $payload, array $catalog, array $plan): array
     {
         $steps = ['basics', 'attributes', 'training', 'perks', 'spells', 'loadout'];
@@ -24,7 +25,7 @@ final class CreationOptions
         $result = ['step_validity' => $validity, 'training_slots' => [], 'racial_proficiency_ids' => []];
         if (!$validity['attributes']) return $result;
 
-        $rules = DevelopmentRules::defaults();
+        $rules = DevelopmentRules::defaults($this->configuration);
         $builder = new TrainingCreationPlan($rules);
         $race = $catalog['races'][$payload['race_id']];
         $racialPerks = array_unique(array_merge($race['rules']['fixed_perk_ids'], $payload['perk_ids']));

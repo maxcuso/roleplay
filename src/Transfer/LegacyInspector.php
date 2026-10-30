@@ -24,10 +24,8 @@ final class LegacyInspector
         $schema = $this->db->getSchemaBuilder();
         $tables = [];
         $prefix = $this->db->getTablePrefix().'roleplay_';
-        // Системная таблица не должна получать префикс игровых таблиц.
-        $all = array_map(fn ($row) => (string) $row->table_name, $this->db->select(
-            'SELECT TABLE_NAME AS table_name FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?',
-            [$this->db->getDatabaseName()]));
+        // Без имени схемы (main/public): остаются физические имена с префиксом форума.
+        $all = $schema->getTableListing(null, false);
         $suffixes = array_map(fn (string $name) => substr($name, strlen($prefix)),
             array_filter($all, fn (string $name) => str_starts_with($name, $prefix)));
         sort($suffixes);

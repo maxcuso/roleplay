@@ -39,9 +39,10 @@ $questSource = $create('sources', ['name' => 'Квест', 'icon' => 'fas fa-scr
 $rules = ['fixed_bonuses' => ['magic' => 2], 'choice_attributes' => ['agility'], 'attribute_count' => 1,
     'fixed_perk_ids' => [$perkA], 'perk_choice_ids' => [$perkB], 'perk_choice_count' => 1,
     'fixed_spell_ids' => [$spellA], 'spell_choice_path_ids' => [$pathId], 'spell_choice_count' => 1];
-$richRace = $create('races', ['name' => 'Эльф', 'rules' => $rules]);
+$richRace = $create('races', ['name' => 'Эльф', 'rules' => $rules, 'quote' => '«Мы помним песни»', 'image' => '/role/media/races/Elf.png/file']);
 $raceRow = $api('GET', 'races', [], ['attribute' => 'magic'])['data']['rows'][0];
 check($raceRow['id'] === $richRace && $raceRow['rules']['fixed_spell_ids'] === [$spellA], 'Race rules and fixed spell round-trip without a Magic level field');
+check($raceRow['quote'] === '«Мы помним песни»' && $raceRow['image'] === '/role/media/races/Elf.png/file', 'Race quote and image round-trip through the admin API');
 check($api('GET', 'spells', [], ['path' => (string) $pathId, 'level' => '2'])['data']['total'] === 1, 'Spell path/circle filters');
 check($api('GET', 'items', [], ['type' => (string) $typeId, 'magical' => '1'])['data']['total'] === 1, 'Item type/magic filters');
 $badRules = $rules;
@@ -69,7 +70,7 @@ $editable = [
         'damage_units', 'cast_mode', 'cast_value', 'cast_unit', 'cooldown_value', 'cooldown_unit', 'mana_cost', 'stamina_cost', 'other_cost'],
     'items' => ['item_type_id', 'rarity', 'appearance', 'is_magical', 'is_melee_weapon', 'is_ranged_weapon', 'is_magic_weapon', 'is_armor', 'is_ingredient', 'is_literature', 'damage_units', 'ignored_damage_units', 'weight', 'base_price', 'max_stack', 'properties',
         'melee_proficiency_id', 'ranged_proficiency_id', 'magic_proficiency_id'],
-    'races' => ['min_age', 'max_age', 'rules'],
+    'races' => ['min_age', 'max_age', 'average_height', 'distinctive_traits', 'background_color', 'quote', 'image', 'rules'],
 ];
 foreach ($editable as $key => $fields) {
     $result = $api('GET', $key)['data'];

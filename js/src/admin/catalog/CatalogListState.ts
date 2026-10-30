@@ -1,5 +1,5 @@
 import type {CatalogDataSource, CatalogResult} from '../../common/catalog/types';
-import {requestMessage} from './CatalogApi';
+import {requestMessage} from '../../common/requestError';
 
 /** Состояние отделено от разметки: поиск и сохранение проверяются без браузера. */
 export default class CatalogListState {
@@ -27,7 +27,7 @@ export default class CatalogListState {
       // Ответ старого поиска не должен заменить результаты нового запроса.
       if (!this.disposed && ticket === this.sequence) this.data = data;
     } catch (error) {
-      if (!this.disposed && ticket === this.sequence) this.error = requestMessage(error);
+      if (!this.disposed && ticket === this.sequence) this.error = requestMessage(error, 'Не удалось выполнить запрос. Попробуйте обновить страницу');
     } finally {
       if (!this.disposed && ticket === this.sequence) {
         this.loading = false;
@@ -62,7 +62,7 @@ export default class CatalogListState {
       await action();
       await this.load();
     } catch (error) {
-      this.error = requestMessage(error);
+      this.error = requestMessage(error, 'Не удалось выполнить запрос. Попробуйте обновить страницу');
     } finally {
       this.mutating = false;
       if (!this.disposed) this.redraw();

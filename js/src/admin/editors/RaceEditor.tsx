@@ -2,10 +2,11 @@ import Icon from 'flarum/common/components/Icon';
 import type {CatalogRow, EditorContext} from '../../common/catalog/types';
 import {TextField, TextArea, NumberField, FieldLabel} from '../../common/catalog/components/FormFields';
 import EditorSection from '../../common/catalog/components/EditorSection';
-import MultiPicker from '../catalog/components/MultiPicker';
+import MultiPicker from '../../common/catalog/components/MultiPicker';
 import {ids, object, lookup, text} from '../../common/catalog/helpers';
 import {catalogueIcon} from '../../common/uiIcons';
 import {roman} from '../../common/presentation';
+import ImageUpload from '../../common/catalog/components/ImageUpload';
 
 /** Каждый вид расового выбора имеет своё поле; выдача не выполняется из редактора. */
 export default function RaceEditor({state, lookups}: EditorContext): JSX.Element {
@@ -31,13 +32,34 @@ export default function RaceEditor({state, lookups}: EditorContext): JSX.Element
       label={(row: CatalogRow) => row.name + (collection === 'spells' ? ' ' + roman(Number(row.level)) : '')}/>;
   }
 
+  const background = state.text('background_color');
+  const swatch = /^#?[0-9a-f]{6}$/i.test(background) ? '#' + background.replace(/^#/, '') : '#808080';
+
   return <div>
     {TextField({state, field: 'name', label: 'Название', required: true})}
-    <div className="RpGrid RpGrid--2">
-      {NumberField({state, field: 'min_age', label: 'Возраст от', nullable: true})}
-      {NumberField({state, field: 'max_age', label: 'Возраст до', nullable: true})}
+    <div className="RpGrid RpGrid--2 RpRaceEditor-summary">
+      <div className="RpField">
+        <FieldLabel label="Продолжительность жизни" icon="fields.age"/>
+        <div className="RpRaceEditor-lifespan">
+          {NumberField({state, field: 'min_age', label: 'От', nullable: true})}
+          <span aria-hidden="true">—</span>
+          {NumberField({state, field: 'max_age', label: 'До', nullable: true})}
+        </div>
+      </div>
+      {TextField({state, field: 'average_height', label: 'Средний рост', max: 255})}
     </div>
     {TextArea({state, field: 'description', label: 'Описание'})}
+    {TextArea({state, field: 'quote', label: 'Цитата'})}
+    <ImageUpload state={state} label="Изображение расы" fileLabel="Файл изображения расы"/>
+    {TextArea({state, field: 'distinctive_traits', label: 'Отличительные черты'})}
+    <div className="RpField"><FieldLabel field="background_color" label="Цвет подложки"/>
+      <span className="RpRaceEditor-color">
+        <input type="color" value={swatch} aria-label="Выбрать цвет подложки"
+          oninput={(event: Event) => state.set('background_color', (event.target as HTMLInputElement).value)}/>
+        <input className="FormControl" maxlength={7} placeholder="#AABBCC" aria-label="Цвет подложки (HEX)" value={background}
+          oninput={(event: Event) => state.set('background_color', (event.target as HTMLInputElement).value)}/>
+      </span>
+    </div>
     {TextField({state, field: 'rules_url', label: 'Ссылка на правила расы', max: 1000})}
     <EditorSection title="Бонусы характеристик" icon="fields.attribute">
       <div className="RpGrid RpGrid--4">{(lookups.attributes ?? []).map(attribute => {

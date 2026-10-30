@@ -37,7 +37,8 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(playerState.roleplayer, player);
   const playerNodes = expand(m(Panel, {state: playerState, picker: true}));
   assert.ok(playerNodes.some(node => node.attrs?.['aria-label'] === 'Статистика ролевика'));
-  assert.ok(playerNodes.some(node => node.tag === 'time' && node.children[0].children === '2026'));
+  assert.equal(playerNodes.filter(node => node.tag === 'dt').length, 2, 'Player summary keeps only XP and character count');
+  assert.ok(!playerNodes.some(node => node.tag === 'time'), 'The removed roleplay start date stays hidden');
   // Проверяем исключения 11–14, составные числа и реальную подпись компонента.
   const Summary = exported('forum/profile/RoleplayerSummary');
   for (const [count, word] of [[0, 'Персонажей'], [1, 'Персонаж'], [2, 'Персонажа'], [4, 'Персонажа'],
@@ -55,13 +56,20 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   const preferredReads = [];
   const preferred = new State({...makeApi(),
     list: async () => ({characters: [{id: 222, name: 'Активный', status: 'active'}, {id: 333, name: 'Новый', status: 'creating'}], next_before: null}),
-    read: async selected => {preferredReads.push(selected); const view = clone(fixture); view.snapshot.character.id = selected; return view;},
+    read: async selected => {preferredReads.push(selected); const view = clone(fixture); view.snapshot.character.id = selected;
+      if (selected === 444) view.snapshot.character.user_id = 999; return view;},
   }, () => {});
   await preferred.loadUser(1, 333); await tick();
   assert.equal(preferred.selected, 333);
   assert.deepEqual(preferredReads, [333], 'Default character is not fetched before requested character');
   await preferred.loadUser(1, 444); await tick();
-  assert.equal(preferred.selected, 222, 'A character outside this profile cannot be opened by query parameter');
+  assert.equal(preferred.selected, 444, 'An explicit link does not silently select a different character');
+  assert.equal(preferred.view, null, 'A character outside this profile cannot be opened by query parameter');
+  assert.ok(preferred.detailError);
+  await preferred.loadUser(1, 555); await tick();
+  assert.equal(preferred.selected, 555, 'An owned character outside the first list page can be opened');
+  assert.ok(preferred.view);
+  assert.ok(preferred.characters.some(row => row.id === 555), 'The selected older character appears in the picker');
 
   // Проверка всеми настоящими vnode, а не только текстовым совпадением JSX.
   let nodes = expand(m(Panel, {state, picker: true, own: true}));
@@ -89,6 +97,25 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   assert.equal(presentation.effectLabel({description: 'Не нуждается во сне', definition: {mechanic: 'text'}}), 'Не нуждается во сне');
   assert.equal(presentation.effectLabel({value: 2, definition: {mechanic: 'skill_check', skill_id: 90}},
     {skills: [{id: 90, name: 'Скрытность'}]}), '+2 к проверкам навыка «Скрытность»');
+  // Подсказка объясняет именно показанную атаку. Округлённый вклад процентной
+  // группы берётся с сервера, а не рассчитывается повторно из её процентов.
+  const damagePresentation = exported('common/character/damagePresentation');
+  const baseDamage = {value: 9, parts: [{value: 9, source: {kind: 'attribute', label: 'Физиология 9'}}]};
+  const attackDamage = {value: 14, parts: [...baseDamage.parts,
+    {value: 5, source: {kind: 'effect_group', label: 'Прибавка от базового значения',
+      effects: [{kind: 'perk', label: 'Так закалялась сталь', value: 50}]}}]};
+  const calculated = {base_damage: {melee_damage: baseDamage, ranged_damage: baseDamage},
+    maximum_damage: {melee_damage: {damage: attackDamage}},
+    attacks: [{damage: {value: 99, parts: [{value: 99, source: {label: 'Другая атака'}}]}}],
+    stats: {ignored_damage: {value: 0, parts: [{value: 0, source: {kind: 'attribute', label: 'Физиология 9'}}]}}};
+  assert.equal(damagePresentation.combatValue(calculated, 'melee_damage'), attackDamage);
+  assert.equal(damagePresentation.combatValue(calculated, 'ranged_damage'), baseDamage);
+  assert.equal(damagePresentation.combatHint(attackDamage, 'Урон в ближнем бою'),
+    'Урон в ближнем бою\nБазовый урон – Средний\nТак закалялась сталь – Малый + Незначительный ×2');
+  assert.equal(damagePresentation.combatHint({parts: [{value: -6, source: {kind: 'perk', label: 'Ранение'}}]}, 'Урон'),
+    'Урон\nРанение – −Малый ×2');
+  assert.equal(damagePresentation.combatHint(damagePresentation.combatValue(calculated, 'ignored_damage'),
+    'Игнорируемый урон', 'Базовый игнорируемый урон'), 'Игнорируемый урон\nБазовый игнорируемый урон – Нет');
   const compactEffects = expand(m(Effects, {effects: [bonus('mana_max', 10),
     {...bonus('stamina_max', 5), source: {kind: 'item', label: 'Плащ'}}]}));
   assert.deepEqual(compactEffects.filter(node => node.attrs?.className === 'RpEffects-source').map(node => node.attrs.title),
@@ -104,7 +131,8 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   assert.ok(tab('Персонаж') && tab('Обучение') && tab('Крафт'));
   tab('Обучение').attrs.onclick();
   nodes = expand(panel.view());
-  assert.ok(nodes.some(node => node.children === 'В разработке'));
+  assert.ok(nodes.some(node => node.attrs?.className === 'RpLearning'
+    || node.children === 'Обучение доступно владельцу активного персонажа'), 'Training opens learning rather than its former placeholder');
   assert.ok(!nodes.some(node => node.attrs?.className === 'RpSheet'));
   tab('Крафт').attrs.onclick();
   nodes = expand(panel.view());
@@ -127,6 +155,12 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   const historyNodes = expand(m(History, app.lastModal.attrs));
   assert.ok(historyNodes.some(node => node.children === 'Награда за задание'));
   expand(m(History, {events: []}));
+  const rewardHistory = expand(m(History, {events: [{id: 992, type: 'character_managed', created_at: '2026-10-29 12:00:00',
+    details: {action: 'topic_reward', experience: 1, gold: 1, comment: 'Тема «Триречье»', grants: [{kind: 'item', name: 'Кожаный доспех', quantity: 1}]}}]}));
+  const itemPosition = rewardHistory.findIndex(node => node.children === 'Кожаный доспех');
+  const topicPosition = rewardHistory.findIndex(node => node.children === 'Тема «Триречье»');
+  assert.ok(itemPosition >= 0 && topicPosition > itemPosition, 'History lists granted items before the originating topic');
+
   // UTC-время переводится в локальный день; награда из двух ресурсов не теряет вторую сумму.
   const historyPresentation = exported('forum/profile/historyPresentation');
   assert.equal(historyPresentation.historyDate('2026-10-10 23:30:00').toISOString(), '2026-10-10T23:30:00.000Z');

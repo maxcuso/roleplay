@@ -15,7 +15,7 @@ export default class SettingsState<T extends {revision: number}> {
       const data = await this.readData();
       if (!this.disposed && generation === this.generation) {this.data = data; this.stale = false;}
     } catch (error) {
-      if (!this.disposed && generation === this.generation) this.error = requestMessage(error, 'Не удалось загрузить настройки.');
+      if (!this.disposed && generation === this.generation) this.error = requestMessage(error, 'Не удалось загрузить настройки. Попробуйте обновить страницу');
     } finally {
       if (generation === this.generation) {this.loading = false; this.notify();}
     }
@@ -31,7 +31,7 @@ export default class SettingsState<T extends {revision: number}> {
       if (!this.disposed) {this.data = data; this.saved = true;}
     } catch (error) {
       if (!this.disposed) {
-        this.error = requestMessage(error, 'Не удалось сохранить настройки. Обнови форму и проверь результат.');
+        this.error = requestMessage(error, 'Не удалось сохранить настройки. Попробуйте обновить страницу');
         const status = requestStatus(error);
         this.stale = status === 409 || status === undefined || status === 0 || status >= 500;
       }

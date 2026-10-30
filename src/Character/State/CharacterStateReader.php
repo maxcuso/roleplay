@@ -38,13 +38,13 @@ final class CharacterStateReader
     public function read(int $characterId, ?callable $authorize = null): array
     {
         if ($characterId < 1) {
-            throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+            throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
         }
         return $this->revision->read(function (int $catalogRevision) use ($characterId, $authorize): array {
             // Порядок блокировок: справочники, затем персонаж. Будущие записи соблюдают тот же порядок.
             $character = $this->db->table('roleplay_characters')->where('id', $characterId)->sharedLock()->first();
             if ($character === null) {
-                throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+                throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             }
             // Проверяем доступ под блокировкой заголовка, до чтения частных выдач.
             if ($authorize !== null) $authorize((array) $character);

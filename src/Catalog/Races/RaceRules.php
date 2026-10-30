@@ -14,7 +14,7 @@ final class RaceRules
 
     public function validate(mixed $input): array
     {
-        if (!is_array($input)) FieldValues::invalid('Расовые правила: требуется объект.');
+        if (!is_array($input)) FieldValues::invalid('Укажите расовые правила в виде объекта JSON');
         FieldValues::allowed($input, [
             'fixed_bonuses', 'choice_attributes', 'attribute_bonus', 'attribute_count',
             'fixed_perk_ids', 'perk_choice_ids', 'perk_choice_count',
@@ -25,13 +25,13 @@ final class RaceRules
         $bonuses = $input['fixed_bonuses'] ?? [];
         $choices = $input['choice_attributes'] ?? [];
         if (!is_array($bonuses) || !is_array($choices) || !array_is_list($choices)) {
-            FieldValues::invalid('Проверь фиксированные бонусы и список характеристик.');
+            FieldValues::invalid('Проверьте фиксированные расовые бонусы и список характеристик, к которым они применяются');
         }
         foreach ($choices as $choice) {
-            if (!is_string($choice)) FieldValues::invalid('Характеристика должна быть системным ключом.');
+            if (!is_string($choice)) FieldValues::invalid('Не удалось определить характеристику: вместо системного ключа передано другое значение');
         }
         if (array_diff(array_keys($bonuses), $slugs) || array_diff($choices, $slugs)) {
-            FieldValues::invalid('В расовых бонусах указана неизвестная характеристика.');
+            FieldValues::invalid('В расовых бонусах указана неизвестная характеристика');
         }
         foreach ($bonuses as $slug => $bonus) {
             FieldValues::integer($bonus, 'Бонус характеристики', -1000, 1000);
@@ -47,13 +47,13 @@ final class RaceRules
             'magic_paths' => ['spell_choice_path_ids']] as $catalog => $fields) {
             foreach ($fields as $field) {
                 $ids = $input[$field] ?? [];
-                if (!is_array($ids)) FieldValues::invalid('Нужен список выбранных записей.');
+                if (!is_array($ids)) FieldValues::invalid('Укажите выбранные записи списком');
                 $result[$field] = $this->store->requireIds($catalog, $ids);
             }
         }
         if (array_intersect($result['fixed_perk_ids'], $result['perk_choice_ids'])
             || array_intersect($result['fixed_spell_ids'], $result['spell_choice_ids'])) {
-            FieldValues::invalid('Одна способность не может быть фиксированной и на выбор одновременно.');
+            FieldValues::invalid('Одна способность указана и как фиксированная, и как доступная на выбор. Оставьте её только в одном из списков');
         }
         $result['perk_choice_count'] = FieldValues::integer($input['perk_choice_count'] ?? 0,
             'Количество перков на выбор', 0, count($result['perk_choice_ids']));
@@ -66,9 +66,9 @@ final class RaceRules
             'Количество заклинаний на выбор', 0, count($spellPool));
         // Список задаёт раса, а не проверка уровня: расовое владение обходит обычные требования.
         $mode = $input['proficiency_choice_mode'] ?? 'list';
-        if (!in_array($mode, ['all', 'list'], true)) FieldValues::invalid('Неизвестный режим расовых владений.');
+        if (!in_array($mode, ['all', 'list'], true)) FieldValues::invalid('Выберите доступный режим получения расовых владений');
         $ids = $input['proficiency_choice_ids'] ?? [];
-        if (!is_array($ids)) FieldValues::invalid('Нужен список расовых владений.');
+        if (!is_array($ids)) FieldValues::invalid('Укажите расовые владения списком');
         $result['proficiency_choice_mode'] = $mode;
         $result['proficiency_choice_ids'] = $this->store->requireIds('weapon_proficiencies', $ids);
         if ($mode === 'all') $result['proficiency_choice_ids'] = [];

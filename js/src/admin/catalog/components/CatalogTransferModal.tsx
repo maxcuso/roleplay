@@ -1,4 +1,5 @@
-import Modal, {IInternalModalAttrs} from 'flarum/common/components/Modal';
+import Feedback from '../../../common/components/Feedback';
+import Modal, {type IInternalModalAttrs, type ModalHeading} from '../../../common/components/RoleplayModal';
 import Button from 'flarum/common/components/Button';
 import Icon from 'flarum/common/components/Icon';
 import type Mithril from 'mithril';
@@ -22,10 +23,10 @@ export default class CatalogTransferModal extends Modal<Attrs> {
   scope: ExportScope = 'section';
   input?: HTMLInputElement;
 
-  className(): string { return 'RpCatalogEditor RpCatalogTransfer'; }
-  title(): Mithril.Children {
+  protected modalClassName(): string { return 'RpCatalogEditor RpCatalogTransfer'; }
+  protected modalHeading(): ModalHeading {
     const importing = this.attrs.kind === 'import';
-    return <span><Icon name={uiIcon(importing ? 'actions.import' : 'actions.export')}/> {importing ? 'Импорт JSON' : 'Экспорт JSON'}</span>;
+    return {label: importing ? 'Импорт JSON' : 'Экспорт JSON', purpose: this.attrs.kind};
   }
   protected wrapper(children: Mithril.Children): Mithril.Children { return <div>{children}</div>; }
   protected get dismissibleOptions() {
@@ -66,7 +67,7 @@ export default class CatalogTransferModal extends Modal<Attrs> {
     const state = this.transfer;
     return <div className="Modal-body">
       <p className="RpTransfer-section"><Icon name={uiIcon(this.attrs.definition.icon)}/> {this.attrs.definition.title}</p>
-      {state.error && <div className="RpCatalog-error" role="alert">{state.error}</div>}
+      {state.error && <Feedback message={state.error}/>}
       {this.attrs.kind === 'export' ? this.exportFields() : this.importFields()}
     </div>;
   }
@@ -122,12 +123,8 @@ export default class CatalogTransferModal extends Modal<Attrs> {
           <span><Icon name={uiIcon('actions.select')}/><b>{report.skipped}</b><small>Пропусков</small></span>
           <span className={report.errors.length ? 'hasErrors' : ''}><Icon name={uiIcon('review.warning')}/><b>{report.errors.length}</b><small>Ошибок</small></span>
         </div>
-        {!!report.errors.length && <div className="RpTransfer-messages RpCatalog-error" role="alert">
-          {report.errors.map((message, index) => <p key={index}>{message}</p>)}
-        </div>}
-        {!!report.warnings.length && <div className="RpTransfer-messages RpTransfer-warnings">
-          {report.warnings.map((message, index) => <p key={index}><Icon name={uiIcon('review.warning')}/> {message}</p>)}
-        </div>}
+        {!!report.errors.length && <Feedback message={report.errors} kind="input"/>}
+        {!!report.warnings.length && <Feedback message={report.warnings} kind="input"/>}
         <div className="RpTransfer-records">
           {report.rows.map(row => <div key={row.catalog + '/' + row.key} className={'RpTransfer-record RpTransfer-record--' + row.action}>
             <span><strong>{row.name}</strong><small>{labels[row.catalog] ?? row.catalog} · {row.key}</small></span>

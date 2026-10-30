@@ -1,0 +1,11 @@
+Tool: built-in image_gen.imagegen
+Canvas: 1200x1600 PNG, full-bleed Grim swallowtail; emblem retained without scaling during canvas normalization.
+Final asset: C:\Forum\Flarum\packages\roleplay-new\content\flags\generated\1200x1600-full\espada-classic-v1.png
+
+Prompt:
+Create ONE alternative design for the Espada clan banner. Image 1 is the current banner and must define the UNCHANGED banner layout and palette. Image 2 is the original angular skull symbol, used for identity inspiration only. Image 3 is the flat heraldic illustration style reference, not a motif to copy.
+KEEP: a full-bleed tall warm ivory pennon (#eee8d8), black outside border, straight top and sides, two equally long pointed bottom tails and one symmetric central V-shaped notch, no outside top/side margins. Exact canvas 1200x1600 pixels, width:height 3:4. Transparent alpha ONLY in the bottom notch outside the actual cloth. The black skull must be centered in the upper rectangular area, occupy about 70% of flag width, entirely above the notch. Its visual center should be around 43% of total banner height. Give the skull comfortable clear space and similar visual scale to the current emblem.
+Replace ONLY the skull with the following new original interpretation. Black silhouette with ivory negative spaces, clean thick contours and modest interior detail, suitable for flat medieval fantasy heraldry. This must be a fresh adaptation, not a copy of a famous logo.
+VARIANT C — CLASSICAL HERALDIC HUMAN SKULL. Use a clear rounded human cranium, two large hollow ivory eye sockets under a low brow, distinct cheekbones, a small inverted-heart or triangular nose cavity, and a compact row of FIVE broad squared teeth. Entire skull is a bold black silhouette with ivory carved-out features. Simplify the anatomy to a handful of strong clean shapes, subtly hand-drawn like a medieval armorial, not a realistic anatomical study. Keep a slight angular taper at the cheeks to echo the old mark. Skull alone, no lower hanging bones and no crossed bones. Sober and dignified rather than comic or horror-realistic.
+Absolutely FLAT solid black and ivory fills; no gradients, texture, grain, shading, highlights, 3D, cloth folds or photographic elements. No text, letters, numbers, crown, helmet, crossbones, weapons, chains, scrolls, ornamental frame or extra symbols. One complete banner PNG.
+

@@ -11,6 +11,7 @@ export default class CreationState {
   dirty = false;
   busy = false;
   creating = false;
+  uploading = false;
   conflict = false;
   attempted = false;
   error = '';
@@ -38,7 +39,7 @@ export default class CreationState {
       this.conflict = false;
       this.createdId = view.existing_character_id;
       if (view.draft.catalog_revision !== view.catalog.revision || view.draft.rules_hash !== view.catalog.rules_hash) {
-        this.error = 'Правила обновились. Проверь сохранённый выбор перед продолжением.';
+        this.error = 'Правила обновились. Проверьте сохранённые выборы перед продолжением';
         this.dirty = true;
       }
       // Пустой черновик получает минимальные значения из настроенного распределения.
@@ -54,7 +55,7 @@ export default class CreationState {
         if (!view.preview.step_validity[steps[index].key]) { this.step = steps[index].key; break; }
       }
     } catch (error) {
-      this.error = message(error, 'Не удалось открыть мастер. Проверь вход в аккаунт и права доступа.');
+      this.error = message(error, 'Не удалось открыть мастер создания персонажа. Убедитесь, что вы вошли в аккаунт и у вас есть доступ к созданию персонажей');
     } finally {
       this.busy = false;
       this.notify();
@@ -136,7 +137,7 @@ export default class CreationState {
       return true;
     } catch (error) {
       this.conflict = status(error) === 409;
-      this.error = message(error, 'Не удалось сохранить. Изменения остаются в форме — попробуй ещё раз.');
+      this.error = message(error, 'Не удалось сохранить черновик. Ваши изменения остались в форме. Попробуйте сохранить их ещё раз');
       return false;
     } finally {
       this.busy = false;
@@ -145,8 +146,10 @@ export default class CreationState {
   }
 
   async goTo(target: CreationStep): Promise<void> {
-    this.attempted = true;
+    if (this.uploading) return;
+    this.attempted = false;
     if (!await this.flush()) { this.notify(); return; }
+    this.attempted = true;
     const index = steps.findIndex(step => step.key === target);
     if (index > steps.findIndex(step => step.key === this.step) && index > 0
       && !this.view!.preview.step_validity[steps[index - 1].key]) { this.notify(); return; }
@@ -155,9 +158,11 @@ export default class CreationState {
   }
 
   async create(): Promise<void> {
-    if (this.creating || this.createdId !== null) return;
+    if (this.uploading || this.creating || this.createdId !== null) return;
+    this.attempted = false;
+    if (!await this.flush()) { this.notify(); return; }
     this.attempted = true;
-    if (!await this.flush() || !this.view!.preview.valid) { this.notify(); return; }
+    if (!this.view!.preview.valid) { this.notify(); return; }
     this.creating = true;
     this.error = '';
     const view = this.view!;
@@ -169,7 +174,7 @@ export default class CreationState {
       this.createdId = (await this.api.create(this.command)).character_id;
     } catch (error) {
       this.conflict = status(error) === 409;
-      this.error = message(error, 'Ответ не получен. Повтори действие: запрос защищён от повторной выдачи.');
+      this.error = message(error, 'Не удалось получить ответ сервера. Попробуйте ещё раз');
     } finally {
       this.creating = false;
       this.notify();

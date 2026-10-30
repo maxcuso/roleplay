@@ -17,14 +17,14 @@ final class CreationConfiguration
         $input += $defaults;
         $distribution = $input['attribute_distribution'];
         if (!is_array($distribution) || !array_is_list($distribution) || count($distribution) !== 4) {
-            FieldValues::invalid('Стартовое распределение должно содержать четыре значения.');
+            FieldValues::invalid('Укажите четыре значения стартового распределения характеристик');
         }
         foreach ($distribution as $value) {
             FieldValues::integer($value, 'Стартовая характеристика', 1, 25);
         }
         $sources = $input['perk_sources'];
         if (!is_array($sources)) {
-            FieldValues::invalid('Нужен объект привязок источников.');
+            FieldValues::invalid('Укажите привязки источников в виде объекта JSON');
         }
         FieldValues::allowed($sources, ['race', 'skill']);
         foreach ($sources as $id) {
@@ -32,17 +32,17 @@ final class CreationConfiguration
         }
         $groups = $input['loadout'];
         if (!is_array($groups) || !array_is_list($groups) || count($groups) > 100) {
-            FieldValues::invalid('Нужен список стартовых групп.');
+            FieldValues::invalid('Укажите стартовые группы снаряжения списком');
         }
         $knownGroups = [];
         foreach ($groups as &$group) {
             if (!is_array($group)) {
-                FieldValues::invalid('Некорректная стартовая группа.');
+                FieldValues::invalid('Проверьте параметры стартовой группы снаряжения');
             }
             FieldValues::allowed($group, ['key', 'name', 'automatic', 'min', 'max', 'options']);
             $this->key($group['key'] ?? null);
             if (isset($knownGroups[$group['key']])) {
-                FieldValues::invalid('Ключ стартовой группы повторяется.');
+                FieldValues::invalid('Системный ключ стартовой группы повторяется. Укажите для каждой группы отдельный ключ');
             }
             $knownGroups[$group['key']] = true;
             $group['name'] = FieldValues::text($group['name'] ?? null, 'Название группы', 100, true);
@@ -50,25 +50,25 @@ final class CreationConfiguration
             $group['min'] = FieldValues::integer($group['min'] ?? 1, 'Минимум выборов', 0, 100);
             $group['max'] = FieldValues::integer($group['max'] ?? 1, 'Максимум выборов', $group['min'], 100);
             if (!is_array($group['options'] ?? null) || !array_is_list($group['options']) || count($group['options']) > 100) {
-                FieldValues::invalid('Нужен список вариантов набора.');
+                FieldValues::invalid('Укажите варианты стартового набора списком');
             }
             if (count($group['options']) < $group['min']
                 || ($group['automatic'] && (count($group['options']) !== 1 || $group['min'] !== 1 || $group['max'] !== 1))) {
-                FieldValues::invalid('Не хватает вариантов или некорректна автоматическая группа.');
+                FieldValues::invalid('Проверьте количество вариантов стартового набора и настройки автоматической группы');
             }
             $knownOptions = [];
             foreach ($group['options'] as &$option) {
-                if (!is_array($option)) FieldValues::invalid('Некорректный вариант набора.');
+                if (!is_array($option)) FieldValues::invalid('Проверьте параметры варианта стартового набора');
                 FieldValues::allowed($option, ['key', 'name', 'items']);
                 $this->key($option['key'] ?? null);
-                if (isset($knownOptions[$option['key']])) FieldValues::invalid('Ключ варианта повторяется.');
+                if (isset($knownOptions[$option['key']])) FieldValues::invalid('Системный ключ варианта повторяется. Укажите для каждого варианта отдельный ключ');
                 $knownOptions[$option['key']] = true;
                 $option['name'] = FieldValues::text($option['name'] ?? null, 'Название варианта', 100, true);
                 if (!is_array($option['items'] ?? null) || !array_is_list($option['items']) || count($option['items']) > 100) {
-                    FieldValues::invalid('Нужен список вещей варианта.');
+                    FieldValues::invalid('Укажите предметы варианта стартового набора списком');
                 }
                 foreach ($option['items'] as $item) {
-                    if (!is_array($item)) FieldValues::invalid('Некорректная вещь набора.');
+                    if (!is_array($item)) FieldValues::invalid('Проверьте параметры предмета в стартовом наборе');
                     FieldValues::allowed($item, ['item_id', 'quantity']);
                     FieldValues::integer($item['item_id'] ?? null, 'Стартовая вещь', 1, PHP_INT_MAX);
                     FieldValues::integer($item['quantity'] ?? null, 'Количество', 1, 1000000);
@@ -92,7 +92,7 @@ final class CreationConfiguration
     private function key(mixed $key): void
     {
         if (!is_string($key) || !preg_match('/^[a-z][a-z0-9_-]{0,99}$/D', $key)) {
-            FieldValues::invalid('Некорректный ключ стартовой группы или варианта.');
+            FieldValues::invalid('Проверьте системный ключ стартовой группы или варианта набора');
         }
     }
 }

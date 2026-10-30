@@ -50,6 +50,24 @@ function prepareAssets() {
 }
 prepareAssets();
 
+// Шрифты страницы читаются только из этой папки и добавляются в список маршрутов.
+// После добавления нового файла шрифта перезапустите сервер.
+const roleFontDirectory = path.join(__dirname, 'role/assets/fonts');
+const roleFontNames = fs.readdirSync(roleFontDirectory, {withFileTypes: true})
+  .filter(entry => entry.isFile() && /\.(?:ttf|otf|woff2?)$/i.test(entry.name))
+  .map(entry => entry.name);
+
+// Выдаём только шесть утверждённых гербов, без исходников и служебных файлов.
+const cityCrestNames = ['questpost.png', 'verkhovye-v3.png', 'zelenolesye-v3.png',
+  'arah-v3.png', 'hillsgaard-v3.png', 'grim-v3.png'];
+const raceImageNames = ['Human.png', 'Elf.png', 'HalfElf.png', 'Dwarf.png',
+  'Halfling.png', 'HalfOrc.png', 'Tabaxi.png', 'Tiefling.png'];
+// Только готовые гербы организаций; для остальных в HTML оставлены заглушки.
+const organizationCrestNames = ['sylvanhart-v1.png', 'grossblood-purple-v2.png',
+  'nod-v1.png', 'espada-v1.png', 'collegium-v4.png', 'pantheon-v2.png'];
+const bannerIconNames = ['create.png', 'badge.png', 'race.png', 'castle.png', 'map.png',
+  'condition.png', 'fist.png', 'cause-falls.png', 'no-struggle.png', 'dice.png', 'up-arrow.svg'];
+
 const routes = new Map([
   ['/', path.join(__dirname, 'index.html')],
   ['/index.html', path.join(__dirname, 'index.html')],
@@ -57,15 +75,33 @@ const routes = new Map([
   // Макет главной ролевой живёт рядом со стендом мастера, на согласованном /role.
   ['/role', path.join(__dirname, 'role/index.html')],
   ['/role/', path.join(__dirname, 'role/index.html')],
+  // Основной текст уже находится в role/index.html; парсер и md-файлы не выдаются.
   ...['style.css', 'page.js', 'content.js'].map(name => ['/role/' + name, path.join(__dirname, 'role', name)]),
+  ['/role/runtime.js', path.join(packageRoot, 'resources/guide/page.js')],
   ['/role/icons.json', path.join(packageRoot, 'resources/presentation/icons.json')],
   ['/role/icons.local.json', path.join(packageRoot, 'resources/presentation/icons.local.json')],
-  ...['bridge-hero.png', 'character-portraits.png'].map(name => ['/role/assets/' + name, path.join(__dirname, 'role/assets', name)]),
+  ...['bridge-hero.png', 'hero-background.jpg', 'locations.jpg', 'character-portraits.png', 'badge-circle.webp'].map(name => ['/role/assets/' + name, path.join(__dirname, 'role/assets', name)]),
+  ...cityCrestNames.map(name => ['/role/assets/city-crests/' + name, path.join(__dirname, 'role/assets/city-crests', name)]),
+  ['/role/assets/city-backgrounds/zelenolesye.webp', path.join(__dirname, 'role/assets/city-backgrounds/zelenolesye.webp')],
+  ['/role/assets/city-backgrounds/questpost.png', path.join(__dirname, 'role/assets/city-backgrounds/questpost.png')],
+  ...raceImageNames.map(name => ['/role/assets/races/' + name, path.join(__dirname, 'role/assets/races', name)]),
+  ...organizationCrestNames.map(name => ['/role/assets/organization-crests/' + name, path.join(__dirname, 'role/assets/organization-crests', name)]),
+  ...bannerIconNames.map(name => ['/role/assets/banner-icons/' + name, path.join(__dirname, 'role/assets/banner-icons', name)]),
+  // В CSS ./assets/fonts ведёт в /role/assets/fonts, а ../assets/fonts — в /assets/fonts.
+  // Оба адреса отдаём из одной папки; это сохраняет текущие пути пользователя.
+  ...roleFontNames.flatMap(name => [
+    ['/role/assets/fonts/' + name, path.join(roleFontDirectory, name)],
+    ['/assets/fonts/' + name, path.join(roleFontDirectory, name)],
+    ['/role/media/fonts/' + name + '/file', path.join(roleFontDirectory, name)],
+  ]),
+  ['/role/assets/jost-bold.ttf', path.join(roleFontDirectory, 'jost-bold.ttf')],
   ['/preview.css', path.join(__dirname, 'preview.css')],
   ['/base.css', path.join(__dirname, 'base.css')],
   ['/preview.js', path.join(runtime, 'preview-dist/preview.js')],
   ['/preview.js.map', path.join(runtime, 'preview-dist/preview.js.map')],
   ['/styles/forum.css', path.join(packageRoot, 'resources/forum.css')],
+  ['/styles/creation.css', path.join(packageRoot, 'resources/creation.css')],
+  ['/role/media/locations.jpg/file', path.join(__dirname, 'role/assets/locations.jpg')],
   ['/styles/cards.css', path.join(packageRoot, 'resources/cards.css')],
   ['/assets/nature.svg', path.join(__dirname, 'assets/nature.svg')],
   ['/assets/fontawesome.css', path.join(assets, 'fontawesome.css')],
@@ -73,8 +109,8 @@ const routes = new Map([
     .map(name => ['/assets/fonts/' + name, path.join(assets, name)]),
 ]);
 const mime = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8', '.map': 'application/json', '.woff2': 'font/woff2',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json; charset=utf-8'};
+  '.js': 'text/javascript; charset=utf-8', '.map': 'application/json', '.woff2': 'font/woff2', '.woff': 'font/woff', '.otf': 'font/otf',
+  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.ttf': 'font/ttf', '.json': 'application/json; charset=utf-8'};
 const server = http.createServer((request, response) => {
   const url = new URL(request.url, 'http://127.0.0.1:' + port);
   if (url.pathname === '/events') {
@@ -108,7 +144,9 @@ const watches = [];
 for (const name of ['index.html', 'style.css', 'page.js', 'content.js']) {
   watches.push(fs.watch(path.join(__dirname, 'role', name), () => announce('role')));
 }
+watches.push(fs.watch(path.join(packageRoot, 'resources/guide/page.js'), () => announce('role')));
 for (const file of [path.join(packageRoot, 'resources/forum.css'), path.join(packageRoot, 'resources/cards.css'),
+  path.join(packageRoot, 'resources/creation.css'),
   path.join(__dirname, 'base.css'), path.join(__dirname, 'preview.css')]) {
   watches.push(fs.watch(file, () => announce('styles')));
 }

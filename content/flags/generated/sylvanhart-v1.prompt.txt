@@ -1,0 +1,16 @@
+Tool: built-in image_gen.imagegen
+Transparent background: true
+Reference images:
+C:/Users/KusoT/AppData/Local/Temp/codex-clipboard-dc0c8024-9a6f-47b6-8d18-6d963fc66589.png
+C:/Forum/Flarum/packages/roleplay-new/content/flags/544214.png
+C:/Forum/Flarum/packages/roleplay-new/content/flags/251623.png
+C:/Forum/Flarum/packages/roleplay-new/content/flags/generated/grossblood-purple-v2.png
+
+Prompt:
+Create ONE heraldic banner for the fantasy clan Sylvanhart, adapting the old emblem in image 1.
+Input roles: image 1 = motif reference ONLY (gear surrounded by pale leafy vines); images 2 and 3 = strict FLAT illustration and heraldic linework references; image 4 = banner outer silhouette and proportions ONLY, not its dragon or textures.
+Use a tall five-sided pennon: straight horizontal top, straight vertical sides, shallow centered downward point at the bottom formed by two diagonal edges. Width/height approximately 0.778, identical silhouette and relative height to the other Hillsgaard clan banners. Front-on, no perspective, whole banner visible, small transparent margins. Plain strong black exterior outline. Opaque uniform deep heraldic BLUE field (#243b54).
+Central single integrated emblem: one large round COPPER-GOLD gear, four broad curved spokes, circular hub opening and an even ring of approximately twelve broad teeth. Gear must be flat warm ochre gold (#c4944d), representing the copper-colored wheel in the original, with black outlines and simple black structural lines. The blue field is visible through its four openings and center. It is a heraldic wheel, NOT a shiny modern machine render.
+Around and behind the gear is one near-closed oval wreath of SILVER/IVORY leafy vines (#eee8d8), preserving the original's broad deeply lobed vine/acanthus-like leaves and curling thin stems, but simplifying to about eight to ten large readable leaves. Leaves have bold black exterior outlines and a few black veins. Two stems meet/cross neatly near the bottom, with restrained natural curls. The wreath is part of the central emblem ON the blue field, not external heraldic mantling or a decorative frame. Keep gear circular and dominant; the silver wreath comfortably surrounds it without tangling over the four spokes. Balanced organic and mechanical design, conveying both craftsmanship and elven heritage. Motif occupies most of the banner width with generous edge clearance, and fits elegantly in the upper and middle field, wreath extending toward the lower point.
+Exactly three flat fill colors: blue field, ochre/copper-gold gear, ivory/silver leaves, plus black ink. All fills absolutely solid and uniform, no secondary shading colors. Match the simple medieval fantasy heraldic drawing of image 2 (flowers) and image 3 (gold figure): crisp confident black contours, tasteful moderate line detail, bold readable shapes. NO metallic shine from original emblem. NO gradient, NO texture, NO grain, NO painted lighting, NO shadow, NO highlights, NO bevel, NO 3D, NO fabric folds. No thin gold halo outlines. No added dragon, eye, skull, crowns, helmet, supporters, weapons, scrolls, text or letters. Transparent alpha background only OUTSIDE the fully opaque banner. Deliver one finished tall PNG asset as part of the same clan pennon collection.
+

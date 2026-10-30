@@ -2,12 +2,8 @@
  * а не в стилях отдельных сущностей: один редактор открывается на обоих экранах. */
 .RpCatalogEditor { width: calc(100vw - 24px); max-width: 480px; font-family: Arial, sans-serif; }
 .RpCatalogEditor--cards { max-width: 620px; }
-.RpCatalogEditor .Modal-header { padding: 18px 22px; }
-.RpCatalogEditor .Modal-title, .RpCatalogEditor .App-titleControl--text { font-size: 18px; line-height: 1.4; font-weight: 700; text-align: left; }
-.RpCatalogEditor .Modal-title .icon, .RpCatalogEditor .App-titleControl--text .icon { margin-right: 8px; }
 .RpCatalogEditor .Modal-body { padding: 20px 22px; background: var(--control-bg); }
 .RpCatalogEditor fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
-.RpCatalog-error { padding: 12px; background: var(--body-bg); color: #b64b4b; border-radius: 6px; margin-bottom: 16px; }
 
 /* У сетки и её дочерних полей не суммируются нижние отступы. Название получает
  * больше места, числовое поле круга — меньше; короткие значения не растягиваем. */
@@ -43,6 +39,17 @@
 .RpItemUsage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; margin-bottom: 16px; }
 .RpItemUsage .RpCheck { margin: 0; }
 .RpItemMagic { padding-top: 16px; }
+
+/* Диапазон жизни остаётся парой чисел; рост допускает свободную запись.
+ * Цвет хранится как HEX, пустое поле оставляет оформление за темой форума. */
+.RpRaceEditor-lifespan { display: flex; align-items: end; gap: 6px; }
+.RpRaceEditor-lifespan > .RpField { flex: 1; margin: 0; }
+.RpRaceEditor-lifespan > span { padding-bottom: 10px; color: var(--muted-color); }
+.RpRaceEditor-lifespan .RpForm-label { font-weight: 400; font-size: 11px; }
+.RpRaceEditor-lifespan .RpForm-label .icon { display: none; }
+.RpRaceEditor-summary { align-items: end; }
+.RpRaceEditor-color { display: flex; align-items: center; gap: 8px; max-width: 200px; }
+.RpRaceEditor-color > input[type="color"] { flex: 0 0 34px; width: 34px; height: 34px; padding: 2px; border: 0; border-radius: 5px; background: var(--body-bg); cursor: pointer; }
 
 /* Простые справочники оставляют небольшой значок слева. Основные поля справа
  * занимают одну-две колонки даже при ширине окна 480 px. */
@@ -82,6 +89,16 @@
 .RpMultiPicker-option .icon { font-size: 20px; flex-shrink: 0; }
 .RpMultiPicker-option span { overflow-wrap: anywhere; }
 
+/* Содержимое книги остаётся компактным списком. Выбор использует общий поиск. */
+.RpLiterature-list { margin: 12px 0 6px; }
+.RpLiterature-row { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto 30px; gap: 8px; align-items: center; padding: 7px 0; font-size: 13px; border-bottom: 1px solid color-mix(in srgb, var(--muted-color) 15%, transparent); }
+.RpLiterature-row > span { min-width: 0; overflow-wrap: anywhere; }
+.RpLiterature-row > .icon, .RpLiterature-circle { color: var(--muted-color); }
+.RpLiterature-row small { display: block; color: var(--muted-color); font-size: 11px; }
+.RpLiterature-row .Button { width: 30px; height: 30px; padding: 0; }
+.RpLiterature-picker { margin-top: 12px; }
+.RpLiterature-picker .RpMultiPicker { margin-bottom: 0; }
+
 /* Предпросмотр использует настоящие карточки профиля, а не копию их разметки.
  * 84 + 38 + 28 = 150 px у сокращённой; 122 + 28 = 150 px у полной.
  * Одинаковые высоты закреплены независимо от отсутствия источника/пустого урона. */
@@ -108,12 +125,11 @@
 .RpCardPreviews .RpCard--compact .RpCard-icon > .icon { font-size: 33px; }
 .RpCardPreviews .RpCard--compact .RpCard-body { height: 38px; min-height: 38px; padding: 4px 9px; }
 .RpCardPreviews .RpCard--compact .RpCard-magical { --rp-magical-size: 23px; }
-.RpCardPreviews .RpCard--expanded .RpCard-description { flex: none; height: calc(var(--rp-card-text-size) * 1.35 * 3); }
+.RpCardPreviews .RpCard--expanded .RpCard-descriptionArea { flex: none; height: calc(var(--rp-card-text-size) * 1.35 * 3); }
 .RpCardPreviews .RpCard-footerContents { height: 100%; overflow-x: auto; overflow-y: hidden; }
 
 @media (max-width: 550px) {
   .RpCatalogEditor .Modal-body { padding: 16px; }
-  .RpCatalogEditor .Modal-header { padding: 16px; }
   .RpGrid--3, .RpGrid--4, .RpGrid--name, .RpGrid--itemName { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .RpGrid--name > :first-child, .RpGrid--itemName > :first-child { grid-column: 1 / -1; }
   .RpCardPreviews { grid-template-columns: 140px minmax(0, 1fr); gap: 12px; }

@@ -41,6 +41,10 @@ export default class CharacterHistory extends Component<Attrs> {
           </span>)}</div>}
         {details.action === 'set_rank' && <div className="RpCharacterHistory-caption">
           {beforeRank.name ? <RankLabel rank={beforeRank}/> : 'Без ранга'} → {afterRank.name ? <RankLabel rank={afterRank}/> : 'Без ранга'}</div>}
+        {(details.action === 'episode_reward' || details.action === 'topic_reward') && Array.isArray(details.grants) && details.grants.map((grant, index) => {
+          const row = object(grant);
+          return <div className="RpCharacterHistory-caption" key={index}>{text(row, 'name')}{Number(row.quantity) > 1 ? ' × ' + Number(row.quantity) : ''}</div>;
+        })}
         {text(details, 'comment') && <p className="RpCharacterHistory-comment">{text(details, 'comment')}</p>}
       </div>
     </li>;

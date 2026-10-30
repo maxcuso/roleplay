@@ -1,0 +1,12 @@
+Built-in imagegen.
+
+Use case: logo-brand.
+Asset: medieval fantasy heraldic shield for the Pantheon of the Five Foundations.
+Reference image 1: use ONLY its exact outer shield shape, black outline and simple heraldic drawing style. Do not copy its owl, crescent, book or purple color.
+Create a single large GOLD FIVE-PETALLED ROSETTE around one plain SILVER/IVORY CIRCULAR DISC, centered on a solid deep dark crimson field #702E36. Exactly FIVE equal-size petals arranged with fivefold rotational symmetry, one petal pointing upward and the others at even 72-degree intervals. The five rounded broad petals must read clearly as separate equally important lobes around the central disc. Each petal is a simple gold shape with a black outline. The central ivory disc has a simple black circular outline and is empty. No stem, no leaves, no face, no text, no small secondary symbols. This symbolizes five equal deities joined in one faith.
+Strictly flat front-facing medieval heraldry, confident black outlines, large readable silhouettes and uniform solid colors. No gradients, texture, lighting, shine, ornament, 3D, perspective, crown, rays, stars, pentagram or letters. Do not add a decorative rim.
+Canvas exactly 1200x1600 portrait 3:4, full-bleed shield: top flat from x240 to x959 at y6; clipped upper corners to x6 and1193 at y220; perfectly vertical sides to around y1155; subtly rounded lower corners; two short diagonal lower edges meet at x600,y1592. Match the reference silhouette. Transparent only outside shield; dark red field completely opaque. Center the rosette around x600,y760, overall diameter around 850px, generous clear space on all sides.
+
+Generated source: C:\Users\KusoT\.codex\generated_images\01a149af-703a-7770-91da-8fdb295c9ba6\exec-2b1d24b1-4d67-4ef9-8d1f-1169e4adbaa8.png
+Final preparation: exact 1200x1600 canvas; same clipped-top, vertical-side, rounded-lower-corner shield contour as collegium-v4.png. Uniform deep crimson field #702E36. Generated rosette copied at original scale without redrawing, stretching or cropping. Alpha contour checked against collegium-v4.png.
+

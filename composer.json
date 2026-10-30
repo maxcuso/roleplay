@@ -16,9 +16,10 @@
   "require": {
     "php": "^8.3",
     "flarum/core": "^2.0.0-rc.8",
-    "enshrined/svg-sanitize": "^0.22",
+    "enshrined/svg-sanitize": "^0.22 || ^1.1",
     "flarum/tags": "^2.0.0-rc.8",
-    "flarum/lock": "^2.0.0-rc.8"
+    "flarum/lock": "^2.0.0-rc.8",
+    "flarum/mentions": "^2.0.0-rc.8"
   },
   "autoload": {
     "psr-4": {
@@ -30,6 +31,7 @@
       "/resources/presentation/icons.local.json",
       "/tests/.runtime/**",
       "/js/node_modules/**",
+      "/js/.flarum-typings/**",
       "/vendor/**"
     ]
   },
@@ -43,5 +45,8 @@
         "color": "#ffffff"
       }
     }
+  },
+  "suggest": {
+    "fof/drafts": "Use a discussion draft as the live source for an event opening post (Flarum 2-compatible version)"
   }
 }

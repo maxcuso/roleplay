@@ -6,22 +6,22 @@ import SelectableEntityCard from '../../../common/cards/SelectableEntityCard';
 
 export default function LoadoutStep(state: CreationState): JSX.Element {
   const view = state.view!, payload = view.draft.payload;
-  function contents(option: LoadoutOption): JSX.Element {
-    return <div className="RpWizard-bundle">{option.items.map((entry, index) => {
+  function contents(option: LoadoutOption, automatic = false): JSX.Element {
+    return <div className={automatic ? 'RpWizard-cardGrid' : 'RpWizard-bundle'}>{option.items.map((entry, index) => {
       const item = lookup(view.catalog.definitions, 'items', entry.item_id);
       return item ? <ItemCard key={index} mode="expanded" item={item} quantity={entry.quantity}
-        type={lookup(view.catalog.definitions, 'item-types', item.item_type_id)}/> : <p key={index}>Предмет недоступен.</p>;
+        type={lookup(view.catalog.definitions, 'item-types', item.item_type_id)}/> : <p key={index}>Предмет больше недоступен. Измените выбор</p>;
     })}</div>;
   }
   return <div>
-    <p className="RpWizard-instruction">Выберите стартовое снаряжение.</p>
+    <p className="RpWizard-instruction">Выберите стартовое снаряжение</p>
     {view.catalog.configuration.loadout.map(group => <section key={group.key} className="RpWizard-choiceSection">
-      <h3>{group.name} {!group.automatic && <span>{(payload.loadout[group.key] ?? []).length}/{group.max}</span>}</h3>
+      <h3>{group.name}{!group.automatic && <span> – выбрано {(payload.loadout[group.key] ?? []).length} из {group.max}</span>}</h3>
       {(payload.loadout[group.key] ?? []).filter(key => !group.options.some(option => option.key === key)).map(key =>
         <button key={key} type="button" onclick={() => state.change(() => {
           payload.loadout[group.key] = payload.loadout[group.key].filter(value => value !== key);
         })}>Убрать недоступный вариант набора</button>)}
-      {group.automatic ? <div><p className="RpWizard-help">Выдаётся автоматически</p>{contents(group.options[0])}</div>
+      {group.automatic ? <div><p className="RpWizard-help">Выдаётся автоматически</p>{contents(group.options[0], true)}</div>
         : <div className="RpWizard-cardGrid">{group.options.map(option => {
           const chosen = payload.loadout[group.key] ?? [], selected = chosen.includes(option.key);
           const available = option.items.every(entry => {

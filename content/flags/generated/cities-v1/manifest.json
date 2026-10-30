@@ -1,0 +1,106 @@
+{
+  "size": {
+    "width": 1200,
+    "height": 1600
+  },
+  "tool": "built-in imagegen",
+  "version": 3,
+  "cities": [
+    {
+      "key": "questpost",
+      "name": "Квестпост",
+      "file": "questpost.png",
+      "shape": "shallow-point",
+      "fieldRGB": [
+        35,
+        65,
+        71
+      ],
+      "motif": "Золотой мост между серебряными скалами — город, выросший у переправы через обрыв."
+    },
+    {
+      "key": "verkhovye",
+      "name": "Верховье",
+      "file": "verkhovye-v3.png",
+      "shape": "beveled",
+      "fieldRGB": [
+        99,
+        42,
+        53
+      ],
+      "motif": "Серебряная гора с воротами и двумя водопадами; упрощённый рисунок без перспективы.",
+      "previousFiles": [
+        "verkhovye.png",
+        "verkhovye-v2.png"
+      ],
+      "previousFile": "verkhovye-v2.png"
+    },
+    {
+      "key": "zelenolesye",
+      "name": "Зеленолесье",
+      "file": "zelenolesye-v3.png",
+      "shape": "rounded",
+      "fieldRGB": [
+        35,
+        63,
+        44
+      ],
+      "motif": "Серебряное дерево с золотыми плодами и открытыми корнями — лес, плодородие и преемственность.",
+      "previousFiles": "zelenolesye.png",
+      "previousFile": "zelenolesye.png"
+    },
+    {
+      "key": "arah",
+      "name": "Оазис Арах",
+      "file": "arah-v3.png",
+      "shape": "long-point",
+      "fieldRGB": [
+        38,
+        49,
+        85
+      ],
+      "motif": "Серебряный источник с каплей воды над золотыми дюнами — священная вода среди пустыни.",
+      "previousFiles": [
+        "arah.png",
+        "arah-v2.png"
+      ],
+      "previousFile": "arah-v2.png"
+    },
+    {
+      "key": "hillsgaard",
+      "name": "Хиллсгард",
+      "file": "hillsgaard-v3.png",
+      "shape": "point",
+      "fieldRGB": [
+        113,
+        35,
+        40
+      ],
+      "motif": "Золотая крепость на семи серебряных холмах — городская община, независимо от правящего клана.",
+      "previousFiles": "hillsgaard.png",
+      "previousFile": "hillsgaard.png"
+    },
+    {
+      "key": "grim",
+      "name": "Грим",
+      "file": "grim-v3.png",
+      "shape": "swallowtail",
+      "fieldRGB": [
+        25,
+        29,
+        34
+      ],
+      "motif": "Серебряный якорь с золотым канатом над двумя волнами — порт, море и торговля.",
+      "previousFiles": "grim.png",
+      "previousFile": "grim.png"
+    }
+  ],
+  "commonCrown": {
+    "width": 448,
+    "source": "questpost.png",
+    "mode": "Exact source artwork copied at original scale",
+    "file": "shared-crown.png",
+    "height": 277
+  },
+  "overview": "overview-v3.png"
+}

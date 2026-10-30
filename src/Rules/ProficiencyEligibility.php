@@ -15,32 +15,32 @@ final class ProficiencyEligibility extends LearningEligibility
             return $problem;
         }
         if ($learned) {
-            return $this->denied('proficiency_already_learned', 'Владение уже изучено.');
+            return $this->denied('proficiency_already_learned', 'Это владение уже изучено');
         }
         if ($remainingChoices < 0) {
-            return $this->denied('invalid_learning_state', 'Некорректное состояние обучения.');
+            return $this->denied('invalid_learning_state', 'Не удалось определить состояние обучения. Попробуйте обновить страницу');
         }
 
         $slug = $attribute['slug'];
         $automaticMinimum = $this->rules->automaticProficiencyMinimum($slug, $proficiency['slug'] ?? '');
         if ($automaticMinimum !== null) {
             if ($attributeLevel < $automaticMinimum) {
-                return $this->denied('attribute_level_required', 'Для автоматического получения нужна характеристика '.$automaticMinimum.'.',
+                return $this->denied('attribute_level_required', 'Владение будет получено автоматически при уровне характеристики '.$automaticMinimum,
                     ['minimum_attribute_level' => $automaticMinimum]);
             }
             // Магическое оружие на Магии 5 выдаётся автоматически и не требует выбора.
             return $this->allowed(['action' => 'automatic', 'consume_choice' => false]);
         }
         $levels = $this->rules->proficiencyChoiceLevels($slug);
-        if (!$levels) {
-            return $this->denied('no_proficiency_choices', 'Характеристика не предоставляет выбор этого владения.');
+        if (!$levels && $remainingChoices === 0) {
+            return $this->denied('no_proficiency_choices', 'Эта характеристика не даёт выбора указанного владения');
         }
-        if ($attributeLevel < $levels[0]) {
-            return $this->denied('attribute_level_required', 'Для получения владения нужна характеристика '.$levels[0].'.',
+        if ($remainingChoices === 0 && $attributeLevel < ($levels[0] ?? PHP_INT_MAX)) {
+            return $this->denied('attribute_level_required', 'Для получения владения повысьте характеристику до уровня '.$levels[0],
                 ['minimum_attribute_level' => $levels[0]]);
         }
         if ($remainingChoices === 0) {
-            return $this->denied('no_proficiency_choices', 'Нет неиспользованного выбора владения.');
+            return $this->denied('no_proficiency_choices', 'У вас нет неиспользованных выборов владения');
         }
         return $this->allowed(['action' => 'learn', 'consume_choice' => true]);
     }

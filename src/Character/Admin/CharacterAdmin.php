@@ -24,7 +24,7 @@ final class CharacterAdmin
     public function list(User $actor, string $search, string $status, int $page): array
     {
         Access::admin($actor);
-        if ($status !== '' && !in_array($status, self::STATUSES, true)) FieldValues::invalid('Неизвестный статус персонажа.');
+        if ($status !== '' && !in_array($status, self::STATUSES, true)) FieldValues::invalid('Не удалось определить статус персонажа. Попробуйте обновить страницу');
         $query = $this->db->table('roleplay_characters');
         if ($search !== '') {
             $literal = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search);
@@ -61,12 +61,12 @@ final class CharacterAdmin
         $discussionId = $this->discussionId($input['discussion_link'] ?? null, $actor);
         return $this->db->transaction(function () use ($id, $revision, $first, $last, $discussionId): array {
             $row = $this->db->table('roleplay_characters')->where('id', $id)->lockForUpdate()->first();
-            if (!$row) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+            if (!$row) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             if ((int) $row->revision !== $revision) {
-                throw new ApiProblem('character_revision_conflict', 'Персонаж изменился. Обнови список.', 409);
+                throw new ApiProblem('character_revision_conflict', 'Данные персонажа изменились. Попробуйте обновить страницу', 409);
             }
             if ($discussionId !== null && $this->db->table('roleplay_characters')->where('discussion_id', $discussionId)
-                ->where('id', '!=', $id)->exists()) FieldValues::invalid('Тема уже привязана к другому персонажу.');
+                ->where('id', '!=', $id)->exists()) FieldValues::invalid('Эта тема уже привязана к другому персонажу. Укажите другую тему');
             $this->db->table('roleplay_characters')->where('id', $id)->update([
                 'first_name' => $first, 'last_name' => $last, 'discussion_id' => $discussionId,
                 'revision' => $revision + 1,
@@ -86,13 +86,13 @@ final class CharacterAdmin
         Access::admin($actor);
         return (new CatalogRevision($this->db))->read(function () use ($id, $revision): array {
             $owner = $this->db->table('roleplay_characters')->where('id', $id)->value('user_id');
-            if ($owner === null) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+            if ($owner === null) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             // Как при создании: сначала владелец, затем персонаж. Лимит персонажей меняется согласованно.
             ActorOperationLock::acquire($this->db, (int) $owner);
             $row = $this->db->table('roleplay_characters')->where('id', $id)->lockForUpdate()->first();
-            if (!$row) throw new ApiProblem('character_not_found', 'Персонаж не найден.', 404);
+            if (!$row) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             if ((int) $row->revision !== $revision) {
-                throw new ApiProblem('character_revision_conflict', 'Персонаж изменился. Обнови список.', 409);
+                throw new ApiProblem('character_revision_conflict', 'Данные персонажа изменились. Попробуйте обновить страницу', 409);
             }
             // Сначала дочерние строки: внешние ключи намеренно запрещают удалять только заголовок.
             // При добавлении новой таблицы состояния персонажа добавь её суффикс в этот список.
@@ -114,10 +114,10 @@ final class CharacterAdmin
         $root = rtrim($this->url->to('forum')->path(''), '/');
         if (str_starts_with($link, $root.'/')) $link = substr($link, strlen($root));
         if (!preg_match('~^/d/([1-9][0-9]*)(?:-[^/?#]*)?(?:[/?#].*)?$~D', $link, $match)) {
-            FieldValues::invalid('Укажи ссылку на тему этого форума: /d/номер.');
+            FieldValues::invalid('Укажите ссылку на тему этого форума в формате /d/номер');
         }
         $id = (int) $match[1];
-        if (!Discussion::whereVisibleTo($actor)->where('id', $id)->exists()) FieldValues::invalid('Тема анкеты не найдена.');
+        if (!Discussion::whereVisibleTo($actor)->where('id', $id)->exists()) FieldValues::invalid('Тема анкеты не найдена. Проверьте ссылку на тему');
         return $id;
     }
 }

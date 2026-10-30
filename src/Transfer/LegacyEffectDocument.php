@@ -15,13 +15,13 @@ final class LegacyEffectDocument
             if (!isset($catalogs[$owner])) continue;
             foreach ($catalogs[$owner] as &$row) {
                 if (!isset($row['effects'])) continue;
-                if (!is_array($row['effects']) || !array_is_list($row['effects'])) $this->invalid('Эффекты должны быть списком.');
+                if (!is_array($row['effects']) || !array_is_list($row['effects'])) $this->invalid('Укажите эффекты списком');
                 foreach ($row['effects'] as &$effect) {
-                    if (!is_array($effect)) $this->invalid('Некорректный эффект.');
+                    if (!is_array($effect)) $this->invalid('Проверьте параметры эффекта');
                     if (!array_key_exists('effect_key', $effect)) continue;
                     $key = $effect['effect_key'];
                     if (!is_string($key) || !isset($definitions[$key])) {
-                        $this->invalid('Для старой привязки нужен раздел effects с определением: '.(is_string($key) ? $key : 'пустой ключ'));
+                        $this->invalid('Для старой привязки добавьте в раздел effects определение эффекта: '.(is_string($key) ? $key : 'пустой ключ'));
                     }
                     $definition = $definitions[$key];
                     unset($definition['key'], $definition['enabled'], $definition['sort_order'], $effect['effect_key']);
@@ -33,7 +33,7 @@ final class LegacyEffectDocument
         }
         // Непривязанные определения не являются самостоятельными сущностями новой модели.
         if (isset($catalogs['effects']) && !isset($catalogs['perks']) && !isset($catalogs['items'])) {
-            $this->invalid('Эффекты теперь импортируются вместе с перками или предметами.');
+            $this->invalid('Укажите эффекты внутри соответствующих перков или предметов. Отдельный импорт эффектов больше не поддерживается');
         }
         unset($catalogs['effects']);
         return $catalogs;

@@ -34,6 +34,15 @@ final class Access
     {
         if (!$actor->exists) throw new PermissionDeniedException();
         self::view($actor);
-        $actor->assertCan('roleplay.moderate');
+        if (!$actor->can('roleplay.moderate')
+            && !\Maxcuso\Roleplay\Workspace\WorkspaceAccess::canCatalog($actor, 'create')) {
+            throw new PermissionDeniedException();
+        }
+    }
+
+    public static function catalogImage(User $actor): void
+    {
+        if (\Maxcuso\Roleplay\Workspace\WorkspaceAccess::canCatalog($actor, 'edit')) return;
+        self::catalogCreate($actor);
     }
 }

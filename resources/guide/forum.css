@@ -1,0 +1,28 @@
+/* Только стык с оболочкой Flarum. Общие компоненты — в style.less рядом. */
+.GuidePage .App-content { padding-top: 0; }
+.RpGuide { min-height: 70vh; }
+.RpGuide .Button { line-height: 1.4; text-decoration: none; }
+.RpGuide button { white-space: normal; }
+.RpGuide .Tabs--sticky { top: 64px; }
+.RpGuide .Hero { margin-bottom: 0; }
+/* Уровень навыка — сбоку от общей карточки; две колонки сохраняются и на телефоне. */
+.RpGuide .Step.Step--perk {
+  grid-template-columns: 28px minmax(0,1fr);
+  align-items: start;
+  gap: 10px;
+  margin: 0;
+}
+.RpGuide .Badge--level {
+  width: 28px;
+  height: 28px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+html.GuidePage { scroll-padding-top: 80px; }
+@media (min-width: 1100px) {
+  .RpGuide .TabPanel[data-document] > .Contents { top: 140px; max-height: calc(100dvh - 165px); }
+}
+@media (max-width: 767px) {
+  .RpGuide .Tabs--sticky { top: 56px; }
+  .RpGuide .Button { max-width: 100%; }
+}

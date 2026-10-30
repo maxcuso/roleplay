@@ -17,8 +17,8 @@ $original = $container->make(ConnectionInterface::class);
 $prefix = 'rpn_'.bin2hex(random_bytes(3)).'_';
 if (!preg_match('/^rpn_[0-9a-f]{6}_$/D', $prefix) || $prefix === $original->getTablePrefix()) throw new RuntimeException('Unsafe prefix');
 $db = new ($original::class)($original->getPdo(), $original->getDatabaseName(), $prefix, $original->getConfig());
-$base = require __DIR__.'/../migrations/2026_10_02_000001_create_base_catalogs.php';
-$ranks = require __DIR__.'/../migrations/2026_10_09_000001_add_ranks.php';
+$base = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
+$ranks = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
 $assert = function (bool $ok, string $message): void {if (!$ok) throw new RuntimeException($message);};
 $reject = function (callable $action, string $code) use ($assert): void {
     try {$action();} catch (ApiProblem $error) {$assert($error->problemCode === $code, 'Wrong rejection'); return;}
@@ -39,8 +39,11 @@ $owner = new class extends User {
 $owner->id = 100; $owner->exists = true;
 $admin = User::findOrFail(1);
 $base['up']($db->getSchemaBuilder());
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_17_000001_race_presentation.php')['up']($db->getSchemaBuilder());
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_22_000002_race_quote_image.php')['up']($db->getSchemaBuilder());
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_30_000003_literature_contents.php')['up']($db->getSchemaBuilder());
 $ranks['up']($db->getSchemaBuilder());
-(require __DIR__.'/../migrations/2026_10_10_000002_roleplayer_statistics.php')['up']($db->getSchemaBuilder());
+(require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_10_000002_roleplayer_statistics.php')['up']($db->getSchemaBuilder());
 try {
     $race = (new CatalogRegistry($db))->get('races')->save(null, 1, ['name' => 'Проверка'], $admin)['id'];
     $now = gmdate('Y-m-d H:i:s');

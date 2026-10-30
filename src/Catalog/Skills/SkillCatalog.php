@@ -70,17 +70,17 @@ final class SkillCatalog extends AttributeBoundCatalog
     private function validateLevels(mixed $input): array
     {
         if (!is_array($input) || !array_is_list($input) || count($input) > 3) {
-            FieldValues::invalid('У навыка должны быть уровни I, II и III.');
+            FieldValues::invalid('Добавьте навыку уровни I, II и III');
         }
         $selected = [];
         foreach ($input as $row) {
             if (!is_array($row)) {
-                FieldValues::invalid('Некорректная привязка уровня навыка.');
+                FieldValues::invalid('Проверьте привязку уровня навыка к перку');
             }
             FieldValues::allowed($row, ['level', 'perk_id']);
             $level = FieldValues::integer($row['level'] ?? null, 'Уровень навыка', 1, 3);
             if (array_key_exists($level, $selected)) {
-                FieldValues::invalid('Уровень навыка повторяется.');
+                FieldValues::invalid('Уровень навыка указан несколько раз. Уберите повторную запись');
             }
             $selected[$level] = FieldValues::integer($row['perk_id'] ?? null, 'Перк', 1, PHP_INT_MAX, true);
         }
@@ -97,7 +97,7 @@ final class SkillCatalog extends AttributeBoundCatalog
     private function requireComplete(array $levels): void
     {
         if (count($levels) !== 3 || in_array(null, array_column($levels, 'perk_id'), true)) {
-            FieldValues::invalid('Перед включением навыка выбери перки для уровней I, II и III.');
+            FieldValues::invalid('Выберите перки для уровней I, II и III, прежде чем включать навык');
         }
     }
 }
