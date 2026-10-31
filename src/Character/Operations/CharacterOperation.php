@@ -14,7 +14,10 @@ use Maxcuso\Roleplay\Catalog\Shared\CatalogRevision;
 /** Общая оболочка проверки/исправления: права, версии, мьютекс, повтор и журнал. Правила — в callback. */
 final class CharacterOperation
 {
-    public function __construct(private readonly ConnectionInterface $db) {}
+    public function __construct(
+        private readonly ConnectionInterface $db,
+        private readonly \Maxcuso\Roleplay\Notification\CharacterNotifications $notifications,
+    ) {}
 
     public function run(int $id, User $actor, string $type, array $body, callable $authorize, callable $change): array
     {
@@ -61,7 +64,7 @@ final class CharacterOperation
                     'type' => $changed['event'], 'payload' => json_encode($changed['payload'], JSON_THROW_ON_ERROR),
                     'created_at' => $now,
                 ]);
-                \Maxcuso\Roleplay\Notification\CharacterNotifications::afterEvent($this->db, (array) $character,
+                $this->notifications->afterEvent($this->db, (array) $character,
                     $changed['event'], $changed['payload'], $eventId, (int) $actor->id);
                 return $result;
             });

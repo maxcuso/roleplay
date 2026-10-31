@@ -18,7 +18,7 @@ use Maxcuso\Roleplay\Creation\CreationCatalog;
 /** Выполняется только из сохранения нового поста внутри общей транзакции. */
 final class CompleteEpisode
 {
-    public function __construct(private ConnectionInterface $db, private Client $api) {}
+    public function __construct(private ConnectionInterface $db, private Client $api, private CharacterOperation $operations) {}
 
     public function publish(string $planId, CommentPost $post, User $actor): void
     {
@@ -57,7 +57,7 @@ final class CompleteEpisode
                 $receipt = [];
                 $operation = ['operation_key' => (string) Str::uuid(), 'revision' => (int) $character->revision,
                     'catalog_revision' => $catalog['revision'], 'plan_id' => $planId, 'recipient' => $recipient];
-                (new CharacterOperation($this->db))->run($id, $actor, $event ? 'episode_completion' : 'topic_reward', $operation,
+                $this->operations->run($id, $actor, $event ? 'episode_completion' : 'topic_reward', $operation,
                     fn (array $row) => (new CharacterVisibility())->assertVisible($row, $actor),
                     function (array $row) use ($recipient, $experience, $bonuses, $catalog, $event, $title, $post, &$receipt): array {
                         $awards = $this->award($row, $recipient, $catalog['definitions'], $title, $event !== null);

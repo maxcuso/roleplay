@@ -1,8 +1,8 @@
 <?php
 // Продолжение check-base-catalogs.php: только изолированные таблицы этого сценария.
-(function () use ($db, $schema, $create, $progressId, $owner, $moderator, $visitor, $topics): void {
+(function () use ($db, $schema, $create, $progressId, $owner, $moderator, $visitor, $topics, $characterOperations): void {
     $profile = new \Maxcuso\Roleplay\Character\Profile\CharacterProfile($db, $topics);
-    $progression = new \Maxcuso\Roleplay\Character\Progression\CharacterProgression($db);
+    $progression = new \Maxcuso\Roleplay\Character\Progression\CharacterProgression($db, $characterOperations);
     $db->table('roleplay_characters')->where('id', $progressId)->update(['status' => 'active']);
     $magicId = $db->table('roleplay_attributes')->where('slug', 'magic')->value('id');
     $db->table('roleplay_character_attributes')->where('character_id', $progressId)->where('attribute_id', $magicId)->update(['base_value' => 3, 'racial_bonus' => 0]);

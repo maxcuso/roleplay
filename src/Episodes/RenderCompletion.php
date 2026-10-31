@@ -12,12 +12,17 @@ use Illuminate\Database\ConnectionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use s9e\TextFormatter\Renderer;
 use Maxcuso\Roleplay\Character\Profile\CharacterVisibility;
-use Maxcuso\Roleplay\Presentation\CharacterAvatar;
+use Maxcuso\Roleplay\Presentation\CharacterAvatarUrl;
 
 /** Отображает сохранённый факт. Никогда не исполняет награды при просмотре. */
 final class RenderCompletion
 {
-    public function __construct(private ConnectionInterface $db) {}
+    public function __construct(
+        private ConnectionInterface $db,
+        private CharacterAvatarUrl $avatars,
+        private SlugManager $slugs,
+        private UrlGenerator $urls,
+    ) {}
 
     public function __invoke(Renderer $renderer, mixed $context, string $xml, ?ServerRequestInterface $request = null): string
     {
@@ -36,10 +41,10 @@ final class RenderCompletion
             ->whereIn('id', $characterIds)->get(['id', 'user_id', 'avatar'])->keyBy('id') : collect();
         $owners = User::whereIn('id', $characters->pluck('user_id')->unique()->all())->get()->keyBy('id');
         $profiles = [];
-        $slugs = resolve(SlugManager::class)->forResource(User::class);
+        $slugs = $this->slugs->forResource(User::class);
         foreach ($characters as $character) {
             if ($owner = $owners->get($character->user_id)) {
-                $profiles[$character->id] = resolve(UrlGenerator::class)->to('forum')
+                $profiles[$character->id] = $this->urls->to('forum')
                     ->path('u/'.rawurlencode($slugs->toSlug($owner)).'/roleplay').'?character='.$character->id;
             }
         }
@@ -61,7 +66,7 @@ final class RenderCompletion
                 foreach (['name', 'experience', 'base_experience', 'gold'] as $field) $person->setAttribute($field, (string) $recipient[$field]);
                 $person->setAttribute('initial', mb_strtoupper(mb_substr($recipient['name'], 0, 1)));
                 $character = $characters->get($recipient['character_id']);
-                $avatar = CharacterAvatar::url($character?->avatar);
+                $avatar = $this->avatars->url($character?->avatar);
                 if ($avatar) $person->setAttribute('avatar', $avatar);
                 if (isset($profiles[$recipient['character_id']])) $person->setAttribute('profile', $profiles[$recipient['character_id']]);
                 $person->setAttribute('experience_hint', RewardExperience::tooltip((int) $recipient['base_experience'], $recipient['bonuses']));

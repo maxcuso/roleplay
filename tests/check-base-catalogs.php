@@ -41,6 +41,9 @@ $db = new ($originalDb::class)($originalDb->getPdo(), $originalDb->getDatabaseNa
 // Как у подключения Flarum: послефиксационные callbacks работают и на изолированной БД.
 $db->setTransactionManager(new \Illuminate\Database\DatabaseTransactionsManager());
 $schema = $db->getSchemaBuilder();
+require_once __DIR__.'/support/NotificationServices.php';
+$testNotifications = \Maxcuso\Roleplay\Tests\Support\NotificationServices::make();
+$characterOperations = new \Maxcuso\Roleplay\Character\Operations\CharacterOperation($db, $testNotifications);
 $migration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
 $ranks = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
 $grantMigration = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_08_000001_track_creation_grants.php';

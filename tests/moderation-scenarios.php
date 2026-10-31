@@ -11,8 +11,8 @@ $db->table('roleplay_characters')->where('id', $reviewId)->update([
     'status' => 'creating', 'mechanics_status' => 'review', 'literature_status' => 'review',
     'literature_approved' => false, 'literature_hash' => null,
 ]);
-$reviewService = new CharacterReview($db, $topics);
-$identity = new CharacterIdentity($db);
+$reviewService = new CharacterReview($db, $topics, $characterOperations);
+$identity = new CharacterIdentity($db, $characterOperations);
 $reviewProfile = new \Maxcuso\Roleplay\Character\Profile\CharacterProfile($db, $topics);
 $reviewController = new CharacterReviewController($reviewService, $identity, $reviewProfile);
 $reviewKeyIndex = 0;
@@ -71,7 +71,7 @@ $oldCatalog = $reviewBody('mechanics', 'approve'); $oldCatalog['catalog_revision
 rejected(fn () => $reviewService->change($reviewId, $moderator, $oldCatalog), 'character_revision_conflict');
 
 $topicId = (int) $db->table('roleplay_characters')->find($reviewId)->discussion_id;
-$synchronizer = new \Maxcuso\Roleplay\Character\Application\LiteratureSynchronizer($db, $topics);
+$synchronizer = new \Maxcuso\Roleplay\Character\Application\LiteratureSynchronizer($db, $topics, $testNotifications);
 $marker = '[success title=Принято font=#1E2019 bg=#A9C7AA border=#A9C7AA][/success]';
 check(\Maxcuso\Roleplay\Character\Application\LiteratureAcceptance::matches($marker), 'Exact acceptance marker recognized');
 check(!\Maxcuso\Roleplay\Character\Application\LiteratureAcceptance::matches('[quote]'.$marker.'[/quote]'), 'Quoted marker cannot approve');

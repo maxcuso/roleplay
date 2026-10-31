@@ -6,7 +6,7 @@ use Maxcuso\Roleplay\Character\Profile\CharacterProfile;
 foreach ([2 => 3, 5 => 3, 6 => 10, 10 => 10, 11 => 25, 15 => 25, 16 => 100, 20 => 100, 21 => 100, 25 => 100] as $level => $cost) {
     check(ExperienceCosts::forLevel($level) === $cost, 'Cost for acquired level '.$level);
 }
-$progression = new CharacterProgression($db);
+$progression = new CharacterProgression($db, $characterOperations);
 $progressId = $profileId;
 $progressProfile = new CharacterProfile($db, $topics);
 $progressIndex = 0;

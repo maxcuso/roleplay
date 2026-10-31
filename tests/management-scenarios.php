@@ -1,6 +1,6 @@
 <?php
 use Maxcuso\Roleplay\Character\Moderation\CharacterManagement;
-$management = new CharacterManagement($db);
+$management = new CharacterManagement($db, $characterOperations);
 $manageIndex = 0;
 $manageBody = function (string $action, array $data, string $comment = 'Тестовая выдача') use ($progressProfile, $progressId, $moderator, &$manageIndex): array {
     $view = $progressProfile->read($progressId, $moderator);

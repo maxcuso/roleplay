@@ -12,7 +12,7 @@ use Maxcuso\Roleplay\Creation\CreationCatalog;
 /** Настройка не бросает кубики. Снимок возникает один раз в транзакции публикации. */
 final class CheckPlans
 {
-    public function __construct(private ConnectionInterface $db) {}
+    public function __construct(private ConnectionInterface $db, private CheckRead $reader) {}
 
     public function prepare(User $actor, array $body): array
     {
@@ -24,7 +24,7 @@ final class CheckPlans
         CheckAccess::discussion($discussionId, $actor);
         return (new CreationCatalog($this->db))->read(function () use ($actor, $id, $discussionId, $type, $payload): array {
             ActorOperationLock::acquire($this->db, (int) $actor->id);
-            $reader = new CheckRead($this->db);
+            $reader = $this->reader;
             $reader->definition($payload);
             if ($type === 'request') $reader->validateRecipients($payload, $actor);
             else $this->rollSnapshot($payload, $discussionId, $actor);
@@ -59,7 +59,7 @@ final class CheckPlans
                 throw new ApiProblem('check_hidden_post', 'Опубликуйте проверку сообщением, доступным участникам');
             }
             $payload = CheckInput::payload($type, json_decode($plan->payload, true, flags: JSON_THROW_ON_ERROR));
-            $reader = new CheckRead($this->db);
+            $reader = $this->reader;
             $definition = $reader->definition($payload);
             if ($type === 'request') {
                 $reader->validateRecipients($payload, $actor);
@@ -81,7 +81,7 @@ final class CheckPlans
 
     private function rollSnapshot(array $payload, ?int $discussionId, User $actor): array
     {
-        $character = (new CheckRead($this->db))->character($payload['character_id'], $actor, $discussionId, $payload['request_id']);
+        $character = $this->reader->character($payload['character_id'], $actor, $discussionId, $payload['request_id']);
         $section = $payload['kind'] === 'skill' ? 'skills' : 'attributes';
         $selected = null;
         foreach ($character[$section] as $row) if ($row['id'] === $payload['target_id']) {$selected = $row; break;}

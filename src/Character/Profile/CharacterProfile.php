@@ -6,7 +6,7 @@ use Flarum\User\User;
 use Illuminate\Database\ConnectionInterface;
 use Maxcuso\Roleplay\Api\Access;
 use Maxcuso\Roleplay\Character\Application\ApplicationTopics;
-use Maxcuso\Roleplay\Character\Moderation\CharacterReview;
+use Maxcuso\Roleplay\Character\Moderation\CharacterReviewView;
 use Maxcuso\Roleplay\Catalog\Shared\CatalogRevision;
 use Maxcuso\Roleplay\Catalog\Shared\CatalogRegistry;
 use Maxcuso\Roleplay\Character\Calculation\CharacterCalculationBuilder;
@@ -90,7 +90,7 @@ final class CharacterProfile
                 'permissions' => ['can_equip' => $visibility->canEquip($snapshot->character, $actor),
                     'can_manage' => $snapshot->character['status'] === 'active' && \Maxcuso\Roleplay\Character\Moderation\ReviewPermissions::staff($actor)],
                 'history' => $this->history($id, $snapshot->character, $actor),
-                'review' => $this->topics === null ? null : (new CharacterReview($this->db, $this->topics))->present($snapshot->character, $actor),
+                'review' => $this->topics === null ? null : (new CharacterReviewView($this->db, $this->topics))->present($snapshot->character, $actor),
             ];
         });
     }

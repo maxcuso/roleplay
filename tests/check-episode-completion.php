@@ -156,7 +156,7 @@ try {
         && !str_contains($html, 'Тема закрыта') && !str_contains($html, 'повторно') && !str_contains($html, 'Награды выданы'), 'Published HTML renders the independent receipt without unwanted status or duplicate messages');
     completeCheck(str_contains($html, 'RpEpisodeReceipt-title') && str_contains($html, 'Награды переправы')
         && !str_contains($html, '[TEST] Completion episode'), 'Quest receipt shows the card title without topic metadata');
-    $avatarUrl = \Maxcuso\Roleplay\Presentation\CharacterAvatar::url($original['avatar']);
+    $avatarUrl = $c->make(\Maxcuso\Roleplay\Presentation\CharacterAvatarUrl::class)->url($original['avatar']);
     completeCheck($avatarUrl !== null && str_contains($html, $avatarUrl) && str_contains($html, 'loading="lazy"'),
         'Published receipts render the current character-sheet avatar');
     completeCheck($context['characters'][0]['avatarUrl'] === $avatarUrl, 'Reward selection resolves character avatar filenames into complete URLs');

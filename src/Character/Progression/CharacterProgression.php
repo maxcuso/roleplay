@@ -20,7 +20,7 @@ use Maxcuso\Roleplay\Rules\DevelopmentRules;
  */
 final class CharacterProgression
 {
-    public function __construct(private readonly ConnectionInterface $db) {}
+    public function __construct(private readonly ConnectionInterface $db, private readonly CharacterOperation $operations) {}
 
     public function change(int $id, User $actor, mixed $input): array
     {
@@ -30,7 +30,7 @@ final class CharacterProgression
             throw new ApiProblem('invalid_request', 'Не удалось определить действие развития персонажа. Обновите анкету и попробуйте ещё раз', 400);
         }
         $targetId = FieldValues::integer($body['target_id'] ?? null, 'Выбор', 1, PHP_INT_MAX);
-        return (new CharacterOperation($this->db))->run($id, $actor, 'character_progression', $body,
+        return $this->operations->run($id, $actor, 'character_progression', $body,
             function (array $character) use ($actor): void {
                 (new CharacterVisibility())->assertVisible($character, $actor);
                 if ((int) $character['user_id'] !== (int) $actor->id) {

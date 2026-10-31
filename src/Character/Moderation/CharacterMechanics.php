@@ -20,7 +20,7 @@ use Maxcuso\Roleplay\Creation\{CreationCatalog, CreationPayload, CreationPlanBui
  */
 final class CharacterMechanics
 {
-    public function __construct(private readonly ConnectionInterface $db) {}
+    public function __construct(private readonly ConnectionInterface $db, private readonly CharacterOperation $operations) {}
 
     public function read(int $id, User $actor): array
     {
@@ -64,7 +64,7 @@ final class CharacterMechanics
         $body = OperationRequest::body($input, ['operation_key', 'revision', 'catalog_revision', 'rules_hash', 'payload']);
         $payload = (new CreationPayload())->normalize($body['payload'] ?? null, (int) $actor->id);
         $hash = CreationRequest::rulesHash($body['rules_hash'] ?? null);
-        return (new CharacterOperation($this->db))->run($id, $actor, 'mechanics_edit', $body,
+        return $this->operations->run($id, $actor, 'mechanics_edit', $body,
             function (array $character) use ($actor): void {
                 // Проверяем владельца и на повторе; проверку состояния — только у новой команды.
                 if (!ReviewPermissions::owner($character, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);

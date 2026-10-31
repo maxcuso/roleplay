@@ -16,31 +16,11 @@ use Maxcuso\Roleplay\Character\Profile\CharacterVisibility;
 /** Две независимые проверки. Одобрение механики не одобряет литературный текст и наоборот. */
 final class CharacterReview
 {
-    public function __construct(private readonly ConnectionInterface $db, private readonly ApplicationTopics $topics) {}
+    public function __construct(private readonly ConnectionInterface $db, private readonly ApplicationTopics $topics, private readonly CharacterOperation $operations) {}
 
     public function present(array $character, User $actor): array
     {
-        $topic = $character['discussion_id'] ? $this->topics->inspect($actor, (int) $character['discussion_id'])
-            : ['available' => false, 'hash' => null];
-        $literature = $this->literatureStatus($character, $topic);
-        $private = ReviewPermissions::owner($character, $actor) || ReviewPermissions::staff($actor);
-        $history = [];
-        if ($private) {
-            $history = $this->db->table('roleplay_character_events')->where('character_id', $character['id'])
-                ->whereIn('type', ['review_decided', 'review_submitted', 'identity_corrected', 'mechanics_updated'])
-                ->orderByDesc('id')->limit(20)->get()->map(fn ($row) => [
-                    'id' => (int) $row->id, 'type' => $row->type, 'actor_id' => (int) $row->actor_user_id,
-                    'created_at' => $row->created_at, 'details' => json_decode($row->payload, true, flags: JSON_THROW_ON_ERROR),
-                ])->all();
-        }
-        $permissions = ReviewPermissions::describe($character, $actor, $literature);
-        $permissions['can_submit_literature'] = $permissions['can_submit_literature'] && $topic['available'];
-        $permissions['can_withdraw_literature'] = $permissions['can_withdraw_literature'] && empty($topic['accepted']);
-        return [
-            'mechanics_status' => $character['mechanics_status'], 'literature_status' => $literature,
-            'topic_available' => $topic['available'], 'topic_hash' => $private ? $topic['hash'] : null,
-            'permissions' => $permissions, 'history' => $history,
-        ];
+        return (new CharacterReviewView($this->db, $this->topics))->present($character, $actor);
     }
 
     public function change(int $id, User $actor, mixed $input): array
@@ -56,7 +36,7 @@ final class CharacterReview
             throw new ApiProblem('invalid_request', 'Не удалось определить действие с анкетой. Попробуйте обновить страницу', 400);
         }
         $comment = FieldValues::text($body['comment'] ?? null, 'Замечания', 4000, $action === 'request_changes');
-        return (new CharacterOperation($this->db))->run($id, $actor, 'character_review', $body,
+        return $this->operations->run($id, $actor, 'character_review', $body,
             function (array $character) use ($actor, $action): void {
                 (new CharacterVisibility())->assertVisible($character, $actor);
                 $allowed = in_array($action, ['submit', 'withdraw'], true)
@@ -69,7 +49,7 @@ final class CharacterReview
                 }
                 $topic = $character['discussion_id'] ? $this->topics->inspect($actor, (int) $character['discussion_id'])
                     : ['available' => false, 'hash' => null];
-                $literature = $this->literatureStatus($character, $topic);
+                $literature = CharacterReviewView::literatureStatus($character, $topic);
                 $statuses = ['mechanics' => $character['mechanics_status'], 'literature' => $literature];
                 $current = $statuses[$part];
                 // Отправить можно только доступную тему. Это не одобрение литературного текста.
@@ -108,15 +88,4 @@ final class CharacterReview
             });
     }
 
-    private function literatureStatus(array $character, array $topic): string
-    {
-        $status = $character['literature_status'];
-        // У активных персонажей сохраняется историческое одобрение.
-        // null у одобрённой создаваемой анкеты — сознательная перепривязка администратором.
-        if ($character['status'] === 'creating' && $status === 'approved' && $character['literature_hash'] !== null
-            && (empty($topic['accepted']) || !$topic['available'] || !hash_equals($character['literature_hash'], $topic['hash']))) {
-            return 'review';
-        }
-        return $status;
-    }
 }

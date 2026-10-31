@@ -20,7 +20,11 @@ $original = $container->make(ConnectionInterface::class);
 $prefix = 'rpd_'.bin2hex(random_bytes(3)).'_';
 if (!preg_match('/^rpd_[0-9a-f]{6}_$/D', $prefix) || $prefix === $original->getTablePrefix()) throw new RuntimeException('Unsafe prefix.');
 $db = new ($original::class)($original->getPdo(), $original->getDatabaseName(), $prefix, $original->getConfig());
+$db->setTransactionManager(new \Illuminate\Database\DatabaseTransactionsManager());
 $schema = $db->getSchemaBuilder();
+require_once __DIR__.'/support/NotificationServices.php';
+$testNotifications = \Maxcuso\Roleplay\Tests\Support\NotificationServices::make();
+$characterOperations = new \Maxcuso\Roleplay\Character\Operations\CharacterOperation($db, $testNotifications);
 $admin = User::findOrFail(1);
 $assert = function (bool $ok, string $message): void {if (!$ok) throw new RuntimeException($message);};
 $revision = fn () => (int) $db->table('roleplay_catalog_state')->where('id', 1)->value('revision');
@@ -109,7 +113,7 @@ try {
     $assert($view['calculation']['stats']['stamina_max']->value === 24, 'Profile uses edited resource formula.');
     $assert($view['calculation']['stats']['carry_capacity']->value === 10.0, 'Fractional growth calculated.');
     $assert($view['calculation']['magic_circle'] === 0, 'Profile uses edited acquired Magic circle.');
-    $development = new CharacterProgression($db);
+    $development = new CharacterProgression($db, $characterOperations);
     $counter = 0;
     $increase = function () use ($profile, $id, $admin, $development, $attributeIds, &$counter) {
         $view = $profile->read($id, $admin);

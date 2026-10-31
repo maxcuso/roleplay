@@ -15,7 +15,7 @@ use Maxcuso\Roleplay\Character\Operations\CharacterOperation;
 /** Владелец исправляет только имя/фамилию/возраст. Стартовые выдачи не пересоздаются. */
 final class CharacterIdentity
 {
-    public function __construct(private readonly ConnectionInterface $db) {}
+    public function __construct(private readonly ConnectionInterface $db, private readonly CharacterOperation $operations) {}
 
     public function correct(int $id, User $actor, mixed $input): array
     {
@@ -23,7 +23,7 @@ final class CharacterIdentity
         $first = FieldValues::text($body['first_name'] ?? null, 'Имя', 100, true);
         $last = FieldValues::text($body['last_name'] ?? null, 'Фамилия', 100);
         $age = FieldValues::integer($body['age'] ?? null, 'Возраст', 0, 1000000);
-        return (new CharacterOperation($this->db))->run($id, $actor, 'identity_correction', $body,
+        return $this->operations->run($id, $actor, 'identity_correction', $body,
             function (array $character) use ($actor): void {
                 if (!ReviewPermissions::owner($character, $actor)) throw new ApiProblem('character_not_found', 'Персонаж не найден. Попробуйте обновить страницу', 404);
             },

@@ -16,7 +16,7 @@ use Maxcuso\Roleplay\Creation\CreationCatalog;
 /** Выдачи/изъятия доступны персоналу через профиль. Каждая команда требует причины и пишется в историю. */
 final class CharacterManagement
 {
-    public function __construct(private readonly ConnectionInterface $db) {}
+    public function __construct(private readonly ConnectionInterface $db, private readonly CharacterOperation $operations) {}
 
     public function lookups(int $id, User $actor): array
     {
@@ -43,7 +43,7 @@ final class CharacterManagement
         if (!in_array($action, ['grant_perk', 'remove_perk', 'grant_spell', 'remove_spell', 'grant_item', 'remove_item', 'balance', 'reward', 'set_rank'], true)
             || !is_array($body['data'] ?? null)) throw new ApiProblem('invalid_request', 'Не удалось определить действие с выдачей. Попробуйте обновить страницу', 400);
         $comment = FieldValues::text($body['comment'] ?? null, 'Причина', 4000, true);
-        return (new CharacterOperation($this->db))->run($id, $actor, 'character_management', $body,
+        return $this->operations->run($id, $actor, 'character_management', $body,
             fn (array $character) => $this->authorize($character, $actor),
             function (array $character) use ($id, $action, $body, $comment): array {
                 if ($character['status'] !== 'active') throw new ApiProblem('management_closed', 'Выдачи можно изменять только у активного персонажа', 409);

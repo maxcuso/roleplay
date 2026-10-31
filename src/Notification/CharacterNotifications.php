@@ -8,8 +8,10 @@ use Psr\Log\LoggerInterface;
 
 final class CharacterNotifications
 {
+    public function __construct(private readonly Queue $queue, private readonly LoggerInterface $logger) {}
+
     /** Регистрируется внутри транзакции. Откат отменяет callback, внешняя фиксация запускает очередь. */
-    public static function afterEvent(ConnectionInterface $db, array $character, string $event, array $details, int $eventId, int $actorId): void
+    public function afterEvent(ConnectionInterface $db, array $character, string $event, array $details, int $eventId, int $actorId): void
     {
         $data = CharacterNotificationData::make($character, $event, $details, $eventId, $actorId);
         if ($data === null) return;
@@ -20,10 +22,10 @@ final class CharacterNotifications
         }
         $db->afterCommit(function () use ($character, $actorId, $data): void {
             try {
-                resolve(Queue::class)->push(new SendCharacterNotification((int) $character['user_id'], $actorId, $data));
+                $this->queue->push(new SendCharacterNotification((int) $character['user_id'], $actorId, $data));
             } catch (\Throwable $error) {
                 // Уже выполненная выдача не должна выглядеть неудачной из-за сбоя уведомления.
-                resolve(LoggerInterface::class)->error('Roleplay notification delivery failed', ['event_id' => $data['eventId'], 'exception' => $error]);
+                $this->logger->error('Roleplay notification delivery failed', ['event_id' => $data['eventId'], 'exception' => $error]);
             }
         });
     }

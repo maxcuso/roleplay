@@ -11,7 +11,7 @@ use Maxcuso\Roleplay\Api\OperationRequest;
 /** Вставка создаёт только намерение. UUID — ключ повтора, а не право выдачи. */
 final class CompletionPlans
 {
-    public function __construct(private ConnectionInterface $db) {}
+    public function __construct(private ConnectionInterface $db, private CompletionRead $reader) {}
 
     public function prepare(int $discussionId, User $actor, mixed $input): array
     {
@@ -35,7 +35,7 @@ final class CompletionPlans
                 }
             } else {
                 foreach ($payload['recipients'] as $recipient) {
-                    $character = (new CompletionRead($this->db))->character($recipient['character_id'], $actor, $event !== null);
+                    $character = $this->reader->character($recipient['character_id'], $actor, $event !== null);
                     if (!$character['available']) throw new ApiProblem('recipient_unavailable', 'Выберите активных получателей награды', 409);
                 }
                 $this->db->table('roleplay_episode_plans')->insert(['id' => $id, 'event_id' => $eventId,

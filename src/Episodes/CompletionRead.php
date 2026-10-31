@@ -9,12 +9,12 @@ use Maxcuso\Roleplay\Api\ApiProblem;
 use Maxcuso\Roleplay\Catalog\Shared\CatalogRegistry;
 use Maxcuso\Roleplay\Catalog\Shared\CatalogRevision;
 use Maxcuso\Roleplay\Character\Profile\CharacterVisibility;
-use Maxcuso\Roleplay\Presentation\CharacterAvatar;
+use Maxcuso\Roleplay\Presentation\CharacterAvatarUrl;
 
 /** Узкие списки для окна. Не открывает административные права справочников. */
 final class CompletionRead
 {
-    public function __construct(private ConnectionInterface $db) {}
+    public function __construct(private ConnectionInterface $db, private CharacterAvatarUrl $avatars) {}
 
     public function context(int $discussionId, User $actor): array
     {
@@ -34,7 +34,7 @@ final class CompletionRead
     {
         $row = (new CharacterVisibility())->apply($this->db->table('roleplay_characters'), $actor)->where('id', $id)->first();
         if (!$row) throw new ApiProblem('character_not_found', 'Персонаж не найден или недоступен', 404);
-        return ['id' => $id, 'name' => trim($row->first_name.' '.$row->last_name), 'avatarUrl' => CharacterAvatar::url($row->avatar),
+        return ['id' => $id, 'name' => trim($row->first_name.' '.$row->last_name), 'avatarUrl' => $this->avatars->url($row->avatar),
             'available' => $row->status === 'active', 'bonuses' => $quest ? (new RewardExperience($this->db))->bonuses($id) : [],
             'perkIds' => $this->db->table('roleplay_character_perks')->where('character_id', $id)->pluck('perk_id')->map(fn ($value) => (int) $value)->all(),
             'spellIds' => $this->db->table('roleplay_character_spells')->where('character_id', $id)->pluck('spell_id')->map(fn ($value) => (int) $value)->all()];
@@ -50,7 +50,7 @@ final class CompletionRead
                 ? (new CharacterVisibility())->apply($this->db->table('roleplay_characters')->where('status', 'active'), $actor)
                 : $this->db->table('roleplay_'.CatalogRegistry::tableFor($kind))->where('enabled', true);
             if ($search !== '') {
-                if ($kind === 'characters') $query->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", [$literal]);
+                if ($kind === 'characters') \Maxcuso\Roleplay\Character\Profile\CharacterNameSearch::apply($query, $search);
                 else $query->where('name', 'like', $literal);
             }
             $total = $query->count();
@@ -58,7 +58,7 @@ final class CompletionRead
             $ids = $query->orderBy('id')->offset(($page - 1) * 30)->limit(30)->pluck('id')->map(fn ($value) => (int) $value)->all();
             if ($kind === 'characters') {
                 $rows = $ids ? $this->db->table('roleplay_characters')->whereIn('id', $ids)->orderBy('id')->get()
-                    ->map(fn ($row) => ['id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name), 'avatarUrl' => CharacterAvatar::url($row->avatar)])->all() : [];
+                    ->map(fn ($row) => ['id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name), 'avatarUrl' => $this->avatars->url($row->avatar)])->all() : [];
             } else {
                 $rows = array_map(fn ($row) => array_intersect_key($row, array_flip(['id', 'name', 'level', 'image', 'icon', 'enabled'])),
                     (new CatalogRegistry($this->db))->definitionsFor($kind, $ids));

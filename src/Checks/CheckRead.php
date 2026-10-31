@@ -10,12 +10,12 @@ use Maxcuso\Roleplay\Character\Profile\CharacterVisibility;
 use Maxcuso\Roleplay\Character\State\{CharacterStateReader, CharacterSnapshotBuilder};
 use Maxcuso\Roleplay\Creation\CreationCatalog;
 use Maxcuso\Roleplay\Events\QuestEvent;
-use Maxcuso\Roleplay\Presentation\CharacterAvatar;
+use Maxcuso\Roleplay\Presentation\CharacterAvatarUrl;
 use Maxcuso\Roleplay\Rules\DevelopmentConfigurationStore;
 
 final class CheckRead
 {
-    public function __construct(private ConnectionInterface $db) {}
+    public function __construct(private ConnectionInterface $db, private CharacterAvatarUrl $avatars) {}
 
     public function context(?int $discussionId, User $actor, ?string $requestId = null): array
     {
@@ -31,7 +31,7 @@ final class CheckRead
             $characters = [];
             foreach ($rows as $row) {
                 if (CheckAccess::eligible($this->db, $discussionId, (int) $row->id, $request)) {
-                    $characters[] = ['id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name), 'avatarUrl' => CharacterAvatar::url($row->avatar)];
+                    $characters[] = ['id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name), 'avatarUrl' => $this->avatars->url($row->avatar)];
                 }
             }
             $event = $discussionId ? QuestEvent::where('discussion_id', $discussionId)->where('event_type', 'quest')->first() : null;
@@ -89,7 +89,7 @@ final class CheckRead
     public function targets(User $actor, string $search, int $page): array
     {
         $query = (new CharacterVisibility())->apply($this->db->table('roleplay_characters')->where('status', 'active'), $actor);
-        if ($search !== '') $query->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ['%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search).'%']);
+        \Maxcuso\Roleplay\Character\Profile\CharacterNameSearch::apply($query, $search);
         $total = $query->count();
         return ['rows' => $query->orderBy('id')->offset(($page - 1) * 30)->limit(30)->get(['id', 'first_name', 'last_name'])
             ->map(fn ($row) => ['id' => (int) $row->id, 'name' => trim($row->first_name.' '.$row->last_name)])->all(),

@@ -9,7 +9,7 @@ use Maxcuso\Roleplay\Catalog\Shared\CatalogRevision;
 /** События форума синхронизируют решение. GET профиля не меняет персонажа. */
 final class LiteratureSynchronizer
 {
-    public function __construct(private readonly ConnectionInterface $db, private readonly ApplicationTopics $topics) {}
+    public function __construct(private readonly ConnectionInterface $db, private readonly ApplicationTopics $topics, private readonly \Maxcuso\Roleplay\Notification\CharacterNotifications $notifications) {}
 
     public function synchronize(int $discussionId, User $actor): void
     {
@@ -52,7 +52,7 @@ final class LiteratureSynchronizer
                 'type' => 'review_decided', 'created_at' => $now,
                 'payload' => json_encode($details, JSON_THROW_ON_ERROR),
             ]);
-            \Maxcuso\Roleplay\Notification\CharacterNotifications::afterEvent($this->db, (array) $character,
+            $this->notifications->afterEvent($this->db, (array) $character,
                 'review_decided', $details, $eventId, $reviewerId);
         });
     }

@@ -11,13 +11,6 @@ final class CharacterAvatar
     public const MAX_BYTES = 2097152;
     public const SIZE = 512;
 
-    /** Только собственные обработанные файлы, без внешних URL и произвольных путей. */
-    public static function url(?string $filename): ?string
-    {
-        if (!$filename || !preg_match('/^avatar-[1-9][0-9]*-[0-9a-f]{32}\.webp$/D', $filename)) return null;
-        return resolve(\Flarum\Http\UrlGenerator::class)->to('forum')->path('assets/roleplay/avatars/'.$filename);
-    }
-
     public static function normalize(mixed $filename, ?int $ownerId = null): ?string
     {
         if ($filename === null || $filename === '') return null;

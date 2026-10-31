@@ -9,7 +9,7 @@ $db->table('roleplay_characters')->where('id', $editId)->update([
     'status' => 'creating', 'mechanics_status' => 'review',
     'literature_status' => 'approved', 'literature_approved' => true,
 ]);
-$mechanics = new CharacterMechanics($db);
+$mechanics = new CharacterMechanics($db, $characterOperations);
 $editController = new CharacterMechanicsController($mechanics);
 $editApi = function (string $method, array $body = [], int $status = 200) use ($editController, $editId, $owner): array {
     $request = \Flarum\Http\RequestUtil::withActor((new \Laminas\Diactoros\ServerRequest())

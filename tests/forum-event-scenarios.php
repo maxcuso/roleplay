@@ -6,7 +6,7 @@ $db->table('roleplay_characters')->where('id', $reviewId)->update([
     'mechanics_status' => 'approved', 'literature_status' => 'review', 'literature_hash' => null,
 ]);
 $listener = new \Maxcuso\Roleplay\Character\Application\SynchronizeLiteratureEvent(
-    new \Maxcuso\Roleplay\Character\Application\LiteratureSynchronizer($db, $topics), $originalDb);
+    new \Maxcuso\Roleplay\Character\Application\LiteratureSynchronizer($db, $topics, $testNotifications), $originalDb);
 $event = (object) ['actor' => $moderator, 'post' => (object) ['discussion_id' => $discussionId]];
 $originalDb->transaction(function () use ($listener, $event, $db, $reviewId): void {
     $listener->handle($event);

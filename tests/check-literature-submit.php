@@ -17,6 +17,10 @@ $original = $container->make(ConnectionInterface::class);
 $prefix = 'rpn_'.bin2hex(random_bytes(3)).'_';
 if (!preg_match('/^rpn_[0-9a-f]{6}_$/D', $prefix) || $prefix === $original->getTablePrefix()) throw new RuntimeException('Unsafe prefix');
 $db = new ($original::class)($original->getPdo(), $original->getDatabaseName(), $prefix, $original->getConfig());
+$db->setTransactionManager(new \Illuminate\Database\DatabaseTransactionsManager());
+require_once __DIR__.'/support/NotificationServices.php';
+$testNotifications = \Maxcuso\Roleplay\Tests\Support\NotificationServices::make();
+$characterOperations = new \Maxcuso\Roleplay\Character\Operations\CharacterOperation($db, $testNotifications);
 $base = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_02_000001_create_base_catalogs.php';
 $ranks = require __DIR__.'/fixtures/migrations-2026-10-30/2026_10_09_000001_add_ranks.php';
 $assert = function (bool $ok, string $message): void {if (!$ok) throw new RuntimeException($message);};
@@ -51,8 +55,8 @@ try {
         'first_name' => 'Проверка', 'discussion_id' => 123, 'mechanics_status' => 'review', 'literature_status' => 'draft',
         'created_at' => $now, 'updated_at' => $now]);
     $row = fn () => (array) $db->table('roleplay_characters')->find($id);
-    $service = new CharacterReview($db, $topics);
-    $sync = new LiteratureSynchronizer($db, $topics);
+    $service = new CharacterReview($db, $topics, $characterOperations);
+    $sync = new LiteratureSynchronizer($db, $topics, $testNotifications);
     $command = fn (string $action = 'submit') => ['operation_key' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
         'revision' => (int) $row()['revision'], 'catalog_revision' => 2, 'part' => 'literature', 'action' => $action];
     $assert($service->present($row(), $owner)['permissions']['can_submit_literature'], 'Owner can submit draft');
