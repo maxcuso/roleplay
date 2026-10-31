@@ -1,0 +1,425 @@
+[
+  {
+    "key": "questpost-v2",
+    "name": "Квестпост",
+    "kind": "city",
+    "shape": "shallow-point",
+    "fields": [
+      [
+        35,
+        65,
+        71
+      ]
+    ],
+    "layout": "solid",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/src/questpost.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit this Questpost banner: REMOVE ONLY the separate gold mural crown at the top. Fill that area with the same uniform dark teal field #234147. Preserve the gold stone bridge, two ivory cliffs, black outlines, scale and exact pennon silhouette. No replacement symbol, no small crown anywhere, no ornaments. Portrait 1200x1600, 3:4, full bleed flag with shallow pointed bottom. Transparency only outside flag. Do not distort or redraw the bridge or rocks.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-2c5ccebf-4bc4-4ca5-a20c-67a6e75870cf.png",
+    "shiftY": -180
+  },
+  {
+    "key": "grim-v4",
+    "name": "Грим",
+    "kind": "city",
+    "shape": "swallowtail",
+    "fields": [
+      [
+        25,
+        29,
+        34
+      ]
+    ],
+    "layout": "solid",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/src/grim-v3.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit this Grim banner: REMOVE ONLY the separate gold mural crown at the top. Fill that area with the same uniform charcoal field #191D22. Preserve the ivory anchor, gold rope, two ivory wave bands, black outlines, scale and exact swallowtail silhouette. No replacement symbol, no small crown, no ornaments. Portrait 1200x1600, 3:4, full bleed. Transparency only outside the lower V notch. Do not distort the remaining emblem.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-3d4f2256-541a-4693-b70c-1c79744998b6.png"
+  },
+  {
+    "key": "guild-questpost-v1",
+    "name": "Гильдия Квестпоста",
+    "kind": "organization",
+    "shape": "shallow-point",
+    "fields": [
+      [
+        30,
+        69,
+        72
+      ],
+      [
+        26,
+        32,
+        35
+      ]
+    ],
+    "layout": "diagonal",
+    "motif": "Золотой ключ и серебряный меч накрест — задания, доступ к неизведанному и служба городу.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. QUESTPOST ADVENTURERS' GUILD: a large GOLD KEY with a simple round bow crossed with one SILVER/IVORY STRAIGHT SWORD, key and sword form an X, both tips point upward. Emphasize a practical medieval key and blade, no gemstones or extra symbols. Background divided diagonally from top-left to bottom-right into dark teal #1E4548 and dark charcoal #1A2023. Pennon has vertical sides and a shallow central bottom point, no shield within the banner.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-92cc39c4-311a-4f1e-af7f-bfe318df7243.png"
+  },
+  {
+    "key": "kamnegriv-v1",
+    "name": "Клан Камнегрив",
+    "kind": "organization",
+    "shape": "beveled",
+    "fields": [
+      [
+        55,
+        71,
+        84
+      ]
+    ],
+    "layout": "solid",
+    "motif": "Серебряная голова горного барана и золотая кирка — горы, добыча и стойкость.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A large SILVER RAM'S HEAD facing directly forward, with two strong curling horns, above a single GOLD MINER'S PICK placed horizontally. Bold angular planes suggest stone, only 3-4 internal lines. Dark slate-blue #374754 field. Tall rectangular pennon with flat bottom and two beveled lower corners.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-d9863a03-4abe-47f8-9d19-47ec7cffd42c.png"
+  },
+  {
+    "key": "gundar-v1",
+    "name": "Клан Гундар",
+    "kind": "organization",
+    "shape": "beveled",
+    "fields": [
+      [
+        105,
+        46,
+        52
+      ],
+      [
+        38,
+        40,
+        44
+      ]
+    ],
+    "layout": "horizontal",
+    "motif": "Серебряная наковальня и золотой молот — кузницы и изобретательство.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. One large SILVER ANVIL in strict flat side elevation, with a GOLD BLACKSMITH HAMMER set diagonally above it. No perspective/top face. Field divided horizontally: upper deep burgundy #692E34 and lower charcoal #26282C. Tall rectangular pennon with flat bottom and two beveled lower corners.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-2bd40a76-e5a5-4197-b1e7-04ce50bad985.png"
+  },
+  {
+    "key": "brennor-v1",
+    "name": "Клан Бреннор",
+    "kind": "organization",
+    "shape": "beveled",
+    "fields": [
+      [
+        37,
+        61,
+        89
+      ]
+    ],
+    "layout": "solid",
+    "motif": "Золотые весы и три серебряные монеты — торговля, оценка и казна.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. Large GOLD BALANCED WEIGHING SCALES, frontal and symmetric, two simple hanging bowls. Below exactly THREE plain SILVER COIN DISCS, two above one below, no lettering or currency signs. Deep blue #253D59 field. Tall rectangular pennon with flat bottom and two beveled lower corners.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-7de5385b-119a-4ff3-a2d7-e835ccc1a175.png"
+  },
+  {
+    "key": "aelsir-v1",
+    "name": "Дом Поющей Осины — род Аэльсир",
+    "kind": "organization",
+    "shape": "rounded",
+    "fields": [
+      [
+        37,
+        74,
+        58
+      ],
+      [
+        50,
+        61,
+        49
+      ]
+    ],
+    "layout": "diagonal",
+    "motif": "Золотой сноп и серебряные осиновые листья — плодородие и помощь хозяйствам.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A GOLD SHEAF with exactly THREE broad ripe grain ears tied by a simple band. TWO SILVER ASPEN LEAVES at the base, rounded pointed leaf shapes. No field landscape. Background diagonally divided forest green #254A3A and muted dark moss #323D31. Tall rectangular pennon with vertical sides and a rounded U-shaped lower edge.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-861a4f24-44f8-49de-bebb-889ae3896a05.png"
+  },
+  {
+    "key": "talveyn-v1",
+    "name": "Дом Внемлющей Чащи — род Талвэйн",
+    "kind": "organization",
+    "shape": "rounded",
+    "fields": [
+      [
+        35,
+        49,
+        72
+      ]
+    ],
+    "layout": "solid",
+    "motif": "Серебряная голова оленя и золотой полумесяц — защита леса и святилище.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A SILVER STAG'S HEAD facing forward, antlers forming a broad protective arch with only three simple tines per side. One small GOLD UPRIGHT CRESCENT between the antlers. No face jewelry. Midnight blue #233148 field. Tall rectangular pennon with vertical sides and a rounded U-shaped lower edge.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-13f1e2ab-626c-40cc-8e20-2edb0305f7bc.png"
+  },
+  {
+    "key": "saelrin-v1",
+    "name": "Дом Зерна и Коры — род Саэлрин",
+    "kind": "organization",
+    "shape": "rounded",
+    "fields": [
+      [
+        98,
+        42,
+        55
+      ]
+    ],
+    "layout": "solid",
+    "motif": "Лекарственная ветвь над серебряной чашей — целительство и травничество.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. One SILVER shallow healing bowl seen in flat frontal elevation, with a GOLD STEM rising from its center and exactly THREE muted LIGHT GREEN medicinal leaves. A simple strong herbal symbol, no snake or modern medical cross. Deep wine #622A37 field. Tall rectangular pennon with vertical sides and a rounded U-shaped lower edge.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-bee873d5-afe8-4cf7-845d-8e7a7df31393.png"
+  },
+  {
+    "key": "dalmir-v1",
+    "name": "Дом Плетёных Стен — род Далмир",
+    "kind": "organization",
+    "shape": "rounded",
+    "fields": [
+      [
+        35,
+        63,
+        50
+      ],
+      [
+        30,
+        39,
+        39
+      ]
+    ],
+    "layout": "horizontal",
+    "motif": "Переплетённые ветви и ткацкий челнок — строительство и ремёсла.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A GOLD GATE ARCH woven from exactly THREE broad interlacing willow branches, a few clear over-under crossings. A single SILVER WEAVING SHUTTLE vertical inside the arch opening, recognizable almond-shaped tool with central slit. No fine weaving strands. Field forest green #233F32 above and dark charcoal-green #1E2727 below. Tall rectangular pennon with vertical sides and a rounded U-shaped lower edge.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-61ec5c1c-9aba-4123-bb61-dee881fdfda7.png"
+  },
+  {
+    "key": "liorel-v1",
+    "name": "Дом Лунного Мха — род Лиорэль",
+    "kind": "organization",
+    "shape": "rounded",
+    "fields": [
+      [
+        56,
+        44,
+        70
+      ],
+      [
+        36,
+        67,
+        58
+      ]
+    ],
+    "layout": "vertical",
+    "motif": "Серебряное рукопожатие под золотым полумесяцем — дипломатия и связи.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. Two SILVER HANDS in a single clear HANDSHAKE, wrists enter from left and right, simple coherent fingers. Above a broad GOLD CRESCENT opening upward. No separate arms, jewelry or sleeves. Field divided vertically: deep plum #382C46 left, dark green #24433A right. Tall rectangular pennon with vertical sides and a rounded U-shaped lower edge.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-18fc4274-b623-48e2-981c-44bb6596c096.png"
+  },
+  {
+    "key": "almeon-v1",
+    "name": "Клан Альмеон",
+    "kind": "organization",
+    "shape": "long-point",
+    "fields": [
+      [
+        37,
+        55,
+        89
+      ]
+    ],
+    "layout": "solid",
+    "motif": "Серебряный сфинкс и золотая капля — предание о защитнике и власть Хранителя вод.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A SILVER WINGED SPHINX seated in side profile facing LEFT, human head with a plain cloth headdress, lion body, one pair of wings indicated as a single clear layered silhouette, paws together, tail curled. Simplified dignified heraldic creature, no crown, no pharaoh ornaments. A single small GOLD WATER DROP below it. Royal dark blue #253759 field. Tall rectangular pennon with vertical sides and a long lower point.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-2f09317b-23a1-4bb8-ada4-310aa34a0222.png"
+  },
+  {
+    "key": "tkhist-v1",
+    "name": "Клан Тхист",
+    "kind": "organization",
+    "shape": "long-point",
+    "fields": [
+      [
+        102,
+        43,
+        40
+      ],
+      [
+        42,
+        58,
+        51
+      ]
+    ],
+    "layout": "diagonal",
+    "motif": "Серебряный варан с золотым ошейником — укротители и защитники караванов.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A large SILVER MONITOR LIZARD HEAD and short neck in LEFT profile, blunt elongated reptile snout, one small black eye, simple scaled neck indicated by only 3 marks. A broad GOLD COLLAR around the neck with ONE attached round ring. NO horns, wings or fire, not a dragon. Field diagonally divided deep rust-red #662B28 and dark green #2A3A33. Tall rectangular pennon with vertical sides and a long lower point.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-d059f399-7ca5-4d16-adf6-97f4054529e4.png"
+  },
+  {
+    "key": "khadim-v1",
+    "name": "Клан Хадим",
+    "kind": "organization",
+    "shape": "long-point",
+    "fields": [
+      [
+        29,
+        67,
+        76
+      ]
+    ],
+    "layout": "solid",
+    "motif": "Серебряный акведук и золотой угольник — камень, вода и мастерские.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. A SILVER AQUEDUCT in strict flat frontal elevation with exactly THREE arches and a straight level top. Only a few masonry lines. Above it one large GOLD CARPENTER'S SQUARE, a simple upright L-shaped measuring tool, no ruler marks. Dark teal #1D434C field. No landscape or water perspective. Tall rectangular pennon with vertical sides and a long lower point.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-c92adbbc-fe63-4c72-8be8-1c477f3ff8e8.png"
+  },
+  {
+    "key": "erta-v1",
+    "name": "Клан Эр’Та",
+    "kind": "organization",
+    "shape": "long-point",
+    "fields": [
+      [
+        54,
+        41,
+        78
+      ],
+      [
+        31,
+        59,
+        73
+      ]
+    ],
+    "layout": "vertical",
+    "motif": "Серебряная башня и золотое светило — магия, знания и архивы.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Use case: logo-brand. Create ONE medieval fantasy heraldic banner. Match the provided STYLE REFERENCES: flat ink illustration, confident BLACK outlines, simple bold silhouettes and only a few interior lines. Uniform matte heraldic colors; no perspective, shading, gradients, glow, texture, photorealism or ornament. No writing, letters, numbers, crown, helmet or decorative frame. Clean readable emblem, generous space around it, centered on the field, entirely inside. Portrait 1200x1600, 3:4; the flag fills the whole file edge-to-edge, transparent ONLY outside its lower silhouette. One SILVER slender STAIR-STEPPED MAGIC TOWER in flat frontal elevation, one black arched window and simple flat roof. Above it a single GOLD EIGHT-RAY STAR, four long and four short rays. No book, owl, crescent or extra sparkles. Field divided vertically dark violet #36294E and deep blue-teal #1F3B49. Tall rectangular pennon with vertical sides and a long lower point.",
+    "source": "C:\\Users\\KusoT\\.codex\\generated_images\\01a149af-703a-7770-91da-8fdb295c9ba6\\exec-fadf3a47-f1b3-4cba-abcf-28a9699947e7.png"
+  },
+  {
+    "key": "klinki-v1",
+    "name": "Клинки",
+    "kind": "organization",
+    "shape": "swallowtail",
+    "fields": [
+      [
+        239,
+        235,
+        218
+      ]
+    ],
+    "layout": "solid",
+    "lightField": true,
+    "source": "C:/Forum/Flarum/packages/roleplay-new/content/flags/src/espada-classic-v1.png",
+    "motif": "Выбранный пользователем классический чёрный череп из src, без перерисовки."
+  },
+  {
+    "key": "grim-v5",
+    "name": "Грим",
+    "kind": "city",
+    "shape": "swallowtail",
+    "fields": [
+      [
+        25,
+        29,
+        34
+      ]
+    ],
+    "layout": "solid",
+    "refs": [
+      "C:\\Forum\\Flarum\\packages\\roleplay-new\\content\\flags\\src\\grim-v4.png"
+    ],
+    "prompt": "Built-in imagegen edit: translate the anchor, rope and both wave bands upward together by about 180 px on the 1200x1600 flag, preserving colors, scale and swallowtail silhouette. No crown.",
+    "source": "C:/Users/KusoT/.codex/generated_images/01a149af-703a-7770-91da-8fdb295c9ba6/exec-92fc9db6-1595-4533-8a57-6f06b6276edb.png",
+    "motif": "Якорь с золотым канатом и обе волны подняты выше; без короны."
+  },
+  {
+    "key": "gundar-v2",
+    "name": "Клан Гундар",
+    "kind": "organization",
+    "shape": "beveled",
+    "fields": [
+      [
+        105,
+        46,
+        52
+      ],
+      [
+        38,
+        40,
+        44
+      ]
+    ],
+    "layout": "horizontal",
+    "motif": "Серебряная наковальня и золотой молот — кузницы и изобретательство.",
+    "refs": [
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/115328.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/388649.png",
+      "C:/Forum/Flarum/packages/roleplay-new/content/flags/reference/889297.png"
+    ],
+    "prompt": "Correct the original pointed flag contour to the same flat bottom with two beveled lower corners as the other Upperlands clans; retain generated hammer and anvil artwork without rescaling.",
+    "source": "C:\\Forum\\Flarum\\packages\\roleplay-new\\content\\flags\\generated\\2026-10-31\\gundar-v1-original.png"
+  }
+]

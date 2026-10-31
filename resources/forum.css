@@ -30,6 +30,14 @@
 .IndexPage-nav .item-roleplayActions { display: block; margin-bottom: 20px; }
 .RpTagButtons { display: grid; gap: 8px; width: 100%; }
 .RpTagButtons > .Button, .IndexPage-nav .item-roleplayDiscussion > .Button { width: 100%; min-width: 0; }
+/* Две компактные кнопки под основным действием, как в разделе арены. */
+.RpTagButtons-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.RpTagButtons-links > .Button {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; min-width: 0; min-height: 40px; padding: 10px 8px;
+  border-radius: 12px; font-size: 12px; white-space: normal;
+}
+.RpTagButtons-links > .Button .Button-icon { margin: 0; }
 @media (max-width: 767px) {
   .IndexPage-nav .item-roleplayDiscussion, .IndexPage-nav .item-roleplayActions { margin-top: 12px; }
   .IndexPage-nav .item-roleplayDiscussion + .item-roleplayActions { margin-top: 0; }

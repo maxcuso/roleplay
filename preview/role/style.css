@@ -1292,7 +1292,7 @@ button:disabled {
 }
 
 /* Баннер-спойлер: open у details задаёт начальное состояние.
-   Весь summary кликабелен; язычок и шеврон нарисованы без отдельной кнопки. */
+   Весь summary вместе с язычком кликабелен; отдельная кнопка не нужна. */
 .Banner--spoiler {
   --banner-tab-direction: 1;
   --banner-tab-duration: 160ms;
@@ -1363,7 +1363,7 @@ button:disabled {
   border-radius: 2px;
   background: color-mix(in srgb,var(--role-muted) 25%,var(--role-surface));
   rotate: -3deg;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .Banner--spoiler > summary::before {
@@ -1378,7 +1378,7 @@ button:disabled {
   border-bottom: 5px solid var(--role-muted);
   scale: 1.1 .8;
   transform: rotate(45deg);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .Banner--spoiler[open] > summary::after {

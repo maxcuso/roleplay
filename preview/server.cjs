@@ -58,13 +58,46 @@ const roleFontNames = fs.readdirSync(roleFontDirectory, {withFileTypes: true})
   .map(entry => entry.name);
 
 // Выдаём только шесть утверждённых гербов, без исходников и служебных файлов.
-const cityCrestNames = ['questpost.png', 'verkhovye-v3.png', 'zelenolesye-v3.png',
-  'arah-v3.png', 'hillsgaard-v3.png', 'grim-v3.png'];
+const cityCrestNames = [
+  "questpost-v2.png",
+  "verkhovye-v3.png",
+  "zelenolesye-v3.png",
+  "arah-v3.png",
+  "hillsgaard-v3.png",
+  "grim-v5.png"
+];
 const raceImageNames = ['Human.png', 'Elf.png', 'HalfElf.png', 'Dwarf.png',
   'Halfling.png', 'HalfOrc.png', 'Tabaxi.png', 'Tiefling.png'];
-// Только готовые гербы организаций; для остальных в HTML оставлены заглушки.
-const organizationCrestNames = ['sylvanhart-v1.png', 'grossblood-purple-v2.png',
-  'nod-v1.png', 'espada-v1.png', 'collegium-v4.png', 'pantheon-v2.png'];
+// Готовые гербы всех организаций страницы; исходники — content/flags/src.
+const organizationCrestNames = [
+  "guild-questpost-v1.png",
+  "kamnegriv-v1.png",
+  "gundar-v2.png",
+  "brennor-v1.png",
+  "aelsir-v1.png",
+  "talveyn-v1.png",
+  "saelrin-v1.png",
+  "dalmir-v1.png",
+  "liorel-v1.png",
+  "almeon-v1.png",
+  "tkhist-v1.png",
+  "khadim-v1.png",
+  "erta-v1.png",
+  "sylvanhart-v1.png",
+  "grossblood-purple-v2.png",
+  "nod-v1.png",
+  "klinki-v1.png",
+  "collegium-v4.png",
+  "pantheon-v2.png"
+];
+const cityBackgroundNames = [
+  "questpost.png",
+  "zelenolesye.webp",
+  "verkhovye.webp",
+  "arah.webp",
+  "hillsgaard.webp",
+  "grim.webp"
+];
 const bannerIconNames = ['create.png', 'badge.png', 'race.png', 'castle.png', 'map.png',
   'condition.png', 'fist.png', 'cause-falls.png', 'no-struggle.png', 'dice.png', 'up-arrow.svg'];
 
@@ -82,8 +115,7 @@ const routes = new Map([
   ['/role/icons.local.json', path.join(packageRoot, 'resources/presentation/icons.local.json')],
   ...['bridge-hero.png', 'hero-background.jpg', 'locations.jpg', 'character-portraits.png', 'badge-circle.webp'].map(name => ['/role/assets/' + name, path.join(__dirname, 'role/assets', name)]),
   ...cityCrestNames.map(name => ['/role/assets/city-crests/' + name, path.join(__dirname, 'role/assets/city-crests', name)]),
-  ['/role/assets/city-backgrounds/zelenolesye.webp', path.join(__dirname, 'role/assets/city-backgrounds/zelenolesye.webp')],
-  ['/role/assets/city-backgrounds/questpost.png', path.join(__dirname, 'role/assets/city-backgrounds/questpost.png')],
+  ...cityBackgroundNames.map(name => ['/role/assets/city-backgrounds/' + name, path.join(__dirname, 'role/assets/city-backgrounds', name)]),
   ...raceImageNames.map(name => ['/role/assets/races/' + name, path.join(__dirname, 'role/assets/races', name)]),
   ...organizationCrestNames.map(name => ['/role/assets/organization-crests/' + name, path.join(__dirname, 'role/assets/organization-crests', name)]),
   ...bannerIconNames.map(name => ['/role/assets/banner-icons/' + name, path.join(__dirname, 'role/assets/banner-icons', name)]),

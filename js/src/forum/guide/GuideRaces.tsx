@@ -64,13 +64,13 @@ export function mountRaces(root: HTMLElement, data: {races: GuideRace[]; attribu
           {guideParagraphs(race.description).map(text => <p>{text}</p>)}
         </div>
         <dl className="Facts Facts--wide-third">
-          <div data-race-field="lifespan"><dt><i data-icon="actions.history" className="Icon" aria-hidden="true"/>Продолжительность жизни</dt>
+          <div data-race-field="lifespan"><dt><i data-icon="actions.history" className="Icon" aria-hidden="true"/>Срок жизни</dt>
             <dd><p>{lifespan(race)}</p></dd></div>
           <div data-race-field="height"><dt><i data-icon="resources.weight" className="Icon" aria-hidden="true"/>Средний рост</dt>
             <dd><p>{guideText(race.average_height) || '—'}</p></dd></div>
           <div data-race-field="traits"><dt><i data-icon="sections.characters" className="Icon" aria-hidden="true"/>Отличительные черты</dt>
             <dd><p>{guideText(race.distinctive_traits) || '—'}</p></dd></div>
-          <div data-race-field="bonuses"><dt><i data-icon="settings.development" className="Icon" aria-hidden="true"/>Бонусы характеристик</dt>
+          <div data-race-field="bonuses"><dt><i data-icon="settings.development" className="Icon" aria-hidden="true"/>Бонусы</dt>
             <dd><p>{bonuses(race, data.attributes)}</p></dd></div>
         </dl>
         <div className="Grid" data-race-perks={race.slug}>

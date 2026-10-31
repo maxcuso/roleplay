@@ -93,10 +93,18 @@ export function mountGuide(root, {
         scheduleContents();
     }
 
+    // Абсолютный адрес сохраняет /role даже при наличии <base> у форума.
+    // Состояние истории принадлежит роутеру Flarum: не затираем его.
+    function replaceAnchor(hash) {
+        const url = new URL(location.href);
+        url.hash = hash;
+        history.replaceState(history.state, '', url.href);
+    }
+
     function activateTab(tab, focus = false) {
         selectTab(tab, focus);
         if (tab.closest('.Tabs') !== guideTabs) return;
-        history.replaceState(null, '', '#guides');
+        replaceAnchor('#guides');
         // Прокручиваем к обычному контейнеру: закреплённая панель вкладок
         // уже находится у края экрана даже при чтении середины раздела.
         findId('guides').scrollIntoView({
@@ -213,12 +221,22 @@ export function mountGuide(root, {
     });
     }
     listen(window, 'hashchange', restoreTabs);
-    // Повторный переход к тому же якорю тоже раскрывает закрытый вручную спойлер.
-    root.querySelectorAll('.Contents a').forEach(link => {
-        listen(link, 'click', () => {
-            if (link.hash === location.hash) restoreTabs();
-        });
-    });
+    // Перехватываем локальные якоря до обработчиков ссылок форума.
+    // Первый и повторный клик одинаково раскрывают раздел и прокручивают к нему,
+    // не запуская навигацию Flarum или загрузку нового документа.
+    listen(root, 'click', event => {
+        if (event.defaultPrevented || event.button !== 0
+            || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        const link = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
+        if (!link || !root.contains(link) || link.hasAttribute('download')
+            || (link.target && link.target !== '_self')) return;
+        const hash = link.getAttribute('href');
+        if (!findId(hash.slice(1))) return;
+        event.preventDefault();
+        event.stopPropagation();
+        replaceAnchor(hash);
+        restoreTabs();
+    }, true);
     restoreTabs();
 
     // Иконки характеристик: единые данные для сетки, кнопок и заголовков.

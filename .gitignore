@@ -6,3 +6,6 @@
 /tests/.runtime/
 
 # js/dist включаем в релиз: Flarum загружает готовый JavaScript без сборки у пользователя.
+
+/content/backgrounds/verification.json
+/content/flags/generated/**/verification*.json

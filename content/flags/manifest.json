@@ -1,0 +1,400 @@
+{
+  "updated": "2026-10-31",
+  "entries": [
+    {
+      "key": "questpost-v2",
+      "name": "Квестпост",
+      "kind": "city",
+      "file": "questpost-v2.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Городской герб без короны.",
+      "shape": "shallow-point",
+      "fields": [
+        [
+          35,
+          65,
+          71
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "verkhovye-v3",
+      "name": "Верховье",
+      "kind": "city",
+      "file": "verkhovye-v3.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "zelenolesye-v3",
+      "name": "Зеленолесье",
+      "kind": "city",
+      "file": "zelenolesye-v3.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "arah-v3",
+      "name": "Оазис Арах",
+      "kind": "city",
+      "file": "arah-v3.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "hillsgaard-v3",
+      "name": "Хиллсгард",
+      "kind": "city",
+      "file": "hillsgaard-v3.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "grim-v5",
+      "name": "Грим",
+      "kind": "city",
+      "file": "grim-v5.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Якорь с золотым канатом и обе волны подняты выше; без короны.",
+      "shape": "swallowtail",
+      "fields": [
+        [
+          25,
+          29,
+          34
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "guild-questpost-v1",
+      "name": "Гильдия Квестпоста",
+      "kind": "organization",
+      "file": "guild-questpost-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Золотой ключ и серебряный меч накрест — задания, доступ к неизведанному и служба городу.",
+      "shape": "shallow-point",
+      "fields": [
+        [
+          30,
+          69,
+          72
+        ],
+        [
+          26,
+          32,
+          35
+        ]
+      ],
+      "layout": "diagonal"
+    },
+    {
+      "key": "kamnegriv-v1",
+      "name": "Клан Камнегрив",
+      "kind": "organization",
+      "file": "kamnegriv-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряная голова горного барана и золотая кирка — горы, добыча и стойкость.",
+      "shape": "beveled",
+      "fields": [
+        [
+          55,
+          71,
+          84
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "gundar-v2",
+      "name": "Клан Гундар",
+      "kind": "organization",
+      "file": "gundar-v2.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряная наковальня и золотой молот — кузницы и изобретательство.",
+      "shape": "beveled",
+      "fields": [
+        [
+          105,
+          46,
+          52
+        ],
+        [
+          38,
+          40,
+          44
+        ]
+      ],
+      "layout": "horizontal"
+    },
+    {
+      "key": "brennor-v1",
+      "name": "Клан Бреннор",
+      "kind": "organization",
+      "file": "brennor-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Золотые весы и три серебряные монеты — торговля, оценка и казна.",
+      "shape": "beveled",
+      "fields": [
+        [
+          37,
+          61,
+          89
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "aelsir-v1",
+      "name": "Дом Поющей Осины — род Аэльсир",
+      "kind": "organization",
+      "file": "aelsir-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Золотой сноп и серебряные осиновые листья — плодородие и помощь хозяйствам.",
+      "shape": "rounded",
+      "fields": [
+        [
+          37,
+          74,
+          58
+        ],
+        [
+          50,
+          61,
+          49
+        ]
+      ],
+      "layout": "diagonal"
+    },
+    {
+      "key": "talveyn-v1",
+      "name": "Дом Внемлющей Чащи — род Талвэйн",
+      "kind": "organization",
+      "file": "talveyn-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряная голова оленя и золотой полумесяц — защита леса и святилище.",
+      "shape": "rounded",
+      "fields": [
+        [
+          35,
+          49,
+          72
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "saelrin-v1",
+      "name": "Дом Зерна и Коры — род Саэлрин",
+      "kind": "organization",
+      "file": "saelrin-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Лекарственная ветвь над серебряной чашей — целительство и травничество.",
+      "shape": "rounded",
+      "fields": [
+        [
+          98,
+          42,
+          55
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "dalmir-v1",
+      "name": "Дом Плетёных Стен — род Далмир",
+      "kind": "organization",
+      "file": "dalmir-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Переплетённые ветви и ткацкий челнок — строительство и ремёсла.",
+      "shape": "rounded",
+      "fields": [
+        [
+          35,
+          63,
+          50
+        ],
+        [
+          30,
+          39,
+          39
+        ]
+      ],
+      "layout": "horizontal"
+    },
+    {
+      "key": "liorel-v1",
+      "name": "Дом Лунного Мха — род Лиорэль",
+      "kind": "organization",
+      "file": "liorel-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряное рукопожатие под золотым полумесяцем — дипломатия и связи.",
+      "shape": "rounded",
+      "fields": [
+        [
+          56,
+          44,
+          70
+        ],
+        [
+          36,
+          67,
+          58
+        ]
+      ],
+      "layout": "vertical"
+    },
+    {
+      "key": "almeon-v1",
+      "name": "Клан Альмеон",
+      "kind": "organization",
+      "file": "almeon-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряный сфинкс и золотая капля — предание о защитнике и власть Хранителя вод.",
+      "shape": "long-point",
+      "fields": [
+        [
+          37,
+          55,
+          89
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "tkhist-v1",
+      "name": "Клан Тхист",
+      "kind": "organization",
+      "file": "tkhist-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряный варан с золотым ошейником — укротители и защитники караванов.",
+      "shape": "long-point",
+      "fields": [
+        [
+          102,
+          43,
+          40
+        ],
+        [
+          42,
+          58,
+          51
+        ]
+      ],
+      "layout": "diagonal"
+    },
+    {
+      "key": "khadim-v1",
+      "name": "Клан Хадим",
+      "kind": "organization",
+      "file": "khadim-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряный акведук и золотой угольник — камень, вода и мастерские.",
+      "shape": "long-point",
+      "fields": [
+        [
+          29,
+          67,
+          76
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "erta-v1",
+      "name": "Клан Эр’Та",
+      "kind": "organization",
+      "file": "erta-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Серебряная башня и золотое светило — магия, знания и архивы.",
+      "shape": "long-point",
+      "fields": [
+        [
+          54,
+          41,
+          78
+        ],
+        [
+          31,
+          59,
+          73
+        ]
+      ],
+      "layout": "vertical"
+    },
+    {
+      "key": "sylvanhart-v1",
+      "name": "Клан Сильванхарт",
+      "kind": "organization",
+      "file": "sylvanhart-v1.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "grossblood-purple-v2",
+      "name": "Клан Гроссблад",
+      "kind": "organization",
+      "file": "grossblood-purple-v2.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "nod-v1",
+      "name": "Клан Нод",
+      "kind": "organization",
+      "file": "nod-v1.png",
+      "width": 1200,
+      "height": 1600
+    },
+    {
+      "key": "klinki-v1",
+      "name": "Клинки",
+      "kind": "organization",
+      "file": "klinki-v1.png",
+      "width": 1200,
+      "height": 1600,
+      "motif": "Выбранный пользователем классический чёрный череп из src, без перерисовки.",
+      "shape": "swallowtail",
+      "fields": [
+        [
+          239,
+          235,
+          218
+        ]
+      ],
+      "layout": "solid"
+    },
+    {
+      "key": "collegium-v4",
+      "name": "Коллегия Магии",
+      "kind": "organization",
+      "file": "collegium-v4.png",
+      "width": 1086,
+      "height": 1448
+    },
+    {
+      "key": "pantheon-v2",
+      "name": "Пантеон Основ",
+      "kind": "organization",
+      "file": "pantheon-v2.png",
+      "width": 1086,
+      "height": 1448
+    }
+  ]
+}

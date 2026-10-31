@@ -9,7 +9,6 @@ import {uiIcon} from '../common/uiIcons';
 import addCreationButton from './creation/addCreationButton';
 import guardWizardClose from './creation/guardWizardClose';
 import GuidePage from './guide/GuidePage';
-import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import {registerCharacterNotifications} from './notifications/CharacterNotification';
 import './events';
 import './episodes';
@@ -25,12 +24,6 @@ app.initializers.add('maxcuso-roleplay', () => {
   app.routes['user.roleplay'] = {path: '/u/:username/roleplay', component: RoleplayProfilePage};
   app.routes['user.roleplayWorkspace'] = {path: '/u/:username/moderation', component: WorkspacePage};
   guardWizardClose();
-
-  extend(IndexSidebar.prototype, 'items', function(items) {
-    items.add('roleplayGuide', m(LinkButton, {
-      href: app.route('roleplay.guide'), icon: uiIcon('extension'), className: 'Button Button--link',
-    }, 'Ролевая'), 70);
-  });
 
   extend(UserPage.prototype, 'navItems', function(this: UserPage, items: ItemList<Mithril.Children>) {
     if (!this.user || !app.forum.attribute('roleplayCanView')) return;

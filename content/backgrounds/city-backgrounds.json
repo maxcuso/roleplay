@@ -1,0 +1,45 @@
+{
+  "images": [
+    {
+      "key": "verkhovye",
+      "name": "Верховье",
+      "url": "https://questpost.ru/assets/loki/Verh/Verh-vrata.webp",
+      "source": "https://questpost.ru/assets/loki/Verh/Verh-vrata.webp",
+      "file": "verkhovye.webp",
+      "width": 1920,
+      "height": 810,
+      "bytes": 302596
+    },
+    {
+      "key": "arah",
+      "name": "Оазис Арах",
+      "url": "https://questpost.ru/assets/loki/Oazis/Oazis-rinok.webp",
+      "source": "https://questpost.ru/assets/loki/Oazis/Oazis-rinok.webp",
+      "file": "arah.webp",
+      "width": 2400,
+      "height": 1350,
+      "bytes": 347650
+    },
+    {
+      "key": "hillsgaard",
+      "name": "Хиллсгард",
+      "url": "https://questpost.ru/assets/loki/Hills/Hills-ploshad.webp",
+      "fallback": "https://i.pinimg.com/originals/01/e6/ae/01e6ae5734f157064b25119b86689541.jpg",
+      "source": "https://questpost.ru/assets/loki/Hills/Hills-ploshad.webp",
+      "file": "hillsgaard.webp",
+      "width": 2800,
+      "height": 1180,
+      "bytes": 369672
+    },
+    {
+      "key": "grim",
+      "name": "Грим",
+      "url": "https://questpost.ru/assets/loki/Grim/Grim-jiloy-rayon.webp",
+      "source": "https://questpost.ru/assets/loki/Grim/Grim-jiloy-rayon.webp",
+      "file": "grim.webp",
+      "width": 2272,
+      "height": 1136,
+      "bytes": 83816
+    }
+  ]
+}

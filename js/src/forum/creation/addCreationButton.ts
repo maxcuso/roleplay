@@ -6,6 +6,7 @@ import LinkButton from 'flarum/common/components/LinkButton';
 import textContrastClass from 'flarum/common/helpers/textContrastClass';
 import type Model from 'flarum/common/Model';
 import CreationWizardModal from './CreationWizardModal';
+import CharacterButton from './CharacterButton';
 import {uiIcon} from '../../common/uiIcons';
 
 /** Верхний блок ролевого тега. Действие создания темы и его права остаются штатными. */
@@ -39,9 +40,12 @@ export default function addCreationButton(): void {
         className: 'Button Button--primary Button--block' + (color ? ' Button--tagColored ' + textContrastClass(color) : ''),
         style: color ? {'--color': color} : undefined,
       }, 'Создать персонажа') : null,
-      m(LinkButton, {
-        href: app.route('roleplay.guide'), icon: uiIcon('extension'), className: 'Button Button--block',
-      }, 'Путеводитель'),
+      m('div.RpTagButtons-links', [
+        m(LinkButton, {
+          href: app.route('roleplay.guide'), icon: uiIcon('extension'), className: 'Button',
+        }, 'Путеводитель'),
+        m(CharacterButton),
+      ]),
     ]), 100);
   });
 }
