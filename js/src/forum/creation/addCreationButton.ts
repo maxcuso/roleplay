@@ -7,6 +7,7 @@ import textContrastClass from 'flarum/common/helpers/textContrastClass';
 import type Model from 'flarum/common/Model';
 import CreationWizardModal from './CreationWizardModal';
 import CharacterButton from './CharacterButton';
+import {creationButtonAvailable, creationEmailUnconfirmed} from './creationAccess';
 import {uiIcon} from '../../common/uiIcons';
 
 /** Верхний блок ролевого тега. Действие создания темы и его права остаются штатными. */
@@ -35,11 +36,12 @@ export default function addCreationButton(): void {
     const color = tag?.attribute<string>('color');
     items.remove('roleplayGuide'); // Ссылка на путеводитель теперь находится в этом блоке.
     items.add('roleplayActions', m('div.RpTagButtons', [
-      app.session.user && app.forum.attribute('roleplayCanCreate') ? m(Button, {
+      creationButtonAvailable() ? m(Button, {
+        disabled: creationEmailUnconfirmed(),
         onclick: () => void CreationWizardModal.open(), icon: uiIcon('wizard.title'),
         className: 'Button Button--primary Button--block' + (color ? ' Button--tagColored ' + textContrastClass(color) : ''),
         style: color ? {'--color': color} : undefined,
-      }, 'Создать персонажа') : null,
+      }, creationEmailUnconfirmed() ? 'Нельзя создать' : 'Создать персонажа') : null,
       m('div.RpTagButtons-links', [
         m(LinkButton, {
           href: app.route('roleplay.guide'), icon: uiIcon('extension'), className: 'Button',

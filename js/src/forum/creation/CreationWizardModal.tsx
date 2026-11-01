@@ -9,6 +9,7 @@ import MechanicsEditApi from '../profile/MechanicsEditApi';
 import type ProfileState from '../profile/ProfileState';
 import showModal from '../../common/showModal';
 import CreationConfirmationModal from './CreationConfirmationModal';
+import {allowCreationOpening, creationRequiresLogin} from './creationAccess';
 
 interface Attrs extends IInternalModalAttrs {profile?: ProfileState; wizard: CreationState; characterId: number | null}
 
@@ -20,6 +21,7 @@ export default class CreationWizardModal extends Modal<Attrs> {
 
   /** Данные получаем до открытия: Modal сразу показывает готовый шаг, без окна загрузки. */
   static open(profile?: ProfileState): Promise<void> {
+    if ((!profile || creationRequiresLogin()) && !allowCreationOpening()) return Promise.resolve();
     if (this.opening) return this.opening;
     if (!app.session.user) return Promise.resolve();
     this.opening = this.prepare(profile).finally(() => {this.opening = null;});

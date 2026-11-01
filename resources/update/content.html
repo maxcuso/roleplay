@@ -2,10 +2,10 @@
   КВЕСТПОСТ · РЕБУТ — самостоятельная страница /role/update, до 700 px.
   Два общих Banner: механики и история. Внутри — Step / Step--reverse.
   Небольшие изменения собраны в Facts после пяти основных механик.
-  Фон, дата запуска и условия компенсации будут согласованы отдельно.
+  Подробные условия перехода будут опубликованы в отдельной теме.
 -->
 
-<!-- 01. Афиша. Фоновую картинку добавим позже. -->
+<!-- 01. Афиша. Фон настраивается в style.css: Hero--update. -->
 <header class="Hero Hero--update" aria-labelledby="update-title">
   <div class="Container Hero-inner">
     <div class="Hero-copy">
@@ -14,58 +14,91 @@
       <p class="Hero-description">Продолжить игру или начать с чистого листа</p>
       <p class="Hero-under">Создание в мастере, анкета в профиле и развитие без проверяющих. Рассказываем, что меняется в механиках и куда движется история</p>
       <div class="Hero-actions">
-        <a class="Button Button--ghost" href="#update-mechanics">Узнать что изменилось<i data-icon="landing.down" aria-hidden="true"></i></a>
+        <a class="Button Button--ghost" href="/role#guides" target="_top">На страницу правил<i data-icon="landing.arrow" aria-hidden="true"></i></a>
       </div>
     </div>
   </div>
 </header>
 
 <!-- 02. Механики: один общий баннер и пять чередующихся шагов. -->
-<section class="Section Section--feature" id="update-mechanics" data-accent="violet">
+<section class="Section Section--feature" id="update-mechanics" data-accent="water">
   <div class="Container Document">
     <header class="Banner">
       <h2>Механики</h2>
       <p>Новые способы создавать, развивать персонажа и проходить проверки</p>
-      <img class="Banner-art" src="/role/assets/banner-icons/up-arrow.svg" width="90" height="90" alt="" loading="lazy">
+      <img class="Banner-art" src="/role/assets/banner-icons/gear.svg" width="512" height="512" alt="" aria-hidden="true" loading="lazy">
     </header>
 
-    <section class="Step Step--balanced" id="update-creation" data-accent="water">
+    <section class="Step Step--balanced" id="update-creation">
       <div>
         <h3><span class="Badge" aria-hidden="true"><i data-icon="permissions.create"></i></span><span>Мастер создания персонажа</span></h3>
         <p>Теперь персонажа можно собрать в мастере: выбрать расу, распределить характеристики, подобрать навыки, перки, заклинания и стартовое снаряжение.</p>
         <p>Мастер учитывает расовые бонусы и показывает доступные варианты. Техническую часть не нужно собирать вручную — вы последовательно принимаете решения о своём герое</p>
       </div>
-      <figure class="Figure Figure--framed Figure--screenshot">
-        <img src="/role/assets/creation-guide/light/02-attributes.jpg" data-screenshot-theme="light" width="948" height="607" alt="Выбор характеристик в мастере создания" loading="lazy">
-        <img src="/role/assets/creation-guide/dark/02-attributes.jpg" data-screenshot-theme="dark" width="948" height="607" alt="Выбор характеристик в мастере создания" loading="lazy">
-      </figure>
+      <!-- Главный снимок идёт последним: он целиком виден поверх двух дополнительных. -->
+      <div class="Grid Grid--screenshots" role="group" aria-label="Экраны мастера создания персонажа">
+        <figure class="Figure Figure--framed Figure--screenshot" aria-hidden="true">
+          <img src="/role/assets/creation-guide/light/03-training.jpg" data-screenshot-theme="light" width="948" height="607" alt="" loading="lazy">
+          <img src="/role/assets/creation-guide/dark/03-training.jpg" data-screenshot-theme="dark" width="948" height="607" alt="" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--framed Figure--screenshot" aria-hidden="true">
+          <img src="/role/assets/creation-guide/light/05-spells-choices.jpg" data-screenshot-theme="light" width="948" height="607" alt="" loading="lazy">
+          <img src="/role/assets/creation-guide/dark/05-spells-choices.jpg" data-screenshot-theme="dark" width="948" height="607" alt="" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--framed Figure--screenshot">
+          <img src="/role/assets/creation-guide/light/02-attributes.jpg" data-screenshot-theme="light" width="948" height="607" alt="Выбор характеристик в мастере создания" loading="lazy">
+          <img src="/role/assets/creation-guide/dark/02-attributes.jpg" data-screenshot-theme="dark" width="948" height="607" alt="Выбор характеристик в мастере создания" loading="lazy">
+        </figure>
+      </div>
     </section>
 
-    <section class="Step Step--reverse Step--balanced" id="update-profile" data-accent="violet">
+    <section class="Step Step--reverse Step--balanced" id="update-profile">
       <div>
         <h3><span class="Badge" aria-hidden="true"><i data-icon="profile.literature"></i></span><span>Анкета прямо в профиле</span></h3>
         <p>Характеристики, навыки, перки и заклинания теперь собраны в анкете персонажа в профиле. Она отражает его текущее развитие и служит источником данных для новых механик.</p>
         <p>Художественная анкета остаётся темой на форуме: в ней вы рассказываете о внешности, характере и прошлом героя. Техническая и литературная части дополняют друг друга</p>
       </div>
-      <figure class="Figure Figure--framed Figure--screenshot">
-        <img src="/role/assets/profile-guide/light/05-accepted.jpg" data-screenshot-theme="light" width="844" height="374" alt="Анкета персонажа в профиле" loading="lazy">
-        <img src="/role/assets/profile-guide/dark/05-accepted.jpg" data-screenshot-theme="dark" width="844" height="374" alt="Анкета персонажа в профиле" loading="lazy">
-      </figure>
+      <!-- Главный снимок идёт последним: он целиком виден поверх двух дополнительных. -->
+      <div class="Grid Grid--screenshots" role="group" aria-label="Анкета персонажа, перки и заклинания" style="--screenshot-peek: 36px">
+        <figure class="Figure Figure--framed Figure--screenshot" aria-hidden="true">
+          <img src="/role/assets/profile-guide/light/13-perks.jpg" data-screenshot-theme="light" width="844" height="431" alt="" loading="lazy">
+          <img src="/role/assets/profile-guide/dark/13-perks.jpg" data-screenshot-theme="dark" width="844" height="431" alt="" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--framed Figure--screenshot" aria-hidden="true">
+          <img src="/role/assets/profile-guide/light/14-spells.jpg" data-screenshot-theme="light" width="844" height="190" alt="" loading="lazy">
+          <img src="/role/assets/profile-guide/dark/14-spells.jpg" data-screenshot-theme="dark" width="844" height="190" alt="" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--framed Figure--screenshot">
+          <img src="/role/assets/profile-guide/light/05-accepted.jpg" data-screenshot-theme="light" width="844" height="374" alt="Анкета персонажа в профиле" loading="lazy">
+          <img src="/role/assets/profile-guide/dark/05-accepted.jpg" data-screenshot-theme="dark" width="844" height="374" alt="Анкета персонажа в профиле" loading="lazy">
+        </figure>
+      </div>
     </section>
 
-    <section class="Step Step--balanced" id="update-development" data-accent="ember">
+    <section class="Step Step--balanced" id="update-development">
       <div>
         <h3><span class="Badge" aria-hidden="true"><i data-icon="settings.development"></i></span><span>Прокачка без проверяющих</span></h3>
         <p>Для обычного повышения характеристик больше не нужна отдельная заявка проверяющему. Выберите характеристику в профиле, посмотрите стоимость и подтвердите трату опыта.</p>
         <p>Новые уровни открывают выборы навыков и владений. Связанные с ними перки добавляются в анкету, а доступные, но ещё не использованные выборы сохраняются</p>
       </div>
-      <figure class="Figure Figure--framed Figure--screenshot">
-        <img src="/role/assets/profile-guide/light/06-attribute-upgrade.jpg" data-screenshot-theme="light" width="410" height="186" alt="Повышение характеристики за опыт" loading="lazy">
-        <img src="/role/assets/profile-guide/dark/06-attribute-upgrade.jpg" data-screenshot-theme="dark" width="410" height="186" alt="Повышение характеристики за опыт" loading="lazy">
-      </figure>
+      <!-- Главный снимок идёт последним: он целиком виден поверх двух дополнительных. -->
+      <div class="Grid Grid--screenshots" role="group" aria-label="Повышение характеристик, изучение навыков и владений">
+        <figure class="Figure Figure--framed Figure--screenshot" aria-hidden="true">
+          <img src="/role/assets/profile-guide/light/08-skill-learning.jpg" data-screenshot-theme="light" width="844" height="420" alt="" loading="lazy">
+          <img src="/role/assets/profile-guide/dark/08-skill-learning.jpg" data-screenshot-theme="dark" width="844" height="420" alt="" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--framed Figure--screenshot" aria-hidden="true">
+          <img src="/role/assets/profile-guide/light/10-proficiency-learning.jpg" data-screenshot-theme="light" width="844" height="421" alt="" loading="lazy">
+          <img src="/role/assets/profile-guide/dark/10-proficiency-learning.jpg" data-screenshot-theme="dark" width="844" height="421" alt="" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--framed Figure--screenshot">
+          <img src="/role/assets/profile-guide/light/06-attribute-upgrade.jpg" data-screenshot-theme="light" width="410" height="186" alt="Повышение характеристики за опыт" loading="lazy">
+          <img src="/role/assets/profile-guide/dark/06-attribute-upgrade.jpg" data-screenshot-theme="dark" width="410" height="186" alt="Повышение характеристики за опыт" loading="lazy">
+        </figure>
+      </div>
     </section>
 
-    <section class="Step Step--reverse Step--balanced" id="update-learning" data-accent="water">
+    <section class="Step Step--reverse Step--balanced" id="update-learning">
       <div>
         <h3><span class="Badge" aria-hidden="true"><i data-icon="sections.spells"></i></span><span>Изучение заклинаний</span></h3>
         <p>У литературы появляется практическое применение: книга может содержать заклинания для изучения. Во вкладке «Обучение» собраны ещё не освоенные знания из книг вашего персонажа.</p>
@@ -78,7 +111,7 @@
     </section>
 
     <!-- Кубики были и раньше. Новое — связь с анкетой и автоматический расчёт. -->
-    <section class="Step Step--balanced" id="update-checks" data-accent="violet">
+    <section class="Step Step--balanced" id="update-checks">
       <div>
         <h3><span class="Badge" aria-hidden="true"><i data-icon="effects.allChecks"></i></span><span>Проверки считаются сами</span></h3>
         <p>Броски кубиков уже были на форуме. Теперь к ним добавляются проверки, связанные с анкетой: система подставляет характеристику, учитывает уровень навыка и рассчитывает итоговый бонус.</p>
@@ -118,7 +151,7 @@
     <header class="Banner">
       <h2>Мир и истории</h2>
       <p>Следующий этап знакомого мира и новая точка встречи героев</p>
-      <img class="Banner-art" src="/role/assets/banner-icons/map.png" width="90" height="90" alt="" loading="lazy">
+      <img class="Banner-art" src="/role/assets/banner-icons/geography.svg" width="512" height="512" alt="" aria-hidden="true" loading="lazy">
     </header>
     <section class="Step Step--balanced" id="update-timeskip">
       <div>
@@ -126,9 +159,6 @@
         <p>История продолжается через <span class="paper-highlight">пять лет</span> после последних событий. Разрушительное происшествие разорвало прямую дорогу между Хиллсгардом и Зеленолесьем. Приключенцам, прежде состоявшим в Коллегии Магии, поручили восстановить сообщение.</p>
         <p>По обе стороны обрыва появились поселения, которые позже объединились в город. Строительство городка Квестпоста заняло два года. Именно здесь начинается новый этап общей истории</p>
       </div>
-      <figure class="Figure Figure--cutout" aria-hidden="true">
-        <img src="/role/assets/banner-icons/castle.png" width="150" height="150" alt="" loading="lazy">
-      </figure>
     </section>
     <section class="Step Step--reverse Step--balanced" id="update-questpost">
       <div>
@@ -136,9 +166,14 @@
         <p>В мире появляется новое место для игры: молодой город между Хиллсгардом и Зеленолесьем. Он вырос вокруг моста через обрыв, а у одного из въездов расположилась Гильдия Квестпоста.</p>
         <p>Подземелья внутри обрыва привлекают исследователей, а заказы со всего Нового Мира дают работу приключенцам. Между заданиями здесь можно вернуться к повседневной жизни, личным делам и новым знакомствам</p>
       </div>
-      <figure class="Figure Figure--framed Figure--screenshot">
-        <img src="/role/assets/city-backgrounds/questpost.png" width="1916" height="821" alt="Квестпост: город по обе стороны обрыва, соединённый мостом" loading="lazy">
-      </figure>
+      <div class="Grid Grid--city">
+        <figure class="Figure Figure--framed Figure--screenshot">
+          <img src="/role/assets/city-backgrounds/questpost.png" width="1916" height="821" alt="Квестпост: город по обе стороны обрыва, соединённый мостом" loading="lazy">
+        </figure>
+        <figure class="Figure Figure--crest">
+          <img src="/role/assets/city-crests/questpost-v2.png" width="1200" height="1600" alt="Герб города Квестпост" loading="lazy">
+        </figure>
+      </div>
     </section>
     <section class="Step Step--balanced" id="update-guild">
       <div>
@@ -146,14 +181,14 @@
         <p>Теперь игра строится вокруг Гильдии искателей приключений. Персонажи становятся её членами: здесь они находят поручения, встречают будущих спутников и отправляются в истории, которые связывают их друг с другом.</p>
         <p>У героя по-прежнему могут быть личные цели, связи и дела за пределами Гильдии. Она становится общей отправной точкой, от которой эти истории могут развиваться дальше</p>
       </div>
-      <figure class="Figure Figure--cutout" aria-hidden="true">
-        <img src="/role/assets/banner-icons/badge.png" width="150" height="150" alt="" loading="lazy">
+      <figure class="Figure Figure--crest">
+        <img src="/role/assets/organization-crests/guild-questpost-v1.png" width="1200" height="1600" alt="Герб Гильдии Квестпоста" loading="lazy">
       </figure>
     </section>
   </div>
 </section>
 
-<!-- 04. Возвращение. Размер и порядок компенсации пока не определены. -->
+<!-- 04. Возвращение. Здесь краткое пояснение, подробные условия — в отдельной теме. -->
 <section class="Section Section--feature" id="update-return" data-accent="water">
   <div class="Container Document">
     <header class="SectionHeading"><div><h2>Продолжить или начать заново</h2></div></header>
@@ -169,14 +204,14 @@
   </div>
 </section>
 
-<!-- 05. Будущие этапы. Впишите даты вместо прочерков в SectionKicker, не меняя разметку.
+<!-- 05. Будущие этапы. Даты редактируются в SectionKicker, без изменения разметки.
      «Артефакторика» — рабочее название ещё не добавленного навыка. -->
 <section class="Section Section--feature" id="update-roadmap" data-accent="violet">
   <div class="Container Document">
     <header class="Banner">
       <h2>План развития</h2>
       <p>Что появится дальше и в каком порядке</p>
-      <span class="Banner-art" aria-hidden="true"><i data-icon="settings.development"></i></span>
+      <img class="Banner-art" src="/role/assets/banner-icons/route.svg" width="512" height="512" alt="" aria-hidden="true" loading="lazy">
     </header>
     <ol class="Timeline Timeline--roadmap" aria-label="Ближайшие этапы развития">
       <li>
@@ -196,21 +231,23 @@
         </div>
       </li>
       <li>
-        <span class="Badge" aria-hidden="true">4</span>
+        <span class="Badge" aria-hidden="true">3</span>
         <div>
           <p class="SectionKicker">Конец ноября</p>
           <h3>Пререлиз</h3>
-          <p>Неофицальный старт принятия анкет и первых квестов</p>
+          <p>Неофициальный старт принятия анкет и первых квестов</p>
         </div>
-        <li>
-        <span class="Badge" aria-hidden="true">5</span>
+      </li>
+      <li>
+        <span class="Badge" aria-hidden="true">4</span>
         <div>
           <p class="SectionKicker">Начало декабря</p>
           <h3>Релиз</h3>
           <p>Официальный запуск ролевой после ребута</p>
         </div>
+      </li>
       <li>
-        <span class="Badge" aria-hidden="true">6</span>
+        <span class="Badge" aria-hidden="true">5</span>
         <div>
           <p class="SectionKicker">Конец декабря</p>
           <h3>Создание предметов</h3>

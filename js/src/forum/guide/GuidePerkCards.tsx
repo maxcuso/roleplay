@@ -16,7 +16,7 @@ interface GuideSkill {
 }
 export interface GuideCatalogData {
   attributes: Array<CatalogRow & {slug: string; icon?: string | null}>;
-  perks: CatalogRow[];
+  perks: Array<CatalogRow & {source?: Fields; source_context?: Fields}>;
   skills: GuideSkill[];
   races: GuideRace[];
 }
@@ -32,7 +32,9 @@ export function mountPerkCards(root: HTMLElement, data: GuideCatalogData): () =>
   };
   const examples = root.querySelector<HTMLElement>('[data-roleplay-block="perk-examples"]');
   if (examples) render(examples, data.perks.length
-    ? data.perks.map(perk => <PerkCard key={perk.id} mode="expanded" perk={{...perk, description: guideText(perk.description)}}/>)
+    ? data.perks.map(perk => <PerkCard key={perk.id} mode="expanded"
+      perk={{...perk, description: guideText(perk.description)}}
+      source={sourceLabel(perk.source, perk.source_context ?? {}, data.attributes)}/>)
     : <p role="status">В справочнике пока нет доступных перков</p>);
 
   const skillCards = (skill: GuideSkill): Mithril.Children => {

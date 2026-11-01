@@ -66,6 +66,14 @@ export function mountDevelopment(root: HTMLElement, data: GuideDevelopmentData):
     </tr>) : <tr><td colspan={3}>В справочнике пока нет доступных рангов</td></tr>);
     mounted.push(slot);
   });
+  // Условия рангов остаются читаемой таблицей HTML, имена приходят из общего справочника.
+  root.querySelectorAll<HTMLElement>('[data-rank-name]').forEach(slot => {
+    const rank = data.ranks.find(rank => rank.level === Number(slot.dataset.rankName));
+    const row = slot.closest('tr');
+    if (row) row.hidden = !rank;
+    m.render(slot, rank ? roman(rank.level) + ' — ' + rank.name : '');
+    mounted.push(slot);
+  });
   // Требования и цены используют те же настройки, что мастер и повышение в профиле.
   root.querySelectorAll<HTMLElement>('[data-skill-minimum]').forEach(slot => {
     m.render(slot, String(data.advancement.skill_minimums[Number(slot.dataset.skillMinimum)]));

@@ -4,6 +4,7 @@ import Button from 'flarum/common/components/Button';
 import type Mithril from 'mithril';
 import ProfileApi from '../profile/ProfileApi';
 import CreationWizardModal from './CreationWizardModal';
+import {creationRequiresLogin, creationEmailUnconfirmed} from './creationAccess';
 import {requestMessage} from '../../common/requestError';
 
 /** Проверяем актуальный список при нажатии: создание и удаление не оставляют старую ссылку. */
@@ -13,7 +14,7 @@ export default class CharacterButton extends Component {
 
   view(): Mithril.Children {
     return <Button className="Button" icon="fas fa-user" loading={this.loading}
-      disabled={Boolean(app.session.user) && !app.forum.attribute('roleplayCanView')}
+      disabled={!creationRequiresLogin() && !creationEmailUnconfirmed() && !app.forum.attribute('roleplayCanView')}
       onclick={() => void this.open()}>Персонаж</Button>;
   }
 
@@ -22,10 +23,11 @@ export default class CharacterButton extends Component {
   private async open(): Promise<void> {
     if (this.loading) return;
     const user = app.session.user;
-    if (!user) {
-      void app.modal.show(() => import('flarum/forum/components/LogInModal'), {});
+    if (creationRequiresLogin() || creationEmailUnconfirmed()) {
+      await CreationWizardModal.open();
       return;
     }
+    if (!user) return;
     const route = m.route.get();
     const current = () => !this.disposed && app.session.user === user && m.route.get() === route;
     this.loading = true;

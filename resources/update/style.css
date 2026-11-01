@@ -24,8 +24,16 @@ html.UpdateDocument[data-theme="dark"] { background: #181b20; color-scheme: dark
 .RpUpdate :is(.Section, .Step, h2, h3) { scroll-margin-top: 0; }
 .RpUpdate .Container { width: calc(100% - var(--role-gutter) * 2); }
 
-/* 02. Афиша. Иллюстрация будет выбрана отдельно. */
-.RpUpdate .Hero--update { background: #1d2030; background-image: none; overflow: hidden; }
+/* 02. Афиша. Затемнение сохраняет читаемость текста поверх иллюстрации. */
+.RpUpdate .Hero--update {
+  background-color: #1d2030;
+  background-image:
+    linear-gradient(180deg, rgba(14,16,26,.42), rgba(14,16,26,.3) 38%, rgba(14,16,26,.78)),
+    url("../role/media/update-background.jpg/file");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
 .RpUpdate .Hero--update .Hero-inner { min-height: 470px; padding-block: 44px; }
 .RpUpdate .Hero--update .Hero-copy { padding: 0; }
 .RpUpdate .Hero--update .SectionKicker { margin: 0 0 22px; font: 500 11px/1.5 "Guide Jost", sans-serif; letter-spacing: 2px; color: #d5c5ed; }
@@ -44,7 +52,86 @@ html.UpdateDocument[data-theme="dark"] { background: #181b20; color-scheme: dark
 .RpUpdate .Hero-actions { flex-wrap: wrap; gap: 10px; }
 .RpUpdate .Button { min-height: 42px; padding-inline: 18px; font-size: 12px; }
 
-/* 03. Основные главы заметнее дополнений благодаря Banner и медиа. */
+/* 03. Фоновые магические круги: только декор, без событий и влияния на размеры.
+   Прозрачность меняется здесь, формы — в assets/update-patterns/*.svg. */
+.RpUpdate {
+  --update-circle-opacity: .07;
+  --update-circle-size: 380px;
+  --update-step-circle-size: 260px;
+  --update-circle-primary: url("../role/media/update-patterns/circle-square.svg/file");
+  --update-circle-secondary: url("../role/media/update-patterns/circle-star.svg/file");
+}
+.RpUpdate[data-theme="dark"] { --update-circle-opacity: .055; }
+.RpUpdate .Section--feature { position: relative; isolation: isolate; overflow: clip; }
+.RpUpdate .Section--feature > .Container { position: relative; z-index: 1; }
+.RpUpdate .Section--feature::before,
+.RpUpdate .Section--feature::after {
+  content: "";
+  position: absolute;
+  width: var(--update-circle-size);
+  aspect-ratio: 1;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--role-accent);
+  opacity: var(--update-circle-opacity);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+.RpUpdate .Section--feature::before {
+  top: 100px;
+  left: -170px;
+  rotate: -17deg;
+  -webkit-mask-image: var(--update-circle-primary);
+  mask-image: var(--update-circle-primary);
+}
+.RpUpdate .Section--feature::after {
+  right: -160px;
+  bottom: 85px;
+  rotate: 23deg;
+  -webkit-mask-image: var(--update-circle-secondary);
+  mask-image: var(--update-circle-secondary);
+}
+.RpUpdate #update-world,
+.RpUpdate #update-roadmap {
+  --update-circle-primary: url("../role/media/update-patterns/circle-orbits.svg/file");
+  --update-circle-secondary: url("../role/media/update-patterns/circle-square.svg/file");
+}
+.RpUpdate #update-world::before { top: 28%; rotate: 12deg; }
+.RpUpdate #update-return::before { top: -100px; }
+.RpUpdate #update-return::after { bottom: -160px; }
+.RpUpdate #update-roadmap::before { top: 140px; left: -145px; }
+.RpUpdate #update-roadmap::after { bottom: -110px; rotate: -12deg; }
+
+/* Дополнительный круг у каждого шага делает фон плотнее между крупными узорами. */
+.RpUpdate .Section--feature .Step { position: relative; isolation: isolate; }
+.RpUpdate .Section--feature .Step::before {
+  content: "";
+  position: absolute;
+  width: var(--update-step-circle-size);
+  aspect-ratio: 1;
+  right: -65px;
+  bottom: -70px;
+  rotate: 14deg;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--role-accent);
+  opacity: var(--update-circle-opacity);
+  -webkit-mask: var(--update-circle-secondary) center / contain no-repeat;
+  mask: var(--update-circle-secondary) center / contain no-repeat;
+}
+.RpUpdate .Section--feature .Step--reverse::before {
+  right: auto;
+  bottom: auto;
+  left: -75px;
+  top: -35px;
+  rotate: -28deg;
+  -webkit-mask-image: var(--update-circle-primary);
+  mask-image: var(--update-circle-primary);
+}
+
+/* 04. Основные главы заметнее дополнений благодаря Banner и медиа. */
 .RpUpdate .Section--feature { max-width: none; margin: 0; padding-block: 40px; background: color-mix(in srgb, var(--role-accent) 7%, var(--role-bg)); }
 .RpUpdate .Section--feature .Banner { margin-bottom: 26px; min-height: 104px; padding: 18px 126px 18px 20px; }
 .RpUpdate .Section--feature .Banner > h2 { border: 0; padding: 0; margin: 0; font-size: 25px; line-height: 1.25; }
@@ -72,9 +159,91 @@ html.UpdateDocument[data-theme="dark"] { background: #181b20; color-scheme: dark
 .RpUpdate .Figure--screenshot { align-self: center; }
 .RpUpdate .Figure--cutout { height: 180px; }
 
+/* Шаг без иллюстрации занимает всю ширину, сохраняя общие отступы Step. */
+/* Отдельные границы сохраняют разметку при обработке Less на форуме. */
+.RpUpdate .Step > :only-child { grid-column-start: 1; grid-column-end: -1; }
+
+/* Панорама обрезается только при отображении; герб немного выходит за рамку. */
+.RpUpdate .Grid--city {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 28px 28px 0;
+  align-self: center;
+  isolation: isolate;
+}
+.RpUpdate .Grid--city > .Figure { grid-column: 1; grid-row: 1; }
+.RpUpdate .Grid--city > .Figure--screenshot {
+  aspect-ratio: 3 / 2;
+  transform: rotate(-1deg);
+}
+.RpUpdate .Grid--city > .Figure--screenshot > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.RpUpdate .Grid--city > .Figure--crest {
+  width: 90px;
+  height: 120px;
+  justify-self: end;
+  align-self: end;
+  transform: translate(26px,24px) rotate(2deg);
+  z-index: 1;
+}
+
+
+/* Перекрывающиеся снимки: два дополнительных кадра позади, последний — главный.
+   Отступ --screenshot-peek задаёт видимую часть задних кадров по вертикали. */
+.RpUpdate .Grid--screenshots {
+  --screenshot-peek: 52px;
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  grid-template-rows: var(--screenshot-peek) auto var(--screenshot-peek);
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 8px;
+  align-self: center;
+  isolation: isolate;
+}
+.RpUpdate .Grid--screenshots > .Figure--screenshot {
+  grid-column: 1;
+  min-width: 0;
+  margin: 0;
+}
+.RpUpdate .Grid--screenshots > .Figure--screenshot:first-child {
+  grid-row: 1 / span 2;
+  width: 88%;
+  justify-self: start;
+  align-self: start;
+  transform: translateX(-6px) rotate(-5deg);
+  z-index: 1;
+}
+.RpUpdate .Grid--screenshots > .Figure--screenshot:nth-child(2) {
+  grid-row: 2 / span 2;
+  width: 88%;
+  justify-self: end;
+  align-self: end;
+  transform: translateX(6px) rotate(4deg);
+  z-index: 2;
+}
+.RpUpdate .Grid--screenshots > .Figure--screenshot:last-child {
+  grid-row: 2;
+  width: 100%;
+  justify-self: center;
+  align-self: center;
+  transform: rotate(-.7deg);
+  z-index: 3;
+}
+
+
 /* План развития использует общий Timeline и текстурные Badge.
    Соединение проходит позади кружков, даты правятся прямо в HTML. */
 .RpUpdate .Document .Timeline--roadmap { margin: 30px 0 0; background-repeat: no-repeat; background-size: 100% 100%; }
+.RpUpdate .Document .Timeline.Timeline--roadmap { padding-inline-start: 24px; }
 .RpUpdate .Document .Timeline.Timeline--roadmap > li {
   display: grid;
   grid-template-columns: 42px minmax(0,1fr);
@@ -112,7 +281,9 @@ html.UpdateDocument[data-theme="dark"] { background: #181b20; color-scheme: dark
   .RpUpdate #update-return .Facts--cards { --columns: 2; }
 }
 @media (max-width: 559px) {
-  .RpUpdate { --role-gutter: 18px; }
+  .RpUpdate { --role-gutter: 18px; --update-circle-size: 270px; --update-step-circle-size: 200px; --update-circle-opacity: .05; }
+  .RpUpdate[data-theme="dark"] { --update-circle-opacity: .045; }
+  .RpUpdate .Hero--update { background-position: 70% center; }
   .RpUpdate .Hero--update .Hero-inner { min-height: 440px; padding-block: 36px; }
   .RpUpdate .Section--feature { padding-block: 32px; }
   .RpUpdate .Step, .RpUpdate .Step--reverse { grid-template-columns: minmax(0,1fr); }
@@ -122,6 +293,7 @@ html.UpdateDocument[data-theme="dark"] { background: #181b20; color-scheme: dark
   .RpUpdate .Section--feature .Banner-art { width: 84px; height: 84px; }
   .RpUpdate .Section--feature .Banner-art > .Icon { font-size: 82px; }
   .RpUpdate .Facts--three { --columns: 1; }
+  .RpUpdate .Document .Timeline.Timeline--roadmap { padding-inline-start: 12px; }
   .RpUpdate .Document .Timeline.Timeline--roadmap > li { width: calc(100% - 24px); gap: 16px; }
   .RpUpdate .Document .Timeline.Timeline--roadmap > li + li { margin-top: 14px; }
 }

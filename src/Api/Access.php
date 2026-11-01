@@ -18,10 +18,25 @@ final class Access
 
     public static function create(User $actor): void
     {
-        // Гость не может владеть черновиком, даже если группе дали право создания.
-        if (!$actor->exists) throw new PermissionDeniedException();
+        // Ни анонимный посетитель, ни общий аккаунт тестовых боёв не владеют анкетой.
+        if (self::creationRequiresLogin($actor) || !$actor->is_email_confirmed) {
+            throw new PermissionDeniedException();
+        }
         self::view($actor);
         $actor->assertCan('roleplay.create');
+    }
+
+    /** Общий Guest определяется по ID, который хранит сама Арена; зависимости от имени нет. */
+    public static function creationRequiresLogin(User $actor): bool
+    {
+        return !$actor->exists || (class_exists(\forumaker\Arena\ArenaGuestUser::class)
+            && \forumaker\Arena\ArenaGuestUser::isGuestId((int) $actor->id));
+    }
+
+    public static function canCreate(User $actor): bool
+    {
+        return !self::creationRequiresLogin($actor) && $actor->is_email_confirmed
+            && $actor->can('viewForum') && $actor->can('roleplay.view') && $actor->can('roleplay.create');
     }
 
     public static function admin(User $actor): void

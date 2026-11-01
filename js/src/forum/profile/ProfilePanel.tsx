@@ -16,6 +16,7 @@ import CharacterManagementModal from './CharacterManagementModal';
 import showModal from '../../common/showModal';
 import type ProfileState from './ProfileState';
 import CreationWizardModal from '../creation/CreationWizardModal';
+import {creationButtonAvailable, creationEmailUnconfirmed} from '../creation/creationAccess';
 import RoleplayerSummary from './RoleplayerSummary';
 import LearningPanel from './LearningPanel';
 
@@ -73,10 +74,11 @@ export default class ProfilePanel extends Component<Attrs> {
         {this.toolbar()}
         {this.attrs.picker && !state.listError && !state.characters.length && <div className="RpProfile-empty">
           <h3>{this.attrs.own ? 'У вас пока нет персонажей' : 'Нет доступных для просмотра персонажей'}</h3>
-          {this.attrs.own && app.forum.attribute('roleplayCanCreate') && <>
+          {this.attrs.own && creationButtonAvailable() && <>
             <p>Мастер поможет выбрать расу, распределить характеристики и подобрать способности</p>
             <Button className="Button Button--primary" icon={uiIcon('actions.create')}
-              onclick={() => void CreationWizardModal.open()}>Создать персонажа</Button>
+              disabled={creationEmailUnconfirmed()} onclick={() => void CreationWizardModal.open()}>
+              {creationEmailUnconfirmed() ? 'Нельзя создать' : 'Создать персонажа'}</Button>
           </>}
         </div>}
         {state.nextBefore !== null && <Button className="Button Button--link" loading={state.loadingMore}

@@ -76,10 +76,42 @@ final class GuideCatalog
             $ranks = array_values(array_filter($registry->definitionsFor('ranks'), fn ($rank) => $rank['enabled']));
             usort($ranks, fn ($a, $b) => $a['level'] <=> $b['level']);
             $ranks = array_map(fn ($rank) => $this->fields($rank, ['slug', 'name', 'level', 'letter', 'description']), $ranks);
-            return ['attributes' => $attributes, 'perks' => array_slice($perks, 0, 3), 'ranks' => $ranks,
+            return ['attributes' => $attributes, 'perks' => $this->perkExamples($perks, $skills, $races), 'ranks' => $ranks,
                 'skills' => $skills, 'races' => $races, 'development' => $levels,
                 'advancement' => $this->fields($development, ['maximum_level', 'skill_minimums', 'experience_costs'])];
         });
+    }
+
+    /** Случайные примеры с настоящим источником. Один перк не повторяется в тройке.
+     * Только связи справочников: выдачи и личные данные персонажей здесь не читаются.
+     */
+    private function perkExamples(array $perks, array $skills, array $races): array
+    {
+        $sources = [];
+        foreach ($skills as $skill) {
+            foreach ($skill['levels'] as $level) {
+                if (!$level['perk']) continue;
+                $sources[$level['perk']['id']][] = [
+                    'source' => $skill['source'] ?? ['name_source' => 'skill', 'icon_source' => 'skill'],
+                    'source_context' => ['skill_name' => $skill['name'], 'attribute_slug' => $skill['attribute_slug']],
+                ];
+            }
+        }
+        foreach ($races as $race) {
+            foreach ([...$race['fixed_perks'], ...$race['choice_perks']] as $perk) {
+                $sources[$perk['id']][] = [
+                    'source' => $race['source'] ?? ['name_source' => 'race'],
+                    'source_context' => ['race_name' => $race['name']],
+                ];
+            }
+        }
+        // Не приписываем свободному перку выдуманный навык или расу.
+        $examples = array_values(array_filter($perks, fn ($perk) => isset($sources[$perk['id']])));
+        shuffle($examples);
+        return array_map(function ($perk) use ($sources): array {
+            $choices = $sources[$perk['id']];
+            return $perk + $choices[array_rand($choices)];
+        }, array_slice($examples, 0, 3));
     }
 
     private function fields(array $row, array $keys): array

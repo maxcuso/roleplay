@@ -127,7 +127,7 @@ function loadClient(kind = 'admin', environment = {}) {
   const app = {
     data: {resources: [{type: 'forums', id: '1', attributes: {}}], settings: {}},
     initializers: {add(name, initialize) { initializers.set(name, initialize); initialize(); }},
-    session: {user: {id: () => 1, slug: () => 'player'}}, routes: {}, setTitle() {}, setTitleCount() {},
+    session: {user: {id: () => 1, slug: () => 'player', attribute: () => undefined, isEmailConfirmed: () => true}}, routes: {}, setTitle() {}, setTitleCount() {},
     search: {state: {params: () => ({})}},
     route(name, params = {}) { return (this.routes[name]?.path || '/').replace(/:([a-z]+)/g, (_match, key) => encodeURIComponent(params[key] ?? ':' + key)); },
     translator: {trans(key) { return key; }},

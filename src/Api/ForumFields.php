@@ -22,9 +22,10 @@ final class ForumFields
                 ReviewPermissions::staff($context->getActor())),
             Schema\Boolean::make('roleplayCanView')->get(fn ($model, Context $context) =>
                 $context->getActor()->can('viewForum') && $context->getActor()->can('roleplay.view')),
+            Schema\Boolean::make('roleplayCreationRequiresLogin')->get(fn ($model, Context $context) =>
+                Access::creationRequiresLogin($context->getActor())),
             Schema\Boolean::make('roleplayCanCreate')->get(fn ($model, Context $context) =>
-                $context->getActor()->exists && $context->getActor()->can('viewForum')
-                && $context->getActor()->can('roleplay.view') && $context->getActor()->can('roleplay.create')),
+                Access::canCreate($context->getActor())),
         ];
     }
 }

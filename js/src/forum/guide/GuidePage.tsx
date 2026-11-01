@@ -71,15 +71,7 @@ export default class GuidePage extends Page {
       icons: resolvedIcons,
       attributes: this.data!.attributes.map(row => ({...row, icon: row.icon ? resolveIcon(row.icon) : null})),
       guides,
-      createCharacter: () => {
-        if (!app.session.user) {
-          // В Flarum 2 окно входа находится в отложенном чанке ядра.
-          void app.modal.show(() => import('flarum/forum/components/LogInModal'), {});
-          return;
-        }
-        if (app.forum.attribute('roleplayCanCreate')) void CreationWizardModal.open();
-        else app.alerts.show({type: 'error'}, 'У вас нет доступа к созданию персонажей');
-      },
+      createCharacter: () => {void CreationWizardModal.open();},
     });
   }
 
